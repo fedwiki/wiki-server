@@ -1,0 +1,17 @@
+.DS_Store
+*.swp
+*.iml
+.idea/
+.sass-cache
+.rvmrc
+/data
+/spec/data
+/client/client.js
+/client/test/testclient.js
+/client/plugins/*.js
+/client/plugins/**/*.js
+/client/plugins/pushpin/**/*.js
+/client/chart/
+/client/garden/
+node_modules
+npm-debug.log
