@@ -38,12 +38,12 @@ module.exports = function (grunt) {
           '<%= coffee.plugins.src %>',
           'client/lib/**/*.coffee'
         ],
-        tasks: ['browserify', 'coffee']
+        tasks: ['coffee', 'browserify']
       }
     }
   });
 
-  grunt.registerTask('build', ['browserify', 'coffee']);
+  grunt.registerTask('build', ['coffee', 'browserify']);
   grunt.registerTask('default', ['build']);
 
 };
