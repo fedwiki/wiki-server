@@ -4,6 +4,17 @@
   "bin": {
     "wiki": "./bin/server.js"
   },
+  "author": {
+    "name": "Ward Cunningham",
+    "email": "ward@c2.com",
+    "url": "http://ward.fed.wiki.org"
+  },
+  "contributors": [
+    { "name": "Nick Niemeir",
+      "email": "nick.niemeir@gmail.com",
+      "url": "http://nrn.io"
+    }
+  ],
   "dependencies": {
     "coffee-script": "*",
     "express": "*",
