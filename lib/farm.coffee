@@ -31,6 +31,7 @@ module.exports = exports = (argv) ->
       incHost = req.headers.host
     else
       return
+    
     # If the host starts with "www." treat it the same as if it didn't
     if incHost[0..3] is "www."
       incHost = incHost[4..]
@@ -46,9 +47,9 @@ module.exports = exports = (argv) ->
         newargv[key] = value
       newargv.p = hosts[incHost]
       newargv.d = if argv.d
-        path.join(argv.d, incHost)
+        path.join(argv.d, incHost.split(':')[0])
       else
-        path.join(argv.r or path.join(__dirname, '..', '..', '..'), 'data', incHost)
+        path.join(argv.r or path.join(__dirname, '..', '..', '..'), 'data', incHost.split(':')[0])
       newargv.u = "http://#{incHost}"
       # Create a new server, add it to the list of servers, and
       # once it's ready send the request to it.
