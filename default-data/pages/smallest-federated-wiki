@@ -1,0 +1,123 @@
+{
+  "title": "Smallest Federated Wiki",
+  "story": [
+    {
+      "id": "48d39ab8cd72a394",
+      "type": "paragraph",
+      "text": "Our new wiki innovates three ways. It shares through federation, composes by refactoring and wraps data with visualization. Follow our open development on [https://github.com/WardCunningham/wiki GitHub] or just watch our work in progress videos here."
+    },
+    {
+      "id": "48d39ab8cd72a191",
+      "type": "paragraph",
+      "text": "<iframe width=\"400\" height=\"250\" frameborder=\"0\" src=\"http://player.vimeo.com/video/27671065?title=0&byline=0&portrait=0\" style=\"-moz-box-shadow: 5px 8px 10px 5px #888;-webkit-box-shadow: 5px 8px 10px 5px #888;box-shadow: 5px 8px 10px 5px #888;\"></iframe>\n\n<p>\nWe introduce the parts of a Federated Wiki page. The \"story\" is a collection of paragraphs and paragraph like items. The \"journal\" collects story edits. Should you take my page and edit it as yours, I can see what you've done and may decide to take your edits as my own.\n\n</p>"
+    },
+    {
+      "id": "48d39ab8cd74a391",
+      "type": "paragraph",
+      "text": "<iframe width=\"400\" height=\"250\" frameborder=\"0\" src=\"http://player.vimeo.com/video/27671347?title=0&byline=0&portrait=0\" style=\"-moz-box-shadow: 5px 8px 10px 5px #888;-webkit-box-shadow: 5px 8px 10px 5px #888;box-shadow: 5px 8px 10px 5px #888;\"></iframe>\n\n<p>\nWe show how drag-and-drop between federated wiki pages creates a new model for sharing. A simple JSON model of the page makes this all straightforward.\n</p>"
+    },
+    {
+      "id": "48d39ab8cc74a381",
+      "type": "paragraph",
+      "text": "<iframe width=\"400\" height=\"250\" frameborder=\"0\" src=\"http://player.vimeo.com/video/27673743?title=0&byline=0&portrait=0\" style=\"-moz-box-shadow: 5px 8px 10px 5px #888;-webkit-box-shadow: 5px 8px 10px 5px #888;box-shadow: 5px 8px 10px 5px #888;\"></iframe>\n\n<p>\nWe explore how a federated wiki's page elements get converted to HTML. The conversion happens on the client side. Coffeescript code uses the type of each story item to retrieve \"emit\" and \"bind\" functions. Emit creates the HTML DOM objects while bind connects them up to jQuery.\n</p>\n"
+    },
+    {
+      "type": "paragraph",
+      "id": "36cf51489ff5e06d",
+      "text": "These have been the first of several dozen videos we've created over the years. We have more, including videos of conference presentations, organized chronologically in a separate [http://wardcunningham.github.com website]"
+    }
+  ],
+  "journal": [
+    {
+      "type": "create",
+      "item": {
+        "title": "Smallest Federated Wiki"
+      },
+      "date": 1375574936223
+    },
+    {
+      "type": "add",
+      "item": {
+        "id": "48d39ab8cd72a394",
+        "type": "paragraph",
+        "text": "Our new wiki innovates three ways. It shares through federation, composes by refactoring and wraps data with visualization. Follow our open development on GitHub or just watch our work in progress videos here."
+      },
+      "id": "48d39ab8cd72a394",
+      "date": 1375575009205
+    },
+    {
+      "type": "add",
+      "item": {
+        "id": "48d39ab8cd72a191",
+        "type": "paragraph",
+        "text": "<iframe width=\"400\" height=\"250\" frameborder=\"0\" src=\"http://player.vimeo.com/video/27671065?title=0&byline=0&portrait=0\" style=\"-moz-box-shadow: 5px 8px 10px 5px #888;-webkit-box-shadow: 5px 8px 10px 5px #888;box-shadow: 5px 8px 10px 5px #888;\"></iframe>\n\n<p>\nWe introduce the parts of a Federated Wiki page. The \"story\" is a collection of paragraphs and paragraph like items. The \"journal\" collects story edits. Should you take my page and edit it as yours, I can see what you've done and may decide to take your edits as my own.\n\n</p>"
+      },
+      "after": "48d39ab8cd72a394",
+      "id": "48d39ab8cd72a191",
+      "date": 1375575059157
+    },
+    {
+      "type": "add",
+      "item": {
+        "id": "48d39ab8cd74a391",
+        "type": "paragraph",
+        "text": "<iframe width=\"400\" height=\"250\" frameborder=\"0\" src=\"http://player.vimeo.com/video/27671347?title=0&byline=0&portrait=0\" style=\"-moz-box-shadow: 5px 8px 10px 5px #888;-webkit-box-shadow: 5px 8px 10px 5px #888;box-shadow: 5px 8px 10px 5px #888;\"></iframe>\n\n<p>\nWe show how drag-and-drop between federated wiki pages creates a new model for sharing. A simple JSON model of the page makes this all straightforward.\n</p>"
+      },
+      "after": "48d39ab8cd72a191",
+      "id": "48d39ab8cd74a391",
+      "date": 1375575075285
+    },
+    {
+      "type": "add",
+      "item": {
+        "id": "48d39ab8cc74a381",
+        "type": "paragraph",
+        "text": "<iframe width=\"400\" height=\"250\" frameborder=\"0\" src=\"http://player.vimeo.com/video/27673743?title=0&byline=0&portrait=0\" style=\"-moz-box-shadow: 5px 8px 10px 5px #888;-webkit-box-shadow: 5px 8px 10px 5px #888;box-shadow: 5px 8px 10px 5px #888;\"></iframe>\n\n<p>\nWe explore how a federated wiki's page elements get converted to HTML. The conversion happens on the client side. Coffeescript code uses the type of each story item to retrieve \"emit\" and \"bind\" functions. Emit creates the HTML DOM objects while bind connects them up to jQuery.\n</p>\n"
+      },
+      "after": "48d39ab8cd74a391",
+      "id": "48d39ab8cc74a381",
+      "date": 1375575085071
+    },
+    {
+      "type": "edit",
+      "id": "48d39ab8cd72a394",
+      "item": {
+        "id": "48d39ab8cd72a394",
+        "type": "paragraph",
+        "text": "Our new wiki innovates three ways. It shares through federation, composes by refactoring and wraps data with visualization. Follow our open development on [GitHub or just watch our work in progress videos here."
+      },
+      "date": 1375575154049
+    },
+    {
+      "type": "edit",
+      "id": "48d39ab8cd72a394",
+      "item": {
+        "id": "48d39ab8cd72a394",
+        "type": "paragraph",
+        "text": "Our new wiki innovates three ways. It shares through federation, composes by refactoring and wraps data with visualization. Follow our open development on [https://github.com/WardCunningham/wiki GitHub] or just watch our work in progress videos here."
+      },
+      "date": 1375575183516
+    },
+    {
+      "item": {
+        "type": "paragraph",
+        "id": "36cf51489ff5e06d",
+        "text": ""
+      },
+      "id": "36cf51489ff5e06d",
+      "type": "add",
+      "after": "48d39ab8cc74a381",
+      "date": 1375575219734
+    },
+    {
+      "type": "edit",
+      "id": "36cf51489ff5e06d",
+      "item": {
+        "type": "paragraph",
+        "id": "36cf51489ff5e06d",
+        "text": "These have been the first of several dozen videos we've created over the years. We have more, including videos of conference presentations, organized chronologically in a separate [http://wardcunningham.github.com website]"
+      },
+      "date": 1375575406281
+    }
+  ]
+}

@@ -12,15 +12,23 @@ Our goal in this fork is two fold.
 How to Install and Launch
 =========================
 
-To launch on localhost:3000 with pages stored in ./data/pages
-
-	npm install wiki
-	npm start
-
-To install globally and specify launch specifics
+To install and launch on localhost:3000
 
 	npm install -g wiki
+	wiki
+
+To launch with on port 8080 with pages in /tmp/wiki8080
+
 	wiki -p 8080 -d /tmp/wiki8080
+
+To build from source and launch on localhost:3000
+
+	git clone https://github.com/WardCunningham/wiki
+	cd wiki
+	npm install
+	grunt build
+	npm start
+
 
 How to Participate
 ==================
