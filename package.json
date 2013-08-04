@@ -1,5 +1,6 @@
 {
   "name": "wiki",
+  "description": "A Federated Wiki Server",
   "version": "0.0.1",
   "bin": {
     "wiki": "./bin/server.js"
