@@ -37,8 +37,8 @@
     "coffeeify": "*"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
-    "start": "./bin/server.js"
+    "test": "mocha",
+    "start": "node bin/server.js"
   },
   "devDependencies": {
     "docco": "~0.3",
