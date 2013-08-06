@@ -21,11 +21,8 @@
     "express": "*",
     "mkdirp": "*",
     "optimist": "*",
-    "passport": "*",
-    "passport-openid": "*",
     "hbs": "*",
     "bouncy": "*",
-    "ws": "*",
     "event-stream": "*",
     "JSONStream": "*",
     "async": "*",
@@ -33,14 +30,14 @@
     "glob": "*",
     "flates": "0.0.5",
     "qs": "0.6.5",
-    "underscore": "*",
-    "coffeeify": "*"
+    "underscore": "*"
   },
   "scripts": {
     "test": "mocha",
     "start": "node bin/server.js"
   },
   "devDependencies": {
+    "coffeeify": "*",
     "docco": "~0.3",
     "mocha": "*",
     "should": "*",
@@ -52,6 +49,7 @@
     "grunt-contrib-watch": "~0.4.4"
   },
   "optionalDependencies": {
+    "ws": "*",
     "level": "*"
   },
   "engines": {
