@@ -60,12 +60,17 @@ argv = optimist
     alias     : 'conf'
     describe  : 'Optional config file.'
   )
+  .options('version',
+    alias     : 'v'
+    describe  : 'Optional config file.'
+  )
   .argv
 
 config = cc(argv,
   argv.config,
+  'config.json',
+  path.join(__dirname, '..', 'config.json'),
   cc.env('wiki_'),
-  cc.find('config.json'),
     F: 40000
     p: 3000
     r: path.join(__dirname, '..')
@@ -75,6 +80,8 @@ config = cc(argv,
 # If h/help is set print the generated help message and exit.
 if argv.h
   optimist.showHelp()
+else if argv.v
+  console.log('wiki version ' + require('../package').version)
 # If f/farm is set call../lib/farm.coffee with argv object, else call
 # ../lib/server.coffee with argv object.
 else if argv.test
