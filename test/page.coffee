@@ -1,7 +1,7 @@
 path = require('path')
 random = require('../lib/random_id')
 testid = random()
-argv = require('../lib/defaultargs.coffee')({d: path.join('/tmp', 'sfwtests', testid), r: path.join(__dirname, '..')})
+argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), root: path.join(__dirname, '..')})
 page = require('../lib/page.coffee')(argv)
 fs = require('fs')
 
