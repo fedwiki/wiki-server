@@ -29,6 +29,22 @@ To build from source and launch on localhost:3000
 	grunt build
 	npm start
 
+Options
+=======
+
+Options for the server can be passed in many ways:
+
+* As command line flags
+* As a configuration JSON file specified with --config
+* As a config.json file in the root folder or cwd.
+* As env vars prefixed with `wiki_`
+
+Higher in the list takes precedence.
+The server will then try to guess all unspecified options.
+
+You can also switch datastores to leveldb from flatfiles by
+switching require('./page') to require('./leveldb') in lib/server.js.
+
 
 How to Participate
 ==================

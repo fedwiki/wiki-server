@@ -17,7 +17,7 @@ module.exports = exports = (argv) ->
     # Start port as farm port -1 so it returns the original farm
     # port the first time it is used.
     # TODO: Call out to the os to make sure we return an open and valid port.
-    port = argv.F - 1
+    port = argv.farmPort - 1
     -> port += 1
 
   # Bouncy watches for incoming requests on the listen port at the bottom,
@@ -45,16 +45,16 @@ module.exports = exports = (argv) ->
       newargv = {}
       for key, value of argv
         newargv[key] = value
-      newargv.p = hosts[incHost]
-      newargv.d = if argv.d
-        path.join(argv.d, incHost.split(':')[0])
+      newargv.port = hosts[incHost]
+      newargv.data = if argv.data
+        path.join(argv.data, incHost.split(':')[0])
       else
-        path.join(argv.r or path.join(__dirname, '..', '..', '..'), 'data', incHost.split(':')[0])
-      newargv.u = "http://#{incHost}"
+        path.join(argv.root or path.join(__dirname, '..', '..', '..'), 'data', incHost.split(':')[0])
+      newargv.url = "http://#{incHost}"
       # Create a new server, add it to the list of servers, and
       # once it's ready send the request to it.
       local = server(newargv)
       runningServers.push(local)
       local.once "listening", ->
         bounce(hosts[incHost])
-  ).listen(argv.p)
+  ).listen(argv.port)

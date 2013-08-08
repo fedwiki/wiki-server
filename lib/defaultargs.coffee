@@ -5,21 +5,21 @@ path = require 'path'
 
 module.exports = (argv) ->
   argv or= {}
-  argv.r or= __dirname
-  argv.F or= 40000
-  argv.p or= 3000
-  argv.s or= 'welcome-visitors'
-  argv.d or= path.join(argv.r, 'data')
-  argv.c or= path.join(argv.r, 'client')
-  argv.db or= path.join(argv.d, 'pages')
-  argv.status or= path.join(argv.d, 'status')
-  argv.u or= 'http://localhost' + (':' + argv.p) unless argv.p is 80
+  argv.root or= __dirname
+  argv.farmPort or= 40000
+  argv.port or= 3000
+  argv.home or= 'welcome-visitors'
+  argv.data or= path.join(argv.root, 'data')
+  argv.client or= path.join(argv.root, 'client')
+  argv.db or= path.join(argv.data, 'pages')
+  argv.status or= path.join(argv.data, 'status')
+  argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
   argv.id or= path.join(argv.status, 'persona.identity')
 
   #resolve all relative paths
-  argv.r = path.resolve(argv.r)
-  argv.d = path.resolve(argv.d)
-  argv.c = path.resolve(argv.c)
+  argv.root = path.resolve(argv.root)
+  argv.data = path.resolve(argv.data)
+  argv.client = path.resolve(argv.client)
   argv.db = path.resolve(argv.db)
   argv.status = path.resolve(argv.status)
   argv.id = path.resolve(argv.id)

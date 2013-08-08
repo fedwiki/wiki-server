@@ -57,12 +57,12 @@ module.exports = exports = (argv) ->
         if exists
           load_parse(loc, cb)
         else
-          defloc = path.join(argv.r, 'default-data', 'pages', file)
+          defloc = path.join(argv.root, 'default-data', 'pages', file)
           fs.exists(defloc, (exists) ->
             if exists
               load_parse(defloc, cb)
             else
-              plugindir = path.join(argv.r, 'client', 'plugins')
+              plugindir = path.join(argv.root, 'client', 'plugins')
               fs.readdir(plugindir , (e, plugins) ->
                 if e then return cb(e)
                 giveUp = do ->

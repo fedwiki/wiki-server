@@ -5,7 +5,7 @@ path = require 'path'
 
 module.exports = exports = (argv) ->
 
-	pluginsdir = path.join argv.c, 'plugins'
+	pluginsdir = path.join argv.client, 'plugins'
 	plugins = {}
 
 	# http://stackoverflow.com/questions/10914751/loading-node-js-modules-dynamically-based-on-route
