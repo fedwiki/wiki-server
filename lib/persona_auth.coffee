@@ -21,14 +21,9 @@ module.exports = exports = (log, loga, argv) ->
         res.send "FAIL", 401  unless sent
         sent = true
 
-      if req.headers?.host
-        reqHost = req.headers.host
-      else
-        reqHost = argv.u
-
       postBody = qs.stringify(
         assertion: req.body.assertion
-        audience: reqHost
+        audience: argv.url
       )
 
       opts =
