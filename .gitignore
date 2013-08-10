@@ -4,6 +4,7 @@
 .idea/
 .sass-cache
 .rvmrc
+config.json
 /data
 /spec/data
 /client/client.js

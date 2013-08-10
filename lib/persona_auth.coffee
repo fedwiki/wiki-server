@@ -23,7 +23,7 @@ module.exports = exports = (log, loga, argv) ->
 
       postBody = qs.stringify(
         assertion: req.body.assertion
-        audience: argv.u
+        audience: argv.url
       )
 
       opts =

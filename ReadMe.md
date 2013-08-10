@@ -26,6 +26,19 @@ This package consists of client and server code as well as a number of sample pl
     $ grunt build
     $ npm start
 
+Options for the server can be passed in many ways:
+
+* As command line flags (run bin/server.js)
+* As a configuration JSON file specified with --config
+* As a config.json file in the root folder or cwd.
+* As env vars prefixed with `wiki_`
+
+Higher in the list takes precedence.
+The server will then try to guess all unspecified options.
+
+You can also switch datastores to leveldb from flatfiles by
+switching require('./page') to require('./leveldb') in lib/server.js.
+
 While you're coding, you can also watch for files to change. This will rebuild the client each time you save a file.
 
     $ grunt watch

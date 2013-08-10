@@ -179,7 +179,7 @@ module.exports = exports = (argv) ->
     app.use(persona.authenticate_session(getOwner))
     app.use(errorHandler)
     app.use(app.router)
-    app.use(express.static(argv.c))
+    app.use(express.static(argv.client))
 
   ##### Set up standard environments. #####
   # In dev mode turn on console.log debugging as well as showing the stack on err.
@@ -210,7 +210,7 @@ module.exports = exports = (argv) ->
 
   ##### Redirects #####
   # Common redirects that may get used throughout the routes.
-  index = argv.s + '.html'
+  index = argv.home + '.html'
 
   oops = '/oops'
 
@@ -272,7 +272,7 @@ module.exports = exports = (argv) ->
   app.get ///system/factories.json///, (req, res) ->
     res.status(200)
     res.header('Content-Type', 'application/json')
-    glob path.join(argv.c, 'plugins', '*', 'factory.json'), (e, files) ->
+    glob path.join(argv.client, 'plugins', '*', 'factory.json'), (e, files) ->
       if e then return res.e(e)
       files = files.map (file) ->
         return fs.createReadStream(file).on('error', res.e).pipe(JSONStream.parse())
@@ -346,7 +346,7 @@ module.exports = exports = (argv) ->
       res.send(files)
 
   app.get '/system/plugins.json', cors, (req, res) ->
-    fs.readdir path.join(argv.c, 'plugins'), (e, files) ->
+    fs.readdir path.join(argv.client, 'plugins'), (e, files) ->
       if e then return res.e e
       res.send(files)
 
@@ -463,9 +463,9 @@ module.exports = exports = (argv) ->
   setOwner null, (e) ->
     # Throw if you can't find the initial owner
     if e then throw e
-    server = app.listen argv.p, argv.o, ->
+    server = app.listen argv.port, argv.host, ->
       app.emit 'listening'
-      loga "Smallest Federated Wiki server listening on", argv.p, "in mode:", app.settings.env
+      loga "Smallest Federated Wiki server listening on", argv.port, "in mode:", app.settings.env
     ### Plugins ###
     # Should replace most WebSocketServers below.
     plugins = pluginsFactory(argv)
