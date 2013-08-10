@@ -14,7 +14,7 @@
     {
       "type": "factory",
       "id": "63ad2e58eecdd9e5",
-      "prompt": "Create a page about yourself. Start by making a link to that page right here. Double-click the gray box below. That opens an editor. Type your name enclosed in double square brackets. Then press Command/ALT-S to save."
+      "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press Command/ALT-S to save.<br><br>Make all pages here yours alone with the login below."
     },
     {
       "type": "paragraph",
@@ -24,12 +24,7 @@
     {
       "type": "factory",
       "id": "05e2fa92643677ca",
-      "prompt": "Create a page about things you do on this wiki. Double-click the gray box below. Type a descriptive name of something you will be writing about. Enclose it in square brackets. Then press Command/ALT-S to save."
-    },
-    {
-      "type": "paragraph",
-      "id": "0cbb4ef5f5d7e472",
-      "text": "Look for the <i>claim</i> button below this page. If you have your own OpenID you can use it to claim these pages so that only you can edit them. If you have a Google account you can use that too. Press the (G) button. Press the (Y) button to use your Yahoo account. You get the idea."
+      "prompt": "Create pages about things you do on this wiki. Type a descriptive name of something you will be writing about. Enclose it in square brackets. Then press Command/ALT-S to save."
     },
     {
       "type": "paragraph",
@@ -331,6 +326,11 @@
         "text": "You can edit your copy of these pages. Press [+] to add more writing spaces. Read [[How to Wiki]] for more ideas. Follow [[Recent Changes]] here and nearby."
       },
       "date": 1361752498310
+    },
+    {
+      "type": "remove",
+      "id": "0cbb4ef5f5d7e472",
+      "date": 1376164176294
     }
   ]
 }
