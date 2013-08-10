@@ -1,60 +1,62 @@
-Federated Wiki
-==============
+# Wiki
 
-This wiki has been extracted from the two year old
-GitHub project [Smallest-Federated-Wiki](https://github.com/WardCunningham/Smallest-Federated-Wiki).
+Wiki is [define the scope of the project in terms of end-user value, right here in the first sentence]. What is a federated wiki, and why does federation matter? [The concept of federation needs a clear, concise explanation. This is the secret sauce that makes SFW worth using. How does someone who's never heard of SFW come to understand it?].
 
-Our goal in this fork is two fold.
-
-1. Publish the server as an npm package
-2. Factor the code into smaller, tested npm packages
-
-How to Install and Launch
-=========================
-
-To install and launch on localhost:3000
-
-	npm install -g wiki
-	wiki
-
-To launch with on port 8080 with pages in /tmp/wiki8080
-
-	wiki -p 8080 -d /tmp/wiki8080
-
-To build from source and launch on localhost:3000
-
-	git clone https://github.com/WardCunningham/wiki
-	cd wiki
-	npm install
-	grunt build
-	npm start
+Over the past two years, the [Smallest Federated Wiki](https://github.com/WardCunningham/Smallest-Federated-Wiki) project has explored the concept and implementation details of the federated wiki concept. This code has been extracted from that project, with the goal of releasing a polished, easy to deploy package. 
 
 
-How to Participate
-==================
+### Using Wiki
 
-First you will want to get caught up with some project history. We've been recording screencast videos for as long as we've had something to demo. You should watch them all. They're short:
+Learn [how to wiki](http://fed.wiki.org/view/how-to-wiki) by reading [fed.wiki.org](http://fed.wiki.org/view/welcome-visitors)
 
-* http://wardcunningham.github.com
+### Running your own Wiki
 
-Then you may want to read through the end-user how-to documentation which is itself written in a federated wiki:
+The quickest way to set up a wiki on your local machine is to install it globally with `npm`:
 
-* http://fed.wiki.org/how-to-wiki.html
+    $ npm install -g wiki
+    $ wiki
 
-Code contributions are always welcome. We're developing using the `fork and pull request` model supported so well by GitHub. Please read through their excellent help to make sure you know what's expected of you:
+You can also:
+* [deploy Wiki to your own server](#)
+* [deploy Wiki to a Nodejs host](#)
 
-* http://help.github.com/send-pull-requests/
 
-You are welcome to join our developer IRC channel, #fedwiki on freenode. We also meet for a google video chat every Wednesday morning at 10am Pacific time.
 
-* http://bit.ly/SFWhangout
+### Developing Wiki
 
-We're proud to be forked frequently. Go ahead and fork this project now. We're glad to have you.
+Read the [developer guide](#), then get the code, build the client, and start the server:
 
-License
-=======
+    $ git clone https://github.com/WardCunningham/wiki.git
+    $ cd wiki
+    $ grunt build
+    $ npm start
 
-You may use the Smallest Federated Wiki under either the
-[MIT License](https://github.com/WardCunningham/Smallest-Federated-Wiki/blob/master/mit-license.txt) or the
-[GNU General Public License](https://github.com/WardCunningham/Smallest-Federated-Wiki/blob/master/gpl-license.txt) (GPL) Version 2.
+While you're coding, you can also watch for files to change. This will rebuild the client each time you save a file.
 
+    $ grunt watch
+
+Test the server-side code by running `$ grunt test`. 
+
+Test the client-side code by starting your wiki server with `$npm start` and opening [`http://localhost:3000/runtests.html`](http://localhost:3000/runtests.html)
+
+
+
+### How to Participate
+
+* Join the developer IRC channel, `#fedwiki` on freenode
+* Stop by the [Google Hangout](http://bit.ly/SFWhangout) at 10am Pacific every Wednesday
+* Submit [Issues](https://github.com/WardCunningham/wiki/issues) 
+* Fork, commit and submit [Pull Requests](https://github.com/WardCunningham/wiki/pulls)
+
+
+### Roadmap
+
+
+### Changelog
+
+
+### License
+
+You may use the Wiki under either the
+[MIT License](https://github.com/WardCunningham/wiki/blob/master/mit-license.txt) or the
+[GNU General Public License](https://github.com/WardCunningham/wiki/blob/master/gpl-license.txt) (GPL) Version 2.
