@@ -16,15 +16,10 @@ The quickest way to set up a wiki on your local machine is to install it globall
     $ npm install -g wiki
     $ wiki
 
-You can also:
-* [deploy Wiki to your own server](#)
-* [deploy Wiki to a Nodejs host](#)
-
-
 
 ### Developing Wiki
 
-Read the [developer guide](#), then get the code, build the client, and start the server:
+This package consists of client and server code as well as a number of sample plugins that create special purpose markups that can be used on a paragraph by paragraph basis. Get the code, build the client, and start the server:
 
     $ git clone https://github.com/WardCunningham/wiki.git
     $ cd wiki
@@ -47,12 +42,6 @@ Test the client-side code by starting your wiki server with `$npm start` and ope
 * Stop by the [Google Hangout](http://bit.ly/SFWhangout) at 10am Pacific every Wednesday
 * Submit [Issues](https://github.com/WardCunningham/wiki/issues) 
 * Fork, commit and submit [Pull Requests](https://github.com/WardCunningham/wiki/pulls)
-
-
-### Roadmap
-
-
-### Changelog
 
 
 ### License
