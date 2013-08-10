@@ -1,6 +1,6 @@
 # Wiki
 
-Wiki is [define the scope of the project in terms of end-user value, right here in the first sentence]. What is a federated wiki, and why does federation matter? [The concept of federation needs a clear, concise explanation. This is the secret sauce that makes SFW worth using. How does someone who's never heard of SFW come to understand it?].
+Wiki is a single-page application for browsing and editing content distributed throughout a federation of similar creative-commons licensed sites. What is a federated wiki, and why does federation matter? Authors thoughout the federation pull content towards themselves as they edit. With this package authors publish their own edits back to the federation as they edit.
 
 Over the past two years, the [Smallest Federated Wiki](https://github.com/WardCunningham/Smallest-Federated-Wiki) project has explored the concept and implementation details of the federated wiki concept. This code has been extracted from that project, with the goal of releasing a polished, easy to deploy package. 
 
