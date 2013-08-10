@@ -5,16 +5,33 @@ Wiki is a single-page application for browsing and editing content distributed t
 Over the past two years, the [Smallest Federated Wiki](https://github.com/WardCunningham/Smallest-Federated-Wiki) project has explored the concept and implementation details of the federated wiki concept. This code has been extracted from that project, with the goal of releasing a polished, easy to deploy package. 
 
 
-### Using Wiki
+### Using Federated Wiki
 
 Learn [how to wiki](http://fed.wiki.org/view/how-to-wiki) by reading [fed.wiki.org](http://fed.wiki.org/view/welcome-visitors)
 
-### Running your own Wiki
+### Running your own Server
 
-The quickest way to set up a wiki on your local machine is to install it globally with `npm`:
+The quickest way to set up wiki on your local machine is to install it globally with `npm`:
 
     $ npm install -g wiki
     $ wiki
+
+Visit localhost:3000 to see your wiki. If you choose a host visible to the internet then other in the federation can use your work.
+
+### Server Options
+
+Options for the server can be passed in many ways:
+
+* As command line flags
+* As a configuration JSON file specified with --config
+* As a config.json file in the root folder or cwd.
+* As env vars prefixed with `wiki_`
+
+Higher in the list takes precedence.
+The server will then try to guess all unspecified options.
+
+You can also switch datastores to leveldb from flatfiles by
+switching require('./page') to require('./leveldb') in lib/server.js.
 
 
 ### Developing Wiki
@@ -25,19 +42,6 @@ This package consists of client and server code as well as a number of sample pl
     $ cd wiki
     $ grunt build
     $ npm start
-
-Options for the server can be passed in many ways:
-
-* As command line flags (run bin/server.js)
-* As a configuration JSON file specified with --config
-* As a config.json file in the root folder or cwd.
-* As env vars prefixed with `wiki_`
-
-Higher in the list takes precedence.
-The server will then try to guess all unspecified options.
-
-You can also switch datastores to leveldb from flatfiles by
-switching require('./page') to require('./leveldb') in lib/server.js.
 
 While you're coding, you can also watch for files to change. This will rebuild the client each time you save a file.
 
