@@ -230,11 +230,15 @@ module.exports = exports = (argv) ->
       pages: []
       authenticated: is_authenticated(req)
       user: req.session.email
+      ownedBy: if owner
+        'Site owned by ' + owner.substr(0, owner.indexOf('@'))
+      else
+        ''
       loginStatus: if owner
         if req.isAuthenticated()
           'logout'
-        else 'login'
-      else 'claim'
+        else 'Sign in'
+      else 'Claim with'
     }
     for page, idx in urlPages
       if urlLocs[idx] is 'view'
@@ -254,18 +258,22 @@ module.exports = exports = (argv) ->
       if status is 404
         return res.send page, status
       info = {
-      	pages: [
-      	  page: file
-      	  generated: """data-server-generated=true"""
-      	  story: wiki.resolveLinks(render(page))
-      	]
-      	user: req.session.email
-      	authenticated: is_authenticated(req)
-      	loginStatus: if owner
-      	  if req.isAuthenticated()
-      	    'logout'
-      	  else 'login'
-      	else 'claim'
+        pages: [
+          page: file
+          generated: """data-server-generated=true"""
+          story: wiki.resolveLinks(render(page))
+        ]
+        user: req.session.email
+        authenticated: is_authenticated(req)
+        ownedBy: if owner
+          'Site owned by ' + owner.substr(0, owner.indexOf('@'))
+        else
+          ''
+        loginStatus: if owner
+          if req.isAuthenticated()
+            'logout'
+          else 'Sign in'
+        else 'Claim with'
       }
       res.render('static.html', info)
 

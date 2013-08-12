@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js">
+<html class='no-js'>
   <head>
     <title>Smallest Federated Wiki</title>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
@@ -25,25 +25,32 @@
       {{/pages}}
     </section>
     <footer class={{loginStatus}}>
+      
+      <div id='site-owner' class='footer-item'>{{ownedBy}}</div>
+
+      {{#authenticated}}
+      <a href='#' class='persona-button' id='persona-logout-btn'><span>Sign out</span></a>
+      {{/authenticated}}
+      {{^authenticated}}
+      <a href='#' class='persona-button' id='persona-login-btn'><span>{{loginStatus}} with your Email</span></a>
+      {{/authenticated}}
+      
       <span>
         Search:
         <input class='search' name='search' type='text'>
       </span>
-      <div id="user-email" class="footer-item"></div>
-      <a href="#" class="persona-button" id="persona-login-btn"><span>Sign in with your Email</span></a>
-      <!-- <img src="/images/email_sign_in_blue.png" id="persona-login-btn" alt="Sign in with your Email" /> -->
-      <button id="persona-logout-btn" class="footer-item">Sign out</button>
+
       <span class='neighborhood'></span>
     </footer>
   <script>
-var owner =
+var loggedInUser =
   {{#authenticated}}
     '{{user}}';
   {{/authenticated}}
   {{^authenticated}}
     null;
   {{/authenticated}}
-wiki.persona(owner);
+wiki.persona(loggedInUser);
   </script>
   </body>
 </html>
