@@ -234,11 +234,11 @@ module.exports = exports = (argv) ->
         'Site owned by ' + owner.substr(0, owner.indexOf('@'))
       else
         ''
-      loginStatus: if owner
+      loginBtnTxt: if owner
         if req.isAuthenticated()
-          'logout'
-        else 'Sign in'
-      else 'Claim with'
+          'Sign out'
+        else 'Sign in with your Email'
+      else 'Claim with your Email'
     }
     for page, idx in urlPages
       if urlLocs[idx] is 'view'
@@ -269,11 +269,11 @@ module.exports = exports = (argv) ->
           'Site owned by ' + owner.substr(0, owner.indexOf('@'))
         else
           ''
-        loginStatus: if owner
+        loginBtnTxt: if owner
           if req.isAuthenticated()
-            'logout'
-          else 'Sign in'
-        else 'Claim with'
+            'Sign out'
+          else 'Sign in with your Email'
+        else 'Claim with your Email'
       }
       res.render('static.html', info)
 

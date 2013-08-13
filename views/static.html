@@ -24,15 +24,15 @@
       <div class='page' id={{page}} {{origin}} {{generated}}>{{{story}}}</div>
       {{/pages}}
     </section>
-    <footer class={{loginStatus}}>
+    <footer>
       
       <div id='site-owner' class='footer-item'>{{ownedBy}}</div>
 
       {{#authenticated}}
-      <a href='#' class='persona-button' id='persona-logout-btn'><span>Sign out</span></a>
+      <a href='#' class='persona-button' id='persona-logout-btn'><span>{{loginBtnTxt}}</span></a>
       {{/authenticated}}
       {{^authenticated}}
-      <a href='#' class='persona-button' id='persona-login-btn'><span>{{loginStatus}} with your Email</span></a>
+      <a href='#' class='persona-button' id='persona-login-btn'><span>{{loginBtnTxt}}</span></a>
       {{/authenticated}}
       
       <span>
