@@ -21,9 +21,14 @@ module.exports = exports = (log, loga, argv) ->
         res.send "FAIL", 401  unless sent
         sent = true
 
+      if argv.url == ''
+        incHost = 'http://' + req.headers.host
+      else
+        incHost = argv.url
+
       postBody = qs.stringify(
         assertion: req.body.assertion
-        audience: argv.u
+        audience: incHost
       )
 
       opts =
@@ -31,6 +36,7 @@ module.exports = exports = (log, loga, argv) ->
         port: 443
         path: "/verify"
         method: "POST"
+        rejectUnauthorized: true
         headers:
           "Content-Length": postBody.length
           "Content-Type": "application/x-www-form-urlencoded"
