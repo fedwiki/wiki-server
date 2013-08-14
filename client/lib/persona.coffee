@@ -25,12 +25,13 @@ module.exports = (owner) ->
     onready: ->
       # It's safe to render the UI now, Persona and
       # the Wiki's notion of a session agree
+      
       if owner
-        $("#user-email").text(owner).show()
+        # $("#user-email").text(owner).show()
         $("#persona-login-btn").hide()
         $("#persona-logout-btn").show()
       else
-        $("#user-email").hide()
+        # $("#user-email").hide()
         $("#persona-login-btn").show()
         $("#persona-logout-btn").hide()
 
