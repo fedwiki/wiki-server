@@ -46,6 +46,9 @@ argv = optimist
   .options('id',
     describe  : 'Set the location of the open id file'
   )
+  .options('database',
+    describe  : 'JSON object for database config'
+  )
   .options('test',
     boolean   : true
     describe  : 'Set server to work with the rspec integration tests'
