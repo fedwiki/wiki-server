@@ -16,6 +16,11 @@ module.exports = (argv) ->
   argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
   argv.id or= path.join(argv.status, 'persona.identity')
 
+  if typeof(argv.database) is 'string'
+    argv.database = JSON.parse(argv.database)
+  argv.database or= {}
+  argv.database.type or= './page'
+
   #resolve all relative paths
   argv.root = path.resolve(argv.root)
   argv.data = path.resolve(argv.data)

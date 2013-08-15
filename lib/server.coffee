@@ -35,12 +35,6 @@ wiki = require '../client/lib/wiki'
 pluginsFactory = require './plugins'
 Persona = require './persona_auth'
 
-# pageFactory can be easily replaced here by requiring your own page handler
-# factory, which gets called with the argv object, and then has get and put
-# methods that accept the same arguments and callbacks.
-# Currently './page' and './leveldb' are provided.
-pageFactory = require './page'
-
 render = (page) ->
   return f.h1(
     f.a({href: '/', style: 'text-decoration: none'},
@@ -92,9 +86,8 @@ module.exports = exports = (argv) ->
         log "Allready fired", error
     next()
 
-  # Tell pagehandler where to find data, and default data.
-  app.pagehandler = pagehandler = pageFactory(argv)
-
+  # Require the database adapter and initialize it with options.
+  app.pagehandler = pagehandler = require(argv.database.type)(argv)
 
   #### Setting up Authentication ####
   # The owner of a server is simply the open id url that the wiki
