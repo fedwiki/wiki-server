@@ -11,7 +11,8 @@
     "url": "http://ward.fed.wiki.org"
   },
   "contributors": [
-    { "name": "Nick Niemeir",
+    {
+      "name": "Nick Niemeir",
       "email": "nick.niemeir@gmail.com",
       "url": "http://nrn.io"
     }
@@ -30,7 +31,8 @@
     "glob": "*",
     "flates": "0.0.5",
     "qs": "0.6.5",
-    "underscore": "*"
+    "underscore": "*",
+    "redis": "~0.8.4"
   },
   "scripts": {
     "test": "mocha",
