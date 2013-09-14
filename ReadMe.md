@@ -40,6 +40,7 @@ This package consists of client and server code as well as a number of sample pl
 
     $ git clone https://github.com/WardCunningham/wiki.git
     $ cd wiki
+    $ npm install
     $ grunt build
     $ npm start
 
