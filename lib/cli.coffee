@@ -90,6 +90,7 @@ else if argv.test
   console.log "WARNING: Server started in testing mode, other options ignored"
   server({port: 33333, data: path.join(argv.root, 'spec', 'data')})
 else if config.farm
+  console.log('Wiki starting in Farm mode, navigate to a specific server to sart it.')
   farm(config)
 else
   server(config)
