@@ -43,7 +43,7 @@
     "docco": "~0.3",
     "mocha": "*",
     "should": "*",
-    "sinon": "*",
+    "sinon": "1.7.1",
     "expect.js": "*",
     "grunt": "~0.4.1",
     "grunt-browserify": "~1.1.1",
