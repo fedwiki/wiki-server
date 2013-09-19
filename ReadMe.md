@@ -30,9 +30,31 @@ Options for the server can be passed in many ways:
 Higher in the list takes precedence.
 The server will then try to guess all unspecified options.
 
-You can also switch datastores to leveldb from flatfiles by
-switching require('./page') to require('./leveldb') in lib/server.js.
+#### Datastore options
 
+A number of datastores are supported. Use the --database and --data options to configure, or use the config.json.
+
+##### flatfiles (default)
+
+The default path to store page data is in a "default-data" subdirectory of the install directory. You can override this like so:
+
+    $ wiki --data FILESYSTEM_PATH
+
+##### redis
+
+The Redis connection arguments are specified as follows:
+
+    $ wiki --database '{"type": "redis", "host": "...", "port": nnn, "options": {...}}'
+
+The Redis datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
+
+##### leveldb
+
+The leveldb datastore uses JSON encoded leveldb format and is configured by providing a filesystem path:
+
+    $ wiki --database '{"type": "leveldb"}' --data FILESYSTEM_PATH
+
+The leveldb datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
 
 ### Developing Wiki
 
