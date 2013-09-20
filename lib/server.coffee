@@ -87,7 +87,8 @@ module.exports = exports = (argv) ->
     next()
 
   # Require the database adapter and initialize it with options.
-  app.pagehandler = pagehandler = require(argv.database.type)(argv)
+  database = require(path.join(__dirname,'..','lib',argv.database.type))
+  app.pagehandler = pagehandler = database(argv)
 
   #### Setting up Authentication ####
   # The owner of a server is simply the open id url that the wiki
