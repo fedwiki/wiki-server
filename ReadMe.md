@@ -40,6 +40,16 @@ The default path to store page data is in a "default-data" subdirectory of the i
 
     $ wiki --data FILESYSTEM_PATH
 
+##### mongodb
+
+The mongodb connection arguments are specified as follows:
+
+    $ wiki --database '{"type": "mongodb", "url": "...", "options": {...}}'
+
+For convenience the url will also be read from MONGO_URI, MONGOLAB_URI, or MONGOHQ_URL. This smooths the Heroku deployment process somewhat.
+
+The mongodb datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
+
 ##### redis
 
 The Redis connection arguments are specified as follows:
