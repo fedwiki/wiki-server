@@ -44,7 +44,7 @@ The default path to store page data is in a "default-data" subdirectory of the i
 
 The mongodb connection arguments are specified as follows:
 
-    $ wiki --database '{"type": "mongodb", "url": "...", "options": {...}}'
+    $ wiki --database '{"type": "./mongodb", "url": "...", "options": {...}}'
 
 For convenience the url will also be read from MONGO_URI, MONGOLAB_URI, or MONGOHQ_URL. This smooths the Heroku deployment process somewhat.
 
@@ -54,7 +54,7 @@ The mongodb datastore allows for a graceful upgrade path. If a page is not found
 
 The Redis connection arguments are specified as follows:
 
-    $ wiki --database '{"type": "redis", "host": "...", "port": nnn, "options": {...}}'
+    $ wiki --database '{"type": "./redis", "host": "...", "port": nnn, "options": {...}}'
 
 The Redis datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
 
@@ -62,7 +62,7 @@ The Redis datastore allows for a graceful upgrade path. If a page is not found i
 
 The leveldb datastore uses JSON encoded leveldb format and is configured by providing a filesystem path:
 
-    $ wiki --database '{"type": "leveldb"}' --data FILESYSTEM_PATH
+    $ wiki --database '{"type": "./leveldb"}' --data FILESYSTEM_PATH
 
 The leveldb datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
 
