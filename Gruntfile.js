@@ -13,7 +13,7 @@ module.exports = function (grunt) {
         }
       },
       testClient: {
-        src: ['client/testclient.coffee', 'client/plugins/*/test.coffee'],
+        src: ['client/testclient.coffee' ],// 'client/plugins/*/test.coffee'],
         dest: 'client/test/testclient.js',
         options: {
           transform: ['coffeeify'],
