@@ -11,7 +11,7 @@ mkdirp = require 'mkdirp'
 async = require 'async'
 
 random_id = require './random_id'
-synopsis = require '../client/lib/synopsis'
+synopsis = require 'wiki-client/lib/synopsis'
 
 # Export a function that generates a page handler
 # when called with options object.

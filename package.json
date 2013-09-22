@@ -32,6 +32,7 @@
     "flates": "0.0.5",
     "qs": "0.6.5",
     "underscore": "*",
+    "wiki-client": "*",
     "redis": "~0.8.4"
   },
   "scripts": {

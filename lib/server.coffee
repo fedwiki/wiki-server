@@ -31,7 +31,7 @@ f = require('flates')
 # Local files
 random = require './random_id'
 defargs = require './defaultargs'
-wiki = require '../client/lib/wiki'
+wiki = require 'wiki-client/lib/wiki'
 pluginsFactory = require './plugins'
 Persona = require './persona_auth'
 
