@@ -227,6 +227,11 @@ module.exports = exports = (argv) ->
         'Site owned by ' + owner.substr(0, owner.indexOf('@'))
       else
         ''
+      loginStatus: if owner
+        if req.isAuthenticated()
+          'logout'
+        else 'login'
+      else 'claim'
       loginBtnTxt: if owner
         if req.isAuthenticated()
           'Sign out'
@@ -262,6 +267,11 @@ module.exports = exports = (argv) ->
           'Site owned by ' + owner.substr(0, owner.indexOf('@'))
         else
           ''
+        loginStatus: if owner
+          if req.isAuthenticated()
+            'logout'
+          else 'login'
+        else 'claim'
         loginBtnTxt: if owner
           if req.isAuthenticated()
             'Sign out'
