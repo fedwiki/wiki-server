@@ -66,6 +66,14 @@ The leveldb datastore uses JSON encoded leveldb format and is configured by prov
 
 The leveldb datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
 
+### Running in the Cloud
+
+We're enthusiastic about hosting wiki on cloud platform services. There are many alternatives, each with its own strengths and 
+weaknesses. Here we list projects that document procedures for specific services. Look here for ideas about running 
+on your service or roll your own and contribute it here. 
+
+* [RedHat's OpenShift](https://github.com/paul90/wiki-openshift-quickstart/) by @paul90
+
 ### Developing Wiki
 
 This package consists of client and server code as well as a number of sample plugins that create special purpose markups that can be used on a paragraph by paragraph basis. Get the code, build the client, and start the server:
