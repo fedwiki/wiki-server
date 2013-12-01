@@ -4,6 +4,7 @@ Wiki is a single-page application for browsing and editing content distributed t
 
 Over the past two years, the [Smallest Federated Wiki](https://github.com/WardCunningham/Smallest-Federated-Wiki) project has explored the concept and implementation details of the federated wiki concept. This code has been extracted from that project, with the goal of releasing a polished, easy to deploy package. 
 
+// TODO: Review content in light of changes from refactor.
 
 ### Using Federated Wiki
 

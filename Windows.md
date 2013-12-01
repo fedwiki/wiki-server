@@ -1,6 +1,8 @@
 Windows Notes
 =============
 
+// TODO: Needs reviewing.
+
 These notes will help with installing and running the Smallest Federated Wiki on Windows.
 
 * [Install and Launch (Sinatra)](Windows.md#install-and-launch-sinatra)

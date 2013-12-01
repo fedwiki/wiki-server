@@ -3,6 +3,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
+/* NOTE: Client and Plugins are no longer here, so none of this is needed.  */
+/* TODO: Review if we still need grunt here. */
+/* IDEA: Use to run docco to produce github pages (probably replace docco...).
+
   grunt.initConfig({
     browserify: {
       client: {

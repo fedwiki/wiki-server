@@ -6,6 +6,7 @@
 fs = require 'fs'
 path = require 'path'
 events = require 'events'
+glob = require 'glob'
 
 mkdirp = require 'mkdirp'
 async = require 'async'
@@ -25,7 +26,10 @@ module.exports = exports = (argv) ->
       return cb(err) if err
       try 
         page = JSON.parse(data)
-        if m = loc.match /plugins\/(.+?)\/pages/
+        
+        # I think this is the correct change, not too sure if it works....
+        # need to workout what causes load_parse to get called to be able to check this.
+        if m = loc.match /wiki-plugin-(.+?)\/pages/
           page.plugin = m[1]
       catch e
         return cb(e)
@@ -62,8 +66,8 @@ module.exports = exports = (argv) ->
             if exists
               load_parse(defloc, cb)
             else
-              plugindir = path.join(argv.root, 'client', 'plugins')
-              fs.readdir(plugindir , (e, plugins) ->
+
+              glob "wiki-plugin-*/pages", {cwd: argv.packageDir}, (e, plugins) ->
                 if e then return cb(e)
                 giveUp = do ->
                   count = plugins.length
@@ -74,14 +78,14 @@ module.exports = exports = (argv) ->
 
                 for plugin in plugins
                   do ->
-                    pluginloc = path.join(plugindir, plugin, 'pages', file)
+                    pluginName = plugin.slice(12, -6)
+                    pluginloc = path.join(argv.packageDir, plugin, file)
                     fs.exists(pluginloc, (exists) ->
                       if exists
                         load_parse(pluginloc, cb)
                       else
                         giveUp()
                     )
-              )
           )
       )
     else
