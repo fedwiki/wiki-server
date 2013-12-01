@@ -340,3 +340,6 @@ textarea {
   opacity: 0.6;
   border-color: #eef2fe;
 }
+
+/* font size of jquery ui dialog */
+.ui-dialog{font-size:13px;}

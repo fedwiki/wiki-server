@@ -8,7 +8,7 @@ module.exports = exports = (log, loga, argv) ->
   persona.authenticate_session = (getOwner) ->
     (req, res, next) ->
       req.isAuthenticated = ->
-        log 'isAuthenticated? owner=', getOwner(), 'req.session.email=', req.session.email, getOwner() is req.session.email
+        # log 'isAuthenticated? owner=', getOwner(), 'req.session.email=', req.session.email, getOwner() is req.session.email
         if getOwner() == ''
             return true
         !! req.session.email and getOwner() is req.session.email
@@ -21,10 +21,14 @@ module.exports = exports = (log, loga, argv) ->
         res.send "FAIL", 401  unless sent
         sent = true
 
+      # log req.headers
+
       if argv.url == ''
         incHost = 'http://' + req.headers.host
       else
         incHost = argv.url
+
+      log "audience: ", incHost
 
       postBody = qs.stringify(
         assertion: req.body.assertion
@@ -73,16 +77,21 @@ module.exports = exports = (log, loga, argv) ->
                 email: verified.email
               }
             else
-              fail()
+              # verify has failed, return statusCode to client to handle...
+              log "ERROR: Verify Failed :: " + JSON.stringify(verified)
+              originalRes.send JSON.stringify {
+                status: 'failure',
+                reason: verified.reason
+              }
 
         else
-          loga "STATUS: " + res.statusCode
-          loga "HEADERS: " + JSON.stringify(res.headers)
+          log "STATUS: " + res.statusCode
+          log "HEADERS: " + JSON.stringify(res.headers)
           fail()
 
       verifier.write postBody
       verifier.on "error", (e) ->
-        loga e
+        log e
         fail()
 
       verifier.end()
