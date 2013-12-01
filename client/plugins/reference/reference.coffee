@@ -1,5 +1,4 @@
 window.plugins.reference =
-window.plugins.federatedWiki =
   emit: ($item, item) ->
     slug = item.slug or 'welcome-visitors'
     site = item.site
