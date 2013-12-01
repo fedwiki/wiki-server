@@ -1,7 +1,7 @@
 {
   "name": "wiki",
   "description": "A Federated Wiki Server",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "bin": {
     "wiki": "./bin/server.js"
   },
@@ -32,7 +32,7 @@
     "flates": "0.0.5",
     "qs": "0.6.5",
     "underscore": "*",
-    "wiki-client": ">=0.0.2",
+    "wiki-client": ">=0.0.4",
     "redis": "~0.8.4"
   },
   "scripts": {
