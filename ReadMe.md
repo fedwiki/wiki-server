@@ -1,6 +1,6 @@
 # Wiki
 
-Wiki is a single-page application for browsing and editing content distributed throughout a federation of similar creative-commons licensed sites. What is a federated wiki, and why does federation matter? Authors thoughout the federation pull content towards themselves as they edit. With this package authors publish their own edits back to the federation as they edit.
+Wiki is a single-page application for browsing and editing content distributed throughout a federation of similar creative-commons licensed sites. What is a federated wiki, and why does federation matter? Authors throughout the federation pull content towards themselves as they edit. With this package authors publish their own edits back to the federation as they edit.
 
 Over the past two years, the [Smallest Federated Wiki](https://github.com/WardCunningham/Smallest-Federated-Wiki) project has explored the concept and implementation details of the federated wiki concept. This code has been extracted from that project, with the goal of releasing a polished, easy to deploy package. 
 
@@ -16,7 +16,7 @@ The quickest way to set up wiki on your local machine is to install it globally 
     $ npm install -g wiki
     $ wiki
 
-Visit localhost:3000 to see your wiki. If you choose a host visible to the internet then other in the federation can use your work.
+Visit localhost:3000 to see your wiki. If you choose a host visible to the internet then others in the federation can use your work.
 
 ### Server Options
 
@@ -36,7 +36,7 @@ A number of datastores are supported. Use the --database and --data options to c
 
 ##### flatfiles (default)
 
-The default path to store page data is in a "default-data" subdirectory of the install directory. You can override this like so:
+The default path to store page data is in a "default-data" subdirectory of the install directory. You can override it like this:
 
     $ wiki --data FILESYSTEM_PATH
 
@@ -48,7 +48,7 @@ The mongodb connection arguments are specified as follows:
 
 For convenience the url will also be read from MONGO_URI, MONGOLAB_URI, or MONGOHQ_URL. This smooths the Heroku deployment process somewhat.
 
-The mongodb datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
+The mongodb datastore allows for a graceful upgrade path. If a page is not found in mongodb the flatfile datastore will be consulted.
 
 ##### redis
 
@@ -64,7 +64,7 @@ The leveldb datastore uses JSON encoded leveldb format and is configured by prov
 
     $ wiki --database '{"type": "./leveldb"}' --data FILESYSTEM_PATH
 
-The leveldb datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
+The leveldb datastore allows for a graceful upgrade path. If a page is not found in leveldb the flatfile datastore will be consulted.
 
 ### Running in the Cloud
 
