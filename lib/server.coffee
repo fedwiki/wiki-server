@@ -301,7 +301,7 @@ module.exports = exports = (argv) ->
     res.status(200)
     res.header('Content-Type', 'application/json')
 # Plugins are located in packages in argv.packageDir, with package names of the form wiki-plugin-*
-    glob path.join(agrv.packageDir, 'wiki-plugin-*', 'factory.json'), (e, files) ->
+    glob path.join(argv.packageDir, 'wiki-plugin-*', 'factory.json'), (e, files) ->
       if e then return res.e(e)
       files = files.map (file) ->
         return fs.createReadStream(file).on('error', res.e).pipe(JSONStream.parse())
