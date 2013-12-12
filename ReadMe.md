@@ -16,6 +16,9 @@ The quickest way to set up wiki on your local machine is to install it globally 
     $ npm install -g wiki
     $ wiki
 
+<span style="padding-left: 1em; border-left: 1em solid rgb(224,216,216); background-color: rbg(192,192,192);">:warning: The default location used to store your pages *should not* be used for more than testing. Any content you create will be lost when you update the package, or run ```npm update -g```. See Datastore options, below, on how to specify an alternative location.
+</span>
+
 Visit localhost:3000 to see your wiki. If you choose a host visible to the internet then others in the federation can use your work.
 
 ### Server Options
