@@ -35,4 +35,10 @@ module.exports = (argv) ->
   argv.status = path.resolve(argv.status)
   argv.id = path.resolve(argv.id)
 
+  if /node_modules/.test(argv.data)
+    console.log "\n\nWARNING : The dafault data path is not a safe place."
+    console.log "       : by using ", argv.data, " your pages will be lost when packages are updated."
+    console.log "       : You are strongly advised to use an alternative directory."
+    console.log "       : See the wiki package ReadMe for how to do this.\n\n"
+
   argv
