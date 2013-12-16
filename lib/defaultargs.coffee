@@ -3,13 +3,16 @@
 # based on what information is provided.
 path = require 'path'
 
+getUserHome = ->
+  process.env.HOME or process.env.HOMEPATH or process.env.USERPROFILE
+
 module.exports = (argv) ->
   argv or= {}
   argv.root or= __dirname
   argv.farmPort or= 40000
   argv.port or= 3000
   argv.home or= 'welcome-visitors'
-  argv.data or= path.join(argv.root, 'data')
+  argv.data or= path.join(getUserHome(), '.wiki') # see also cli
   argv.client or= path.join(argv.root, 'client')
   argv.db or= path.join(argv.data, 'pages')
   argv.status or= path.join(argv.data, 'status')
