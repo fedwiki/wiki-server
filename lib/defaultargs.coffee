@@ -3,19 +3,17 @@
 # based on what information is provided.
 path = require 'path'
 
+getUserHome = ->
+  process.env.HOME or process.env.HOMEPATH or process.env.USERPROFILE
+
 module.exports = (argv) ->
   argv or= {}
-# NOTE: root is wiki-server's root, so something like ...wiki/node_modules/wiki-server
-#       it might make sense to use something else, we can find everything relative to
-#       root.
   argv.root or= __dirname
-# the directory that contains all the packages that go to makeup the wiki
-  argv.packageDir or= path.join(argv.root, '..')
   argv.farmPort or= 40000
   argv.port or= 3000
   argv.home or= 'welcome-visitors'
-  argv.data or= path.join(argv.root, '..', '..', 'data')
-  argv.client or= path.join(argv.packageDir, 'wiki-client', 'client')
+  argv.data or= path.join(getUserHome(), '.wiki') # see also cli
+  argv.client or= path.join(argv.root, 'client')
   argv.db or= path.join(argv.data, 'pages')
   argv.status or= path.join(argv.data, 'status')
   argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
@@ -28,7 +26,6 @@ module.exports = (argv) ->
 
   #resolve all relative paths
   argv.root = path.resolve(argv.root)
-  argv.packageDir = path.resolve(argv.packageDir)
   argv.data = path.resolve(argv.data)
   argv.client = path.resolve(argv.client)
   argv.db = path.resolve(argv.db)

@@ -8,6 +8,9 @@ bouncy = require 'bouncy'
 farm = require './farm'
 cc = require 'config-chain'
 
+getUserHome = ->
+  process.env.HOME or process.env.HOMEPATH or process.env.USERPROFILE
+
 # Handle command line options
 
 argv = optimist
@@ -77,6 +80,7 @@ config = cc(argv,
     port: 3000
     root: path.join(__dirname, '..')
     home: 'welcome-visitors'
+    data: path.join(getUserHome(), '.wiki') # see also defaultargs
 ).store
 
 # If h/help is set print the generated help message and exit.
