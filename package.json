@@ -1,5 +1,5 @@
 {
-  "name": "wiki-server",
+  "name": "wiki-node-server",
   "description": "A Federated Wiki Server",
   "version": "0.1.1",
   "bin": {
@@ -15,6 +15,11 @@
       "name": "Nick Niemeir",
       "email": "nick.niemeir@gmail.com",
       "url": "http://nrn.io"
+    },
+    {
+      "name": "Paul Rodwell",
+      "email": "paul.rodwell@btinternet.com",
+      "url": "http://wiki-paul90.rhcloud.com"
     }
   ],
   "dependencies": {
@@ -64,6 +69,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/WardCunningham/wiki.git"
+    "url": "https://github.com/fedwiki/wiki-node-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fedwiki/wiki-node-server/issues"
   }
 }

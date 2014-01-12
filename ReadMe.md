@@ -1,112 +1,47 @@
-# Wiki
+# Wiki-Node-Server
 
-Wiki is a single-page application for browsing and editing content distributed throughout a federation of similar creative-commons licensed sites. What is a federated wiki, and why does federation matter? Authors throughout the federation pull content towards themselves as they edit. With this package authors publish their own edits back to the federation as they edit.
+Federated wiki node.js server as a npm module.
 
-Over the past two years, the [Smallest Federated Wiki](https://github.com/WardCunningham/Smallest-Federated-Wiki) project has explored the concept and implementation details of the federated wiki concept. This code has been extracted from that project, with the goal of releasing a polished, easy to deploy package. 
+**N.B.** Following a code re-organization over the New Year 2013/4 this 
+repository now only contains the code for the node.js server implementation. 
+You will also notice that the GitHub reposistory name and location has 
+changed, it is now fedwiki/wiki-node-server. It you have previously forked, 
+and cloned, this repository you will want to update your clone's upstream 
+remote to reflect this change.
 
-// TODO: Review content in light of changes from refactor.
+This package is now published as ```wiki-node-server```. The ```wiki``` 
+package which depends on this package, to provide the federated wiki server, 
+can be found as [fedwiki/wiki-node].
 
-### Using Federated Wiki
+* * *
 
-Learn [how to wiki](http://fed.wiki.org/view/how-to-wiki) by reading [fed.wiki.org](http://fed.wiki.org/view/welcome-visitors)
+## Goals
 
-### Running your own Server
+Over its first two years the Smallest Federated Wiki (SFW) project explored
+many ways that a wiki could embrace HTML5 and related technologies. Here
+we will cautiously reorganize this work as small independent modules that
+favor ongoing innovation.
 
-The quickest way to set up wiki on your local machine is to install it globally with `npm`:
+We proceed by dividing SFW first into large pieces and then these into
+smaller pieces as we simplify and regularize the communications between them.
+We now favor the node.js module and event conventions, dependency injection,
+and increased separation between the DOM and the logic that manages it.
 
-    $ npm install -g wiki
-    $ wiki
+Federated wiki's single-page application reads page content from many sources
+and writes updates to a few. Read-write server backends are maintained in
+ruby (sinatra) and node (express). Read-only servers have been realized
+with static files and cgi scripts. Encouraging experiments have exploited
+exotic service architectures such as CCNx content-addressable networks.
 
-<span style="padding-left: 1em; border-left: 1em solid rgb(224,216,216); background-color: rbg(192,192,192);">:warning: The default location used to store your pages *should not* be used for more than testing. Any content you create will be lost when you update the package, or run ```npm update -g```. See Datastore options, below, on how to specify an alternative location.
-</span>
+## Participation
 
-Visit localhost:3000 to see your wiki. If you choose a host visible to the internet then others in the federation can use your work.
+We're happy to take issues or pull requests regarding the goals and
+their implementation within this code.
 
-### Server Options
+A wider-ranging conversation is documented in the GitHub ReadMe of the
+founding project, [SFW](https://github.com/WardCunningham/Smallest-Federated-Wiki/blob/master/ReadMe.md).
 
-Options for the server can be passed in many ways:
-
-* As command line flags
-* As a configuration JSON file specified with --config
-* As a config.json file in the root folder or cwd.
-* As env vars prefixed with `wiki_`
-
-Higher in the list takes precedence.
-The server will then try to guess all unspecified options.
-
-#### Datastore options
-
-A number of datastores are supported. Use the --database and --data options to configure, or use the config.json.
-
-##### flatfiles (default)
-
-The default path to store page data is in a "default-data" subdirectory of the install directory. You can override it like this:
-
-    $ wiki --data FILESYSTEM_PATH
-
-##### mongodb
-
-The mongodb connection arguments are specified as follows:
-
-    $ wiki --database '{"type": "./mongodb", "url": "...", "options": {...}}'
-
-For convenience the url will also be read from MONGO_URI, MONGOLAB_URI, or MONGOHQ_URL. This smooths the Heroku deployment process somewhat.
-
-The mongodb datastore allows for a graceful upgrade path. If a page is not found in mongodb the flatfile datastore will be consulted.
-
-##### redis
-
-The Redis connection arguments are specified as follows:
-
-    $ wiki --database '{"type": "./redis", "host": "...", "port": nnn, "options": {...}}'
-
-The Redis datastore allows for a graceful upgrade path. If a page is not found in redis the flatfile datastore will be consulted.
-
-##### leveldb
-
-The leveldb datastore uses JSON encoded leveldb format and is configured by providing a filesystem path:
-
-    $ wiki --database '{"type": "./leveldb"}' --data FILESYSTEM_PATH
-
-The leveldb datastore allows for a graceful upgrade path. If a page is not found in leveldb the flatfile datastore will be consulted.
-
-### Running in the Cloud
-
-We're enthusiastic about hosting wiki on cloud platform services. There are many alternatives, each with its own strengths and 
-weaknesses. Here we list projects that document procedures for specific services. Look here for ideas about running 
-on your service or roll your own and contribute it here. 
-
-* [RedHat's OpenShift](https://github.com/paul90/wiki-openshift-quickstart/) by @paul90
-
-### Developing Wiki
-
-This package consists of client and server code as well as a number of sample plugins that create special purpose markups that can be used on a paragraph by paragraph basis. Get the code, build the client, and start the server:
-
-    $ git clone https://github.com/WardCunningham/wiki.git
-    $ cd wiki
-    $ npm install
-    $ grunt build
-    $ npm start
-
-While you're coding, you can also watch for files to change. This will rebuild the client each time you save a file.
-
-    $ grunt watch
-
-Test the server-side code by running `$ grunt test`. 
-
-Test the client-side code by starting your wiki server with `$npm start` and opening [`http://localhost:3000/runtests.html`](http://localhost:3000/runtests.html)
-
-
-
-### How to Participate
-
-* Join the developer IRC channel, `#fedwiki` on freenode
-* Stop by the [Google Hangout](http://bit.ly/SFWhangout) at 10am Pacific every Wednesday
-* Submit [Issues](https://github.com/WardCunningham/wiki/issues) 
-* Fork, commit and submit [Pull Requests](https://github.com/WardCunningham/wiki/pulls)
-
-
-### License
+## License
 
 You may use the Wiki under either the
 [MIT License](https://github.com/WardCunningham/wiki/blob/master/mit-license.txt) or the
