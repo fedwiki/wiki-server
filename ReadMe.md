@@ -69,6 +69,19 @@ The leveldb datastore uses JSON encoded leveldb format and is configured by prov
 
 The leveldb datastore allows for a graceful upgrade path. If a page is not found in leveldb the flatfile datastore will be consulted.
 
+##### Example config.json for Redis
+
+```
+{
+  "database" : {
+    "type" : "./redis",
+    "host" : "your.redis_instance.com",
+    "port" : 6379,
+    "options": { "auth_pass" : "all_mimsy_were_the_borogroves" }
+  }
+}
+```
+
 ### Running in the Cloud
 
 We're enthusiastic about hosting wiki on cloud platform services. There are many alternatives, each with its own strengths and 
