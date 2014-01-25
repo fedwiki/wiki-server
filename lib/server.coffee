@@ -10,6 +10,8 @@
 # can be installed with an:
 #     npm install
 
+require('coffee-trace')
+
 # Standard lib
 fs = require 'fs'
 path = require 'path'
@@ -165,6 +167,10 @@ module.exports = exports = (argv) ->
     app.set('view engine', 'html')
     app.engine('html', hbs.__express)
     app.set('view options', layout: false)
+    
+    # use logger, at least in development, probably needs a param to configure (or turn off).
+    # use stream to direct to somewhere other than stdout.
+    app.use(express.logger('tiny'))
     app.use(express.cookieParser())
     app.use(express.bodyParser())
     app.use(express.methodOverride())
@@ -172,7 +178,18 @@ module.exports = exports = (argv) ->
     app.use(persona.authenticate_session(getOwner))
     app.use(errorHandler)
     app.use(app.router)
+
+    # Add static route to the client
     app.use(express.static(argv.client))
+    
+    # Add static routes to the plugins client.
+    glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
+      plugins.map (plugin) ->
+        pluginName = plugin.slice(12, -7)
+        pluginPath = '/plugins/' + pluginName
+        app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
+    
+    
 
   ##### Set up standard environments. #####
   # In dev mode turn on console.log debugging as well as showing the stack on err.
@@ -283,7 +300,8 @@ module.exports = exports = (argv) ->
   app.get ///system/factories.json///, (req, res) ->
     res.status(200)
     res.header('Content-Type', 'application/json')
-    glob path.join(argv.client, 'plugins', '*', 'factory.json'), (e, files) ->
+# Plugins are located in packages in argv.packageDir, with package names of the form wiki-plugin-*
+    glob path.join(argv.packageDir, 'wiki-plugin-*', 'factory.json'), (e, files) ->
       if e then return res.e(e)
       files = files.map (file) ->
         return fs.createReadStream(file).on('error', res.e).pipe(JSONStream.parse())
@@ -356,11 +374,15 @@ module.exports = exports = (argv) ->
       if e then return res.e e
       res.send(files)
 
+# Returns a list of installed plugins. (does this get called anymore!)
   app.get '/system/plugins.json', cors, (req, res) ->
-    fs.readdir path.join(argv.client, 'plugins'), (e, files) ->
+    glob "wiki-plugin-*", {cwd: argv.packageDir}, (e, files) ->
       if e then return res.e e
+      # extract the plugin name from the name of the directory it's installed in
+      files = files.map (file) -> file.slice(12)
       res.send(files)
 
+      
   app.get '/system/sitemap.json', cors, (req, res) ->
     pagehandler.pages (e, sitemap) ->
       return res.e(e) if e

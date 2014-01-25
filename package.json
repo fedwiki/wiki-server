@@ -1,7 +1,7 @@
 {
-  "name": "wiki",
+  "name": "wiki-server",
   "description": "A Federated Wiki Server",
-  "version": "0.0.7",
+  "version": "0.1.1",
   "bin": {
     "wiki": "./bin/server.js"
   },
@@ -15,6 +15,11 @@
       "name": "Nick Niemeir",
       "email": "nick.niemeir@gmail.com",
       "url": "http://nrn.io"
+    },
+    {
+      "name": "Paul Rodwell",
+      "email": "paul.rodwell@btinternet.com",
+      "url": "http://wiki-paul90.rhcloud.com"
     }
   ],
   "dependencies": {
@@ -32,38 +37,41 @@
     "flates": "0.0.5",
     "qs": "0.6.5",
     "underscore": "*",
-    "wiki-client": ">=0.0.4",
     "redis": "~0.8.4"
   },
   "scripts": {
     "test": "mocha",
     "start": "node bin/server.js"
   },
+  "//": "TODO: Now that client and plugins are nolonger here, review what dependencies we still need",
   "devDependencies": {
     "coffeeify": "*",
-    "docco": "~0.3",
+    "docco": "*",
     "mocha": "*",
     "should": "*",
     "sinon": "1.7.1",
     "expect.js": "*",
-    "grunt": "~0.4.1",
-    "grunt-browserify": "~1.1.1",
-    "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-watch": "~0.4.4"
+    "grunt": "~0.4",
+    "grunt-browserify": "~1.2",
+    "grunt-contrib-coffee": "~0.7",
+    "grunt-contrib-watch": "~0.5"
   },
   "optionalDependencies": {
     "ws": "*",
     "level": "*",
-    "mongoskin": "~0.6.0"
+    "mongoskin": "~0.6"
   },
   "engines": {
-    "node": ">0.8"
+    "node": "0.10"
   },
   "testling": {
     "harness": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/WardCunningham/wiki.git"
+    "url": "https://github.com/fedwiki/wiki-node-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fedwiki/wiki-node-server/issues"
   }
 }
