@@ -2,9 +2,6 @@
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
   "version": "0.1.2",
-  "bin": {
-    "wiki": "./bin/server.js"
-  },
   "author": {
     "name": "Ward Cunningham",
     "email": "ward@c2.com",
@@ -23,7 +20,7 @@
     }
   ],
   "dependencies": {
-    "coffee-script": "*",
+    "coffee-script": "1.6",
     "express": "*",
     "mkdirp": "*",
     "optimist": "*",
@@ -40,8 +37,7 @@
     "redis": "~0.8.4"
   },
   "scripts": {
-    "test": "mocha",
-    "start": "node bin/server.js"
+    "test": "mocha"
   },
   "//": "TODO: Now that client and plugins are nolonger here, review what dependencies we still need",
   "devDependencies": {
