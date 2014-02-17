@@ -7,6 +7,7 @@ server = require './server'
 bouncy = require 'bouncy'
 farm = require './farm'
 cc = require 'config-chain'
+glob = require 'glob'
 
 getUserHome = ->
   process.env.HOME or process.env.HOMEPATH or process.env.USERPROFILE
@@ -86,13 +87,20 @@ config = cc(argv,
 # If h/help is set print the generated help message and exit.
 if argv.help
   optimist.showHelp()
+# If v/version is set print the version of the wiki components and exit.
 else if argv.version
-  console.log('wiki version: ' + require('../package').version)
-# If f/farm is set call../lib/farm.coffee with argv object, else call
-# ../lib/server.coffee with argv object.
+  console.log('wiki: ' + require('../../../package').version)
+  console.log('wiki-server: ' + require('../package').version)
+  console.log('wiki-client: ' + require('../../wiki-client/package').version)
+  glob 'wiki-plugin-*', {cwd: 'node_modules/'}, (e, plugins) ->
+    plugins.map (plugin) ->
+      console.log(plugin + ': ' + require(path.join('..','..',plugin,'package')).version)
+
 else if argv.test
   console.log "WARNING: Server started in testing mode, other options ignored"
   server({port: 33333, data: path.join(argv.root, 'spec', 'data')})
+# If f/farm is set call../lib/farm.coffee with argv object, else call
+# ../lib/server.coffee with argv object.
 else if config.farm
   console.log('Wiki starting in Farm mode, navigate to a specific server to sart it.')
   farm(config)
