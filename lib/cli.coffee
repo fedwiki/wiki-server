@@ -92,7 +92,7 @@ else if argv.version
   console.log('wiki: ' + require('../../../package').version)
   console.log('wiki-server: ' + require('../package').version)
   console.log('wiki-client: ' + require('../../wiki-client/package').version)
-  glob 'wiki-plugin-*', {cwd: 'node_modules/'}, (e, plugins) ->
+  glob 'wiki-plugin-*', {cwd: path.join(__dirname,'..','..')}, (e, plugins) ->
     plugins.map (plugin) ->
       console.log(plugin + ': ' + require(path.join('..','..',plugin,'package')).version)
 
