@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "coffee-script": "1.6",
-    "express": "*",
+    "express": "~3",
     "mkdirp": "*",
     "optimist": "*",
     "hbs": "*",
