@@ -9,7 +9,7 @@ changed, it is now fedwiki/wiki-node-server. It you have previously forked,
 and cloned, this repository you will want to update your clone's upstream 
 remote to reflect this change.
 
-This package is now published as ```wiki-node-server```. The ```wiki``` 
+This package is now published as ```wiki-server```. The ```wiki``` 
 package which depends on this package, to provide the federated wiki server, 
 can be found as [fedwiki/wiki-node].
 
