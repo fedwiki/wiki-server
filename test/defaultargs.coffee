@@ -7,5 +7,4 @@ describe 'defaultargs', ->
     it 'should write non give args', ->
       defaultargs().port.should.equal(3000)
     it 'should modify dependant args', ->
-      defaultargs({root: '/tmp/asdf/'}).db.should.equal('/tmp/asdf/data/pages')
-
+      defaultargs({data: '/tmp/asdf/'}).db.should.equal('/tmp/asdf/pages')	

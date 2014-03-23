@@ -21,7 +21,8 @@
   ],
   "dependencies": {
     "coffee-script": "1.6",
-    "express": "*",
+    "coffee-trace": "*",
+    "express": "~3",
     "mkdirp": "*",
     "optimist": "*",
     "hbs": "*",
@@ -39,18 +40,12 @@
   "scripts": {
     "test": "mocha"
   },
-  "//": "TODO: Now that client and plugins are nolonger here, review what dependencies we still need",
   "devDependencies": {
-    "coffeeify": "*",
-    "docco": "*",
     "mocha": "*",
     "should": "*",
     "sinon": "1.7.1",
     "expect.js": "*",
-    "grunt": "~0.4",
-    "grunt-browserify": "~1.2",
-    "grunt-contrib-coffee": "~0.7",
-    "grunt-contrib-watch": "~0.5"
+    "wiki-client": "*"
   },
   "optionalDependencies": {
     "ws": "*",
