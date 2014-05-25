@@ -38,10 +38,11 @@ pluginsFactory = require './plugins'
 Persona = require './persona_auth'
 
 render = (page) ->
-  return f.h1(
+  return f.div({class: "twins"}, f.p('')) + '\n' +
+  f.div({class: "header"}, f.h1(
     f.a({href: '/', style: 'text-decoration: none'},
       f.img({height: '32px', src: '/favicon.png'})) +
-      ' ' + page.title) +
+      ' ' + page.title)) + '\n' +
     f.div {class: "story"},
       page.story.map((story) ->
         if story.type is 'paragraph'
@@ -167,7 +168,7 @@ module.exports = exports = (argv) ->
     app.set('view engine', 'html')
     app.engine('html', hbs.__express)
     app.set('view options', layout: false)
-    
+
     # use logger, at least in development, probably needs a param to configure (or turn off).
     # use stream to direct to somewhere other than stdout.
     app.use(express.logger('tiny'))
@@ -181,15 +182,15 @@ module.exports = exports = (argv) ->
 
     # Add static route to the client
     app.use(express.static(argv.client))
-    
+
     # Add static routes to the plugins client.
     glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
       plugins.map (plugin) ->
         pluginName = plugin.slice(12, -7)
         pluginPath = '/plugins/' + pluginName
         app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
-    
-    
+
+
 
   ##### Set up standard environments. #####
   # In dev mode turn on console.log debugging as well as showing the stack on err.
@@ -382,7 +383,7 @@ module.exports = exports = (argv) ->
       files = files.map (file) -> file.slice(12)
       res.send(files)
 
-      
+
   app.get '/system/sitemap.json', cors, (req, res) ->
     pagehandler.pages (e, sitemap) ->
       return res.e(e) if e
@@ -506,4 +507,3 @@ module.exports = exports = (argv) ->
 
   # Return app when called, so that it can be watched for events and shutdown with .close() externally.
   app
-
