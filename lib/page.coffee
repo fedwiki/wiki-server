@@ -21,18 +21,15 @@ module.exports = exports = (argv) ->
     if e then throw e
 
   #### Private utility methods. ####
-  load_parse = (loc, cb) ->
+  load_parse = (loc, cb, annotations={}) ->
     fs.readFile(loc, (err, data) ->
       return cb(err) if err
       try 
         page = JSON.parse(data)
-        
-        # I think this is the correct change, not too sure if it works....
-        # need to workout what causes load_parse to get called to be able to check this.
-        if m = loc.match /wiki-plugin-(.+?)\/pages/
-          page.plugin = m[1]
       catch e
         return cb(e)
+      for key, val of annotations
+        page[key] = val
       cb(null, page)
     )
 
@@ -82,7 +79,7 @@ module.exports = exports = (argv) ->
                     pluginloc = path.join(argv.packageDir, plugin, file)
                     fs.exists(pluginloc, (exists) ->
                       if exists
-                        load_parse(pluginloc, cb)
+                        load_parse(pluginloc, cb, {plugin})
                       else
                         giveUp()
                     )
