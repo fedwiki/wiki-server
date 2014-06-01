@@ -31,13 +31,13 @@ module.exports = exports = (argv) ->
       incHost = req.headers.host
     else
       return
-    
+
     # If the host starts with "www." treat it the same as if it didn't
     if incHost[0..3] is "www."
       incHost = incHost[4..]
     # if we already have a port for this host, forward the request to it.
     if hosts[incHost]
-      bounce(hosts[incHost])
+      bounce(argv.host, hosts[incHost])
     else
       hosts[incHost] = nextport()
       # Create a new options object, copy over the options used to start the
@@ -56,5 +56,5 @@ module.exports = exports = (argv) ->
       local = server(newargv)
       runningServers.push(local)
       local.once "listening", ->
-        bounce(hosts[incHost])
-  ).listen(argv.port)
+        bounce(argv.host, hosts[incHost])
+  ).listen(argv.port, argv.host)

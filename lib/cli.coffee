@@ -102,8 +102,7 @@ else if argv.test
 # If f/farm is set call../lib/farm.coffee with argv object, else call
 # ../lib/server.coffee with argv object.
 else if config.farm
-  console.log('Wiki starting in Farm mode, navigate to a specific server to sart it.')
+  console.log('Wiki starting in Farm mode, navigate to a specific server to start it.')
   farm(config)
 else
   server(config)
-
