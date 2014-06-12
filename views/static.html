@@ -27,16 +27,19 @@
       {{/pages}}
     </section>
     <footer class={{loginStatus}}>
-      
+
       <div id='site-owner' class='footer-item'>{{ownedBy}}</div>
 
       {{#authenticated}}
+      {{^claimed}}
+      <a href='#' class='persona-button.orange' id='claim-button'><span>{{claimBtnTxt}}</span></a>
+      {{/claimed}}
       <a href='#' class='persona-button' id='persona-logout-btn'><span>{{loginBtnTxt}}</span></a>
       {{/authenticated}}
       {{^authenticated}}
       <a href='#' class='persona-button' id='persona-login-btn'><span>{{loginBtnTxt}}</span></a>
       {{/authenticated}}
-      
+
       <span class='searchbox'>
         Search:
         <input class='search' name='search' type='text'>

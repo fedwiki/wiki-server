@@ -5,16 +5,16 @@ qs = require('qs')
 
 module.exports = exports = (log, loga, argv) ->
   persona = {}
-  persona.authenticate_session = (getOwner) ->
+  persona.authenticate_session = (getUser) ->
     (req, res, next) ->
       req.isAuthenticated = ->
         # log 'isAuthenticated? owner=', getOwner(), 'req.session.email=', req.session.email, getOwner() is req.session.email
-        if getOwner() == ''
+        if getUser() == ''
             return true
-        !! req.session.email and getOwner() is req.session.email
+        !! req.session.email and getUser() is req.session.email
       next()
 
-  persona.verify_assertion = (getOwner, setOwner) ->
+  persona.verify_assertion = (getUser) ->
     (req, res) ->
       sent = false
       fail = ->
@@ -23,6 +23,7 @@ module.exports = exports = (log, loga, argv) ->
 
       # log req.headers
 
+      # this does not cope with sites using other protocols, such as https
       if argv.url == ''
         incHost = 'http://' + req.headers.host
       else
@@ -58,19 +59,21 @@ module.exports = exports = (log, loga, argv) ->
             verified = JSON.parse(d)
             if "okay" is verified.status and !!verified.email
               req.session.email = verified.email
-              owner = getOwner()
-              if owner is ''
-                setOwner verified.email, ->
-                  loga 'Owner was not claimed, setting owner'
-              else if owner is verified.email
-                log 'Welcome back! Creating session'
-              else
-                log 'Expected ', owner, ' but got ', verified.email
-                delete req.session.email
-                return originalRes.send JSON.stringify {
-                  status: 'wrong-address',
-                  email: verified.email
-                }
+
+              # user need not be the owner, so removing this segment
+              #owner = getOwner()
+              #if owner is ''
+              #  setOwner verified.email, ->
+              #    loga 'Owner was not claimed, setting owner'
+              #else if owner is verified.email
+              #  log 'Welcome back! Creating session'
+              #else
+              #  log 'Expected ', owner, ' but got ', verified.email
+              #  delete req.session.email
+              #  return originalRes.send JSON.stringify {
+              #    status: 'wrong-address',
+              #    email: verified.email
+              #  }
               log "Verified Email=", verified.email
               originalRes.send JSON.stringify {
                 status: 'okay',

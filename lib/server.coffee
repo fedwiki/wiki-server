@@ -98,6 +98,9 @@ module.exports = exports = (argv) ->
   # and kept in memory as owner.  A falsy owner implies an unclaimed wiki.
   owner = ''
 
+  # The user is the currently authenticated user, need not be the owner
+  user = ''
+
   # Attempt to figure out if the wiki is claimed or not,
   # if it is return the owner, if not set the owner
   # to the id if it is provided.
@@ -155,9 +158,9 @@ module.exports = exports = (argv) ->
 
   persona = Persona(log, loga, argv)
 
-  # Persona middleware needs access to this module's owner variable
-  getOwner = ->
-    owner
+  # Persona middleware needs access to this module's user variable
+  getUser = ->
+    user
 
   #### Express configuration ####
   # Set up all the standard express server options,
@@ -176,7 +179,7 @@ module.exports = exports = (argv) ->
     app.use(express.bodyParser())
     app.use(express.methodOverride())
     app.use(express.session({ secret: 'notsecret'}))
-    app.use(persona.authenticate_session(getOwner))
+    app.use(persona.authenticate_session(getUser))
     app.use(errorHandler)
     app.use(app.router)
 
@@ -240,21 +243,25 @@ module.exports = exports = (argv) ->
     info = {
       pages: []
       authenticated: is_authenticated(req)
+      claimed: if owner
+        true
+      else false
       user: req.session.email
       ownedBy: if owner
         'Site owned by ' + owner.substr(0, owner.indexOf('@'))
       else
         ''
-      loginStatus: if owner
-        if req.isAuthenticated()
-          'logout'
-        else 'login'
-      else 'claim'
-      loginBtnTxt: if owner
-        if req.isAuthenticated()
-          'Sign out'
-        else 'Sign in with your Email'
-      else 'Claim with your Email'
+      loginStatus: if is_authenticated(req)
+        'logout'
+      else 'login'
+      loginBtnTxt: if is_authenticated(req)
+        'Sign out'
+      else 'Sign in with your Email'
+      claimBtnTxt: if is_authenticated(req)
+        if !owner
+          'Claim Site'
+        else ''
+      else ''
     }
     for page, idx in urlPages
       if urlLocs[idx] is 'view'
@@ -262,9 +269,15 @@ module.exports = exports = (argv) ->
       else
         pageDiv = {page, origin: """data-site=#{urlLocs[idx]}"""}
       info.pages.push(pageDiv)
+    # some diagnostic log messages
+    log "Authenticated: ", is_authenticated(req)
+    log "Owner: ", owner
+    log "Info: ", info
     res.render('static.html', info)
 
   app.get ///([a-z0-9-]+)\.html$///, (req, res, next) ->
+    # also get called when logout refreshs the page...
+    log "app.get (html): ", req.params[0]
     file = req.params[0]
     log(file)
     if file is 'runtests'
@@ -281,20 +294,24 @@ module.exports = exports = (argv) ->
         ]
         user: req.session.email
         authenticated: is_authenticated(req)
+        claimed: if owner
+          true
+        else false
         ownedBy: if owner
           'Site owned by ' + owner.substr(0, owner.indexOf('@'))
         else
           ''
-        loginStatus: if owner
-          if req.isAuthenticated()
-            'logout'
-          else 'login'
-        else 'claim'
-        loginBtnTxt: if owner
-          if req.isAuthenticated()
-            'Sign out'
-          else 'Sign in with your Email'
-        else 'Claim with your Email'
+        loginStatus: if req.isAuthenticated()
+          'logout'
+        else 'login'
+        loginBtnTxt: if req.isAuthenticated()
+          'Sign out'
+        else 'Sign in with your Email'
+        claimBtnTxt: if req.isAuthenticated()
+          if !owner
+            'Claim Site'
+          else ''
+        else ''
       }
       res.render('static.html', info)
 
@@ -389,10 +406,22 @@ module.exports = exports = (argv) ->
       return res.e(e) if e
       res.json(sitemap)
 
+  ###### Claim ######
+
+  app.get '/system/claim', authenticated, (req, res) ->
+    # can only claim site if user is authenticated
+    # and the site has not already been claimed.
+    if owner = ''
+      setOwner verified.email, ->
+        loga 'Site was not claimed, setting owner'
+        res.send("OK")
+
+
+  ###### Persona routes ######
 
   app.post '/persona_login',
            cors,
-           persona.verify_assertion(getOwner, setOwner)
+           persona.verify_assertion(getUser)
 
 
   app.post '/persona_logout', cors, (req, res) ->
