@@ -20,7 +20,7 @@
     }
   ],
   "dependencies": {
-    "coffee-script": "1.6",
+    "coffee-script": "1.8",
     "coffee-trace": "*",
     "express": "~3",
     "mkdirp": "*",
