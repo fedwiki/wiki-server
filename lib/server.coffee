@@ -29,6 +29,14 @@ JSONStream = require 'JSONStream'
 async = require 'async'
 f = require('flates')
 
+# Express 4 middleware
+logger = require 'morgan'
+cookieParser = require 'cookie-parser'
+methodOverride = require 'method-override'
+session = require 'express-session'
+bodyParser = require 'body-parser'
+errorHandler = require 'errorhandler'
+
 
 # Local files
 random = require './random_id'
@@ -77,7 +85,7 @@ module.exports = exports = (argv) ->
     console.log stuff
 
 
-  errorHandler = (req, res, next) ->
+  ourErrorHandler = (req, res, next) ->
     fired = false
     res.e = (error, status) ->
       if !fired
@@ -163,47 +171,47 @@ module.exports = exports = (argv) ->
   # Set up all the standard express server options,
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
-  app.configure ->
-    app.set('views', path.join(__dirname, '..', '/views'))
-    app.set('view engine', 'html')
-    app.engine('html', hbs.__express)
-    app.set('view options', layout: false)
+
+  app.set('views', path.join(__dirname, '..', '/views'))
+  app.set('view engine', 'html')
+  app.engine('html', hbs.__express)
+  app.set('view options', layout: false)
 
     # use logger, at least in development, probably needs a param to configure (or turn off).
     # use stream to direct to somewhere other than stdout.
-    app.use(express.logger('tiny'))
-    app.use(express.cookieParser())
-    app.use(express.bodyParser())
-    app.use(express.methodOverride())
-    app.use(express.session({ secret: 'notsecret'}))
-    app.use(persona.authenticate_session(getOwner))
-    app.use(errorHandler)
-    app.use(app.router)
+  app.use(logger('tiny'))
+  app.use(cookieParser())
+  app.use(bodyParser.json())
+  app.use(bodyParser.urlencoded({ extended: true}))
+  app.use(methodOverride())
+  app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
+  app.use(persona.authenticate_session(getOwner))
+  app.use(ourErrorHandler)
 
     # Add static route to the client
-    app.use(express.static(argv.client))
+  app.use(express.static(argv.client))
 
     # Add static routes to the plugins client.
-    glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
-      plugins.map (plugin) ->
-        pluginName = plugin.slice(12, -7)
-        pluginPath = '/plugins/' + pluginName
-        app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
+  glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
+    plugins.map (plugin) ->
+      pluginName = plugin.slice(12, -7)
+      pluginPath = '/plugins/' + pluginName
+      app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
 
 
 
   ##### Set up standard environments. #####
   # In dev mode turn on console.log debugging as well as showing the stack on err.
-  app.configure 'development', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
+  if 'development' == app.get('env')
+    app.use(errorHandler({ dumpExceptions: true, showStack: true }))
     argv.debug = console? and true
 
   # Show all of the options a server is using.
   log argv
 
   # Swallow errors when in production.
-  app.configure 'production', ->
-    app.use(express.errorHandler())
+  if 'production' == app.get('env')
+    app.use(errorHandler())
 
   # authenticated indicates that we have a logged in user.
   # The req.isAuthenticated returns true on an unclaimed wiki
@@ -336,7 +344,7 @@ module.exports = exports = (argv) ->
   # deal with it.
   favLoc = path.join(argv.status, 'favicon.png')
   app.get '/favicon.png', cors, (req,res) ->
-    res.sendfile(favLoc)
+    res.sendFile(favLoc)
 
   authenticated = (req, res, next) ->
     if req.isAuthenticated()
