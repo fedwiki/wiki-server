@@ -24,7 +24,7 @@ module.exports = exports = (argv) ->
   load_parse = (loc, cb, annotations={}) ->
     fs.readFile(loc, (err, data) ->
       return cb(err) if err
-      try 
+      try
         page = JSON.parse(data)
       catch e
         return cb(e)
@@ -66,6 +66,11 @@ module.exports = exports = (argv) ->
 
               glob "wiki-plugin-*/pages", {cwd: argv.packageDir}, (e, plugins) ->
                 if e then return cb(e)
+
+                # if no plugins found
+                if plugins.length is 0
+                  cb(null, 'Page not found', 404)
+
                 giveUp = do ->
                   count = plugins.length
                   return ->
@@ -147,12 +152,12 @@ module.exports = exports = (argv) ->
   itself.pages = (cb) ->
     fs.readdir argv.db, (e, files) ->
       return cb(e) if e
-      # used to make sure all of the files are read 
+      # used to make sure all of the files are read
       # and processesed in the site map before responding
       doSitemap = (file, cb) ->
         itself.get file, (e, page, status) ->
           return cb() if file.match /^\./
-          if e 
+          if e
             console.log 'Problem building sitemap:', file, 'e: ', e
             return cb() # Ignore errors in the pagehandler get.
           cb null, {
@@ -164,6 +169,6 @@ module.exports = exports = (argv) ->
 
       async.map files, doSitemap, (e, sitemap) ->
         return cb(e) if e
-        cb null, sitemap.filter (item) -> if item? then true 
+        cb null, sitemap.filter (item) -> if item? then true
 
   itself
