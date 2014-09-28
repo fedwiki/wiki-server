@@ -52,6 +52,7 @@
     "should": "*",
     "sinon": "1.7.1",
     "expect.js": "*",
+    "supertest": "*",
     "wiki-client": "*"
   },
   "optionalDependencies": {
