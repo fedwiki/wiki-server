@@ -448,7 +448,8 @@ module.exports = exports = (argv) ->
 
           else
             log "Unfamiliar action:", action
-            page.story
+            #page.story
+            throw('Unfamiliar action ignored')
       catch e
         return res.e e
 
@@ -463,9 +464,11 @@ module.exports = exports = (argv) ->
       pagehandler.put req.params[0], page, (e) ->
         if e then return res.e e
         res.send('ok')
-        log 'saved'
+        # log 'saved'
 
-    log action
+
+    # log action
+
     # If the action is a fork, get the page from the remote server,
     # otherwise ask pagehandler for it.
     if action.fork
