@@ -33,7 +33,8 @@ f = require('flates')
 logger = require 'morgan'
 cookieParser = require 'cookie-parser'
 methodOverride = require 'method-override'
-session = require 'express-session'
+## session = require 'express-session'
+sessions = require 'client-sessions'
 bodyParser = require 'body-parser'
 errorHandler = require 'errorhandler'
 
@@ -184,7 +185,16 @@ module.exports = exports = (argv) ->
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({ extended: true}))
   app.use(methodOverride())
-  app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
+  # app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
+  app.use(sessions({
+    cookieName: 'session',
+    secret: 'notsosecret-needsreplacing',
+    duration: 24 * 60 * 60 * 1000,
+    activeDuration: 1000 * 60 * 5,
+    cookie: {
+      httpOnly: true
+    }
+    }))
   app.use(persona.authenticate_session(getOwner))
   app.use(ourErrorHandler)
 
@@ -243,6 +253,7 @@ module.exports = exports = (argv) ->
   # the login status, and related footer html, which the client
   # relies on to know if it is logged in or not.
   app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res) ->
+    console.log 'req =' + req
     urlPages = (i for i in req.params[0].split('/') by 2)[1..]
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
     info = {
@@ -404,8 +415,8 @@ module.exports = exports = (argv) ->
 
 
   app.post '/persona_logout', cors, (req, res) ->
-    req.session.destroy (err) ->
-      res.send(err || "OK")
+    req.session.reset()
+    res.send("OK")
 
   ##### Put routes #####
 
