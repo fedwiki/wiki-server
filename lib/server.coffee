@@ -182,8 +182,8 @@ module.exports = exports = (argv) ->
     # use stream to direct to somewhere other than stdout.
   app.use(logger('tiny'))
   app.use(cookieParser())
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: true}))
+  app.use(bodyParser.json({ limit: '1024kb'}))
+  app.use(bodyParser.urlencoded({ extended: true, limit: '1024kb'}))
   app.use(methodOverride())
   # app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
   app.use(sessions({
