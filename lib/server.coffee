@@ -418,9 +418,9 @@ module.exports = exports = (argv) ->
     req.session.reset()
     res.send("OK")
 
-  ##### Post routes #####
+  ##### Put routes #####
 
-  app.post /^\/page\/([a-z0-9-]+)\/action$/i, authenticated, (req, res) ->
+  app.put /^\/page\/([a-z0-9-]+)\/action$/i, authenticated, (req, res) ->
     action = JSON.parse(req.body.action)
     # Handle all of the possible actions to be taken on a page,
     actionCB = (e, page, status) ->
