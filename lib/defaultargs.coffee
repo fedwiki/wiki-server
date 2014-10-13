@@ -25,6 +25,12 @@ module.exports = (argv) ->
     argv.database = JSON.parse(argv.database)
   argv.database or= {}
   argv.database.type or= './page'
+  if argv.database.type.charAt(0) is '.'
+    if argv.database.type != './page'
+      console.log "\n\nWARNING: This storage option is depeciated."
+      console.log "    See ReadMe for details of the changes required.\n\n"
+  else
+    argv.database.type = 'wiki-storage-' + argv.database.type
 
   #resolve all relative paths
   argv.root = path.resolve(argv.root)
