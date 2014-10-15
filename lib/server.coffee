@@ -134,34 +134,6 @@ module.exports = exports = (argv) ->
     next()
 
 
-  remoteGet = (remote, slug, cb) ->
-    [host, port] = remote.split(':')
-    getopts = {
-      host: host
-      port: port or 80
-      path: "/#{slug}.json"
-    }
-    # TODO: This needs more robust error handling, just trying to
-    # keep it from taking down the server.
-    http.get(getopts, (resp) ->
-      responsedata = ''
-      resp.on 'data', (chunk) ->
-        responsedata += chunk
-
-      resp.on 'error', (e) ->
-        cb(e, 'Page not found', 404)
-
-      resp.on 'end', ->
-        if resp.statusCode == 404
-          cb(null, 'Page not found', 404)
-        else if responsedata
-          cb(null, JSON.parse(responsedata), resp.statusCode)
-        else
-          cb(null, 'Page not found', 404)
-
-    ).on 'error', (e) ->
-      cb(e, 'Page not found', 404)
-
   persona = Persona(log, loga, argv)
 
   # Persona middleware needs access to this module's owner variable
@@ -333,7 +305,7 @@ module.exports = exports = (argv) ->
 
 
   ###### Json Routes ######
-  # Handle fetching local and remote json pages.
+  # Handle fetching local json pages.
   # Local pages are handled by the pagehandler module.
   app.get ///^/([a-z0-9-]+)\.json$///, cors, (req, res) ->
     file = req.params[0]
@@ -341,14 +313,6 @@ module.exports = exports = (argv) ->
       if e then return res.e e
       res.send(status or 200, page)
 
-  # Remote pages use the http client to retrieve the page
-  # and sends it to the client.  TODO: consider caching remote pages locally.
-  app.get ///^/remote/([a-zA-Z0-9:\.-]+)/([a-z0-9-]+)\.json$///, (req, res) ->
-    remoteGet req.params[0], req.params[1], (e, page, status) ->
-      if e
-        log "remoteGet error:", e
-        return res.e e
-      res.send(status or 200, page)
 
   ###### Favicon Routes ######
   # If favLoc doesn't exist send 404 and let the client
@@ -381,11 +345,6 @@ module.exports = exports = (argv) ->
             if e then return res.e e
             res.send('Favicon Saved')
 
-  # Redirect remote favicons to the server they are needed from.
-  app.get ///^/remote/([a-zA-Z0-9:\.-]+/favicon.png)$///, (req, res) ->
-    remotefav = "http://#{req.params[0]}"
-
-    res.redirect(remotefav)
 
   ###### Meta Routes ######
   # Send an array of pages in the database via json
@@ -482,9 +441,7 @@ module.exports = exports = (argv) ->
 
     # If the action is a fork, get the page from the remote server,
     # otherwise ask pagehandler for it.
-    if action.fork
-      remoteGet(action.fork, req.params[0], actionCB)
-    else if action.type is 'create'
+    if action.type is 'create'
       # Prevent attempt to write circular structure
       itemCopy = JSON.parse(JSON.stringify(action.item))
       pagehandler.get req.params[0], (e, page, status) ->
@@ -500,7 +457,7 @@ module.exports = exports = (argv) ->
         delete action.item
         actionCB(null, itemCopy)
       else # pull
-        remoteGet(action.site, req.params[0], actionCB)
+        res.status(400).send('Remote GET nolonger supported')
     else
       pagehandler.get(req.params[0], actionCB)
 
