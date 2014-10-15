@@ -225,7 +225,6 @@ module.exports = exports = (argv) ->
   # the login status, and related footer html, which the client
   # relies on to know if it is logged in or not.
   app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res) ->
-    console.log 'req =' + req
     urlPages = (i for i in req.params[0].split('/') by 2)[1..]
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
     info = {
@@ -263,7 +262,7 @@ module.exports = exports = (argv) ->
     pagehandler.get file, (e, page, status) ->
       if e then return res.e e
       if status is 404
-        return res.send page, status
+        return res.status(status).send(page)
       info = {
         pages: [
           page: file
@@ -311,7 +310,7 @@ module.exports = exports = (argv) ->
     file = req.params[0]
     pagehandler.get file, (e, page, status) ->
       if e then return res.e e
-      res.send(status or 200, page)
+      res.status(status or 200).send(page)
 
 
   ###### Favicon Routes ######
@@ -385,7 +384,7 @@ module.exports = exports = (argv) ->
     actionCB = (e, page, status) ->
       #if e then return res.e e
       if status is 404
-        res.send(page, status)
+        res.status(status).send(page)
       # Using Coffee-Scripts implicit returns we assign page.story to the
       # result of a list comprehension by way of a switch expression.
       try
