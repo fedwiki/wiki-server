@@ -26,10 +26,18 @@ describe 'page', ->
         got.title.should.equal 'Welcome Visitors'
         done()
       )
+    # note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
     it 'should copy a page from plugins if nonexistant in db', (done) ->
-      page.get('air-temperature', (e, got) ->
+      page.get('recent-changes', (e, got) ->
         if e then throw e
-        got.title.should.equal 'Air Temperature'
+        got.title.should.equal 'Recent Changes'
+        done()
+      )
+    # note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
+    it 'should mark a page from plugins with the plugin name', (done) ->
+      page.get('recent-changes', (e, got) ->
+        if e then throw e
+        got.plugin.should.equal 'activity'
         done()
       )
     it 'should create a page if it exists nowhere', (done) ->
