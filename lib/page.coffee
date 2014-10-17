@@ -79,7 +79,7 @@ module.exports = exports = (argv) ->
                     pluginloc = path.join(argv.packageDir, plugin, file)
                     fs.exists(pluginloc, (exists) ->
                       if exists
-                        load_parse(pluginloc, cb, {plugin})
+                        load_parse(pluginloc, cb, {plugin: pluginName})
                       else
                         giveUp()
                     )
