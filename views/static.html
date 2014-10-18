@@ -53,7 +53,8 @@ var loggedInUser =
   {{^authenticated}}
     null;
   {{/authenticated}}
-wiki.persona(loggedInUser);
+  var seedNeighbors = '{{seedNeighbors}}'
+  wiki.persona(loggedInUser);
   </script>
   </body>
 </html>
