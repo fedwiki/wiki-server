@@ -154,8 +154,8 @@ module.exports = exports = (argv) ->
     # use stream to direct to somewhere other than stdout.
   app.use(logger('tiny'))
   app.use(cookieParser())
-  app.use(bodyParser.json({ limit: '1024kb'}))
-  app.use(bodyParser.urlencoded({ extended: true, limit: '1024kb'}))
+  app.use(bodyParser.json({ limit: argv.sizeLimit}))
+  app.use(bodyParser.urlencoded({ extended: true, limit: argv.sizeLimit}))
   app.use(methodOverride())
   # app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
   app.use(sessions({
@@ -185,15 +185,11 @@ module.exports = exports = (argv) ->
   ##### Set up standard environments. #####
   # In dev mode turn on console.log debugging as well as showing the stack on err.
   if 'development' == app.get('env')
-    app.use(errorHandler({ dumpExceptions: true, showStack: true }))
+    app.use(errorHandler())
     argv.debug = console? and true
 
   # Show all of the options a server is using.
   log argv
-
-  # Swallow errors when in production.
-  if 'production' == app.get('env')
-    app.use(errorHandler())
 
   # authenticated indicates that we have a logged in user.
   # The req.isAuthenticated returns true on an unclaimed wiki
