@@ -16,8 +16,6 @@ require('coffee-trace')
 fs = require 'fs'
 path = require 'path'
 http = require 'http'
-child_process = require 'child_process'
-spawn = child_process.spawn
 
 # From npm
 mkdirp = require 'mkdirp'
@@ -73,11 +71,7 @@ module.exports = exports = (argv) ->
   # best to supply sane defaults for any arguments that are missing.
   argv = defargs(argv)
 
-  app.startOpts = do ->
-    options = {}
-    for own k, v of argv
-      options[k] = v
-    options
+  app.startOpts = argv
 
   log = (stuff...) ->
     console.log stuff if argv.debug
@@ -255,6 +249,7 @@ module.exports = exports = (argv) ->
       pages: []
       authenticated: is_authenticated(req)
       user: req.session.email
+      seedNeighbors: argv.neighbors
       ownedBy: if owner
         'Site owned by ' + owner.substr(0, owner.indexOf('@'))
       else
@@ -295,6 +290,7 @@ module.exports = exports = (argv) ->
         ]
         user: req.session.email
         authenticated: is_authenticated(req)
+        seedNeighbors: argv.neighbors
         ownedBy: if owner
           'Site owned by ' + owner.substr(0, owner.indexOf('@'))
         else
