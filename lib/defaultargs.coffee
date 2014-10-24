@@ -20,12 +20,19 @@ module.exports = (argv) ->
   argv.status or= path.join(argv.data, 'status')
   argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
   argv.id or= path.join(argv.status, 'persona.identity')
+  argv.uploadLimit or= '5mb'
   argv.neighbors or= ''
 
   if typeof(argv.database) is 'string'
     argv.database = JSON.parse(argv.database)
   argv.database or= {}
   argv.database.type or= './page'
+  if argv.database.type.charAt(0) is '.'
+    if argv.database.type != './page'
+      console.log "\n\nWARNING: This storage option is depeciated."
+      console.log "    See ReadMe for details of the changes required.\n\n"
+  else
+    argv.database.type = 'wiki-storage-' + argv.database.type
 
   #resolve all relative paths
   argv.root = path.resolve(argv.root)

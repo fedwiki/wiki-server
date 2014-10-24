@@ -27,6 +27,15 @@ JSONStream = require 'JSONStream'
 async = require 'async'
 f = require('flates')
 
+# Express 4 middleware
+logger = require 'morgan'
+cookieParser = require 'cookie-parser'
+methodOverride = require 'method-override'
+## session = require 'express-session'
+sessions = require 'client-sessions'
+bodyParser = require 'body-parser'
+errorHandler = require 'errorhandler'
+
 
 # Local files
 random = require './random_id'
@@ -71,7 +80,7 @@ module.exports = exports = (argv) ->
     console.log stuff
 
 
-  errorHandler = (req, res, next) ->
+  ourErrorHandler = (req, res, next) ->
     fired = false
     res.e = (error, status) ->
       if !fired
@@ -157,47 +166,52 @@ module.exports = exports = (argv) ->
   # Set up all the standard express server options,
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
-  app.configure ->
-    app.set('views', path.join(__dirname, '..', '/views'))
-    app.set('view engine', 'html')
-    app.engine('html', hbs.__express)
-    app.set('view options', layout: false)
+
+  app.set('views', path.join(__dirname, '..', '/views'))
+  app.set('view engine', 'html')
+  app.engine('html', hbs.__express)
+  app.set('view options', layout: false)
 
     # use logger, at least in development, probably needs a param to configure (or turn off).
     # use stream to direct to somewhere other than stdout.
-    app.use(express.logger('tiny'))
-    app.use(express.cookieParser())
-    app.use(express.bodyParser())
-    app.use(express.methodOverride())
-    app.use(express.session({ secret: 'notsecret'}))
-    app.use(persona.authenticate_session(getOwner))
-    app.use(errorHandler)
-    app.use(app.router)
+  app.use(logger('tiny'))
+  app.use(cookieParser())
+  app.use(bodyParser.json({ limit: argv.uploadLimit}))
+  app.use(bodyParser.urlencoded({ extended: true, limit: argv.uploadLimit}))
+  app.use(methodOverride())
+  # app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
+  app.use(sessions({
+    cookieName: 'session',
+    secret: 'notsosecret-needsreplacing',
+    duration: 24 * 60 * 60 * 1000,
+    activeDuration: 1000 * 60 * 5,
+    cookie: {
+      httpOnly: true
+    }
+    }))
+  app.use(persona.authenticate_session(getOwner))
+  app.use(ourErrorHandler)
 
     # Add static route to the client
-    app.use(express.static(argv.client))
+  app.use(express.static(argv.client))
 
     # Add static routes to the plugins client.
-    glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
-      plugins.map (plugin) ->
-        pluginName = plugin.slice(12, -7)
-        pluginPath = '/plugins/' + pluginName
-        app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
+  glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
+    plugins.map (plugin) ->
+      pluginName = plugin.slice(12, -7)
+      pluginPath = '/plugins/' + pluginName
+      app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
 
 
 
   ##### Set up standard environments. #####
   # In dev mode turn on console.log debugging as well as showing the stack on err.
-  app.configure 'development', ->
-    app.use(express.errorHandler({ dumpExceptions: true, showStack: true }))
+  if 'development' == app.get('env')
+    app.use(errorHandler())
     argv.debug = console? and true
 
   # Show all of the options a server is using.
   log argv
-
-  # Swallow errors when in production.
-  app.configure 'production', ->
-    app.use(express.errorHandler())
 
   # authenticated indicates that we have a logged in user.
   # The req.isAuthenticated returns true on an unclaimed wiki
@@ -267,7 +281,7 @@ module.exports = exports = (argv) ->
     pagehandler.get file, (e, page, status) ->
       if e then return res.e e
       if status is 404
-        return res.send page, status
+        return res.status(status).send(page)
       info = {
         pages: [
           page: file
@@ -316,7 +330,7 @@ module.exports = exports = (argv) ->
     file = req.params[0]
     pagehandler.get file, (e, page, status) ->
       if e then return res.e e
-      res.send(status or 200, page)
+      res.status(status or 200).send(page)
 
   # Remote pages use the http client to retrieve the page
   # and sends it to the client.  TODO: consider caching remote pages locally.
@@ -332,7 +346,7 @@ module.exports = exports = (argv) ->
   # deal with it.
   favLoc = path.join(argv.status, 'favicon.png')
   app.get '/favicon.png', cors, (req,res) ->
-    res.sendfile(favLoc)
+    res.sendFile(favLoc)
 
   authenticated = (req, res, next) ->
     if req.isAuthenticated()
@@ -392,8 +406,8 @@ module.exports = exports = (argv) ->
 
 
   app.post '/persona_logout', cors, (req, res) ->
-    req.session.destroy (err) ->
-      res.send(err || "OK")
+    req.session.reset()
+    res.send("OK")
 
   ##### Put routes #####
 
@@ -403,7 +417,7 @@ module.exports = exports = (argv) ->
     actionCB = (e, page, status) ->
       #if e then return res.e e
       if status is 404
-        res.send(page, status)
+        res.status(status).send(page)
       # Using Coffee-Scripts implicit returns we assign page.story to the
       # result of a list comprehension by way of a switch expression.
       try
@@ -436,7 +450,8 @@ module.exports = exports = (argv) ->
 
           else
             log "Unfamiliar action:", action
-            page.story
+            #page.story
+            throw('Unfamiliar action ignored')
       catch e
         return res.e e
 
@@ -451,9 +466,11 @@ module.exports = exports = (argv) ->
       pagehandler.put req.params[0], page, (e) ->
         if e then return res.e e
         res.send('ok')
-        log 'saved'
+        # log 'saved'
 
-    log action
+
+    # log action
+
     # If the action is a fork, get the page from the remote server,
     # otherwise ask pagehandler for it.
     if action.fork

@@ -1,3 +1,5 @@
+request = require 'supertest'
+fs = require 'fs'
 server = require '..'
 path = require 'path'
 random = require '../lib/random_id'
@@ -5,32 +7,32 @@ testid = random()
 argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), port: 55555})
 
 describe 'server', ->
-  describe '#actionCB()', ->
-    runningServer = {}
-    routeCB = {}
-    before((done) ->
-      runningServer = server(argv)
-      runningServer.once("listening", ->
-        routeCB = runningServer.routes.put[0].callbacks[1]
-        done()
-      )
-    )
-    req = {
-      body: {}
-      params: [ "asdf-test-page" ]
-    }
-    file = path.join(argv.db, "asdf-test-page")
-    res = {}
-    # TODO: When race conditions are fixed in lib/page.coffee clean up function below.
-    createSend = (test) ->
-      (str) ->
-        runningServer.pagehandler.get('asdf-test-page', (e, data) ->
-          if e then throw e
-          test(data)
-        )
+  app = {}
+  before((done) ->
+    app = server(argv)
+    app.once("listening", ->
+      done()))
 
-    it 'should create a page', (done) ->
-      req.body.action = JSON.stringify({
+
+  request = request('http://localhost:55555')
+
+  # location of the test page
+  loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
+
+
+  it 'new site should have an empty list of pages', (done) ->
+    request
+      .get('/system/slugs.json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end (err, res) ->
+        if err
+          throw err
+        res.body.should.be.empty
+        done()
+
+  it 'should create a page', (done) ->
+    body = JSON.stringify({
       type: 'create'
       item: {
         title: "Asdf Test Page"
@@ -40,89 +42,165 @@ describe 'server', ->
           {id: "a3", type: "paragraph", text: "this is the third paragraph"}
           {id: "a4", type: "paragraph", text: "this is the fourth paragraph"}
           ]
-        journal: []
       }
-      id: 'd5'
+      date: 1234567890123
       })
-      test = (page) ->
-        page.title.should.equal('Asdf Test Page')
-        page.journal[0].type.should.equal('create')
-        page.story[0].id.should.equal('a1')
-        done()
-      res.send = createSend(test)
-      routeCB(req, res)
 
-    it 'should move the paragraphs to the order given ', (done) ->
-      req.body.action = '{ "type": "move", "order": [ "a1", "a3", "a2", "a4"] }'
-      test = (page) ->
+    request
+      .put('/page/adsf-test-page/action')
+      .send("action=" + body)
+      .expect(200)
+      .end (err, res) ->
+        if err
+          throw err
+        done()
+
+  it 'should move the paragraphs to the order given ', (done) ->
+    body = '{ "type": "move", "order": [ "a1", "a3", "a2", "a4"] }'
+
+    request
+      .put('/page/adsf-test-page/action')
+      .send("action=" + body)
+      .expect(200)
+      .end (err, res) ->
+        if err
+          throw err
+        try
+          page = JSON.parse(fs.readFileSync(loc))
+        catch err
+          throw err
         page.story[1].id.should.equal('a3')
-        page.story[1].id.should.not.equal('a2')
+        page.story[2].id.should.equal('a2')
+        page.journal[1].type.should.equal('move')
         done()
-      res.send = createSend(test)
-      routeCB(req, res)
 
-    it 'should add a paragraph', (done) ->
-      req.body.action = JSON.stringify({
-        type: 'add'
-        after: 'a2'
-        item: {id: 'a5', type: 'paragraph', text: 'this is the NEW paragraph'}
-      })
-      test = (page) ->
+  it 'should add a paragraph', (done) ->
+    body = JSON.stringify({
+      type: 'add'
+      after: 'a2'
+      item: {id: 'a5', type: 'paragraph', text: 'this is the NEW paragrpah'}
+    })
+
+    request
+      .put('/page/adsf-test-page/action')
+      .send("action=" + body)
+      .expect(200)
+      .end (err, res) ->
+        if err
+          throw err
+        try
+          page = JSON.parse(fs.readFileSync(loc))
+        catch err
+          throw err
+        page.story.length.should.equal(5)
         page.story[3].id.should.equal('a5')
+        page.journal[2].type.should.equal('add')
         done()
-      res.send = createSend(test)
-      routeCB(req, res)
 
-    it 'should remove a paragraph with given id', (done) ->
-      req.body.action = JSON.stringify({
-        type: 'remove'
-        id: 'a2'
-      })
-      test = (page) ->
-        page.story.length.should.equal(4)
-        page.story[2].id.should.not.equal('a2')
-        page.story[1].id.should.not.equal('a2')
-        done()
-      res.send = createSend(test)
-      routeCB(req, res)
+  it 'should remove a paragraph with given id', (done) ->
+    body = JSON.stringify({
+      type: 'remove'
+      id: 'a2'
+    })
 
-    it 'should edit a paragraph in place', (done) ->
-      req.body.action = JSON.stringify({
-        type: 'edit'
-        item: {id: 'a3', type: 'paragraph', text: 'edited'}
-        id: 'a3'
-      })
-      test = (page) ->
-        page.story[1].text.should.equal('edited')
-        done()
-      res.send = createSend(test)
-      routeCB(req, res)
-
-    it 'should default to no change', (done) ->
-      req.body.action = JSON.stringify({
-        type: 'asdf'
-      })
-      test = (page) ->
+    request
+      .put('/page/adsf-test-page/action')
+      .send("action=" + body)
+      .expect(200)
+      .end (err, res) ->
+        if err
+          throw err
+        try
+          page = JSON.parse(fs.readFileSync(loc))
+        catch err
+          throw err
         page.story.length.should.equal(4)
         page.story[1].id.should.equal('a3')
-        page.story[3].text.should.equal('this is the fourth paragraph')
+        page.story[2].id.should.not.equal('a2')
+        page.story[2].id.should.equal('a5')
+        page.journal[3].type.should.equal('remove')
         done()
-      res.send = createSend(test)
-      routeCB(req, res)
 
-    it 'should refuse to create over a page', (done) ->
-      req.body.action = JSON.stringify({
-        type: 'create'
-        item: {
-          title: 'Doh'
-        }
-        id: 'c1'
+  it 'should edit a paragraph in place', (done) ->
+    body = JSON.stringify({
+      type: 'edit'
+      item: {id: 'a3', type: 'paragraph', text: 'edited'}
+      id: 'a3'
+    })
+
+    request
+      .put('/page/adsf-test-page/action')
+      .send("action=" + body)
+      .expect(200)
+      .end (err, res) ->
+        if err
+          throw err
+        try
+          page = JSON.parse(fs.readFileSync(loc))
+        catch err
+          throw err
+        page.story[1].text.should.equal('edited')
+        page.journal[4].type.should.equal('edit')
+        done()
+
+  it 'should default to no change', (done) ->
+    body = JSON.stringify({
+      type: 'asdf'
       })
-      test = (page) ->
+
+    request
+      .put('/page/adsf-test-page/action')
+      .send("action=" + body)
+      .expect(500)
+      .end (err, res) ->
+        if err
+          throw err
+        try
+          page = JSON.parse(fs.readFileSync(loc))
+        catch err
+          throw err
+        page.story.length.should.equal(4)
+        page.journal.length.should.equal(5)
+        page.story[0].id.should.equal('a1')
+        page.story[3].text.should.equal('this is the fourth paragraph')
+        page.journal[4].type.should.equal('edit')
+        done()
+
+  it 'should refuse to create over a page', (done) ->
+    body = JSON.stringify({
+      type: 'create'
+      item: { title: 'Doh'}
+      id: 'c1'
+    })
+
+    request
+      .put('/page/adsf-test-page/action')
+      .send("action=" + body)
+      .expect(409)
+      .end (err, res) ->
+        #console.log err
+        #console.log res
+        if err
+          throw err
+        try
+          page = JSON.parse(fs.readFileSync(loc))
+        catch err
+          throw err
         page.title.should.not.equal('Doh')
         done()
-      res.send = createSend(test)
-      routeCB(req, res)
 
-    after( ->
-      runningServer.close() if runningServer.close)
+  it 'site should now have one page', (done) ->
+    request
+      .get('/system/slugs.json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end (err, res) ->
+        if err
+          throw err
+        res.body.length.should.equal[1]
+        res.body[0].should.equal['adsf-test-page']
+        done()
+
+
+  after( ->
+    app.close() if app.close)
