@@ -510,13 +510,13 @@ module.exports = exports = (argv) ->
   setOwner null, (e) ->
     # Throw if you can't find the initial owner
     if e then throw e
-    server = app.listen argv.port, argv.host, ->
-      app.emit 'listening'
-      loga "Smallest Federated Wiki server listening on", argv.port, "in mode:", app.settings.env
+    app.emit 'owner-set'
+
+  app.on 'running-serv', (serv) ->
     ### Plugins ###
     # Should replace most WebSocketServers below.
     plugins = pluginsFactory(argv)
-    plugins.startServers({server: server, argv})
+    plugins.startServers({server: serv, argv})
 
   # Return app when called, so that it can be watched for events and shutdown with .close() externally.
   app

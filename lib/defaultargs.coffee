@@ -11,7 +11,6 @@ module.exports = (argv) ->
   argv.root or= __dirname
   # the directory that contains all the packages that makeup the wiki
   argv.packageDir or= path.join(argv.root, "..")
-  argv.farmPort or= 40000
   argv.port or= 3000
   argv.home or= 'welcome-visitors'
   argv.data or= path.join(getUserHome(), '.wiki') # see also cli

@@ -10,8 +10,9 @@ describe 'server', ->
   app = {}
   before((done) ->
     app = server(argv)
-    app.once("listening", ->
-      done()))
+    app.once("owner-set", ->
+      app.listen app.startOpts.port, app.startOpts.host, done
+    ))
 
 
   request = request('http://localhost:55555')
