@@ -339,7 +339,7 @@ module.exports = exports = (argv) ->
       if e
         log "remoteGet error:", e
         return res.e e
-      res.send(status or 200, page)
+      res.status(status or 200).send(page)
 
   ###### Favicon Routes ######
   # If favLoc doesn't exist send 404 and let the client
@@ -481,7 +481,7 @@ module.exports = exports = (argv) ->
       pagehandler.get req.params[0], (e, page, status) ->
         if e then return actionCB(e)
         unless status is 404
-          res.send('Page already exists.', 409)
+          res.status(409).send('Page already exists.')
         else
           actionCB(null, itemCopy)
 

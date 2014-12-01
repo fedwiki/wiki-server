@@ -40,7 +40,6 @@
     "morgan": "^1.3.1",
     "optimist": "*",
     "qs": "~1.2.1",
-    "redis": "~0.8.4",
     "serve-static": "^1.6.3",
     "underscore": "*"
   },
@@ -56,9 +55,7 @@
     "wiki-client": "*"
   },
   "optionalDependencies": {
-    "ws": "*",
-    "level": "*",
-    "mongoskin": "~0.6"
+    "ws": "*"
   },
   "engines": {
     "node": "0.10"
