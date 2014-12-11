@@ -9,7 +9,7 @@
     {
       "type": "html",
       "id": "d88b9a104822256b",
-      "text": "<h3>How To Read Content"
+      "text": "<h3>How To Read Content<h3>"
     },
     {
       "type": "paragraph",
@@ -39,7 +39,7 @@
     {
       "type": "html",
       "id": "be22840c9f21b356",
-      "text": "<h3>How To Add Content"
+      "text": "<h3>How To Add Content</h3>"
     },
     {
       "type": "paragraph",
@@ -94,7 +94,7 @@
     {
       "type": "html",
       "id": "243033dc6528eab1",
-      "text": "<h3>How to Remove Content"
+      "text": "<h3>How to Remove Content</h3>"
     },
     {
       "type": "paragraph",
@@ -109,7 +109,7 @@
     {
       "type": "html",
       "id": "d3a1bd6b0c947378",
-      "text": "<h3>How To Improve Wiki"
+      "text": "<h3>How To Improve Wiki</h3>"
     },
     {
       "type": "paragraph",
@@ -1268,6 +1268,46 @@
       "type": "fork",
       "site": "fed.wiki.org",
       "date": 1418289607167
+    },
+    {
+      "type": "edit",
+      "id": "d88b9a104822256b",
+      "item": {
+        "type": "html",
+        "id": "d88b9a104822256b",
+        "text": "<h3>How To Read Content<h3>"
+      },
+      "date": 1418291640726
+    },
+    {
+      "type": "edit",
+      "id": "be22840c9f21b356",
+      "item": {
+        "type": "html",
+        "id": "be22840c9f21b356",
+        "text": "<h3>How To Add Content</h3>"
+      },
+      "date": 1418291650940
+    },
+    {
+      "type": "edit",
+      "id": "243033dc6528eab1",
+      "item": {
+        "type": "html",
+        "id": "243033dc6528eab1",
+        "text": "<h3>How to Remove Content</h3>"
+      },
+      "date": 1418291658004
+    },
+    {
+      "type": "edit",
+      "id": "d3a1bd6b0c947378",
+      "item": {
+        "type": "html",
+        "id": "d3a1bd6b0c947378",
+        "text": "<h3>How To Improve Wiki</h3>"
+      },
+      "date": 1418291665532
     }
   ],
   "synopsys": "The first federated wiki page written and often first page viewed."
