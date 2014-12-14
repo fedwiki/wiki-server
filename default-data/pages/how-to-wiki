@@ -9,7 +9,7 @@
     {
       "type": "html",
       "id": "d88b9a104822256b",
-      "text": "<h3>How To Read Content<h3>"
+      "text": "<h3>How To Read Content</h3>"
     },
     {
       "type": "paragraph",
@@ -1308,6 +1308,16 @@
         "text": "<h3>How To Improve Wiki</h3>"
       },
       "date": 1418291665532
+    },
+    {
+      "type": "edit",
+      "id": "d88b9a104822256b",
+      "item": {
+        "type": "html",
+        "id": "d88b9a104822256b",
+        "text": "<h3>How To Read Content</h3>"
+      },
+      "date": 1418521158127
     }
   ],
   "synopsys": "The first federated wiki page written and often first page viewed."
