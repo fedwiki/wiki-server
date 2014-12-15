@@ -149,6 +149,11 @@ module.exports = exports = (argv) ->
       queue.push({file, page, cb})
       serial(queue.shift()) unless working
 
+  editDate = (journal) ->
+    for action in (journal || []) by -1
+      return action.date if action.date and action.type != 'fork'
+    undefined
+
   itself.pages = (cb) ->
     fs.readdir argv.db, (e, files) ->
       return cb(e) if e
@@ -163,7 +168,7 @@ module.exports = exports = (argv) ->
           cb null, {
             slug     : file
             title    : page.title
-            date     : page.journal and page.journal.length > 0 and page.journal.pop().date
+            date     : editDate(page.journal)
             synopsis : synopsis(page)
           }
 
