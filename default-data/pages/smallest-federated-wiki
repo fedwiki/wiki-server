@@ -1,0 +1,39 @@
+{
+  "title": "Smallest Federated Wiki",
+  "story": [
+    {
+      "type": "paragraph",
+      "id": "4b6f52ddeb6ebb39",
+      "text": "The Smallest Federated Wiki was the founding project that has grown into many sites running substantially evolved client and server software. See [[Federated Wiki]]"
+    }
+  ],
+  "journal": [
+    {
+      "type": "create",
+      "item": {
+        "title": "Smallest Federated Wiki",
+        "story": []
+      },
+      "date": 1418658255368
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "4b6f52ddeb6ebb39"
+      },
+      "id": "4b6f52ddeb6ebb39",
+      "type": "add",
+      "date": 1418658275922
+    },
+    {
+      "type": "edit",
+      "id": "4b6f52ddeb6ebb39",
+      "item": {
+        "type": "paragraph",
+        "id": "4b6f52ddeb6ebb39",
+        "text": "The Smallest Federated Wiki was the founding project that has grown into many sites running substantially evolved client and server software. See [[Federated Wiki]]"
+      },
+      "date": 1418658294473
+    }
+  ]
+}
