@@ -1,0 +1,218 @@
+{
+  "title": "Federated Wiki",
+  "story": [
+    {
+      "type": "paragraph",
+      "id": "530fa0c6d830da7d",
+      "text": "Federated Wiki sites share pages circulating within a creative commons. A single-page browser application can read from many sites at once and save changes in that browser. Users who host their own sites can login there to have their edits shared back to the federation as they edit."
+    },
+    {
+      "type": "reference",
+      "id": "efb2a20c1ef9eacf",
+      "site": "sites.fed.wiki.org",
+      "title": "sites.fed.wiki.org",
+      "text": "Catalog of federated wiki sites with domain names for page titles and brief descriptions tuned for search."
+    },
+    {
+      "type": "paragraph",
+      "id": "d72fef48db142972",
+      "text": "We publish federated wiki software as a Node.js package ready to run on a variety of platforms. This is usefully run on a personal laptop or an industrial server in the cloud. Most people get started by joining a community and launching sites and/or servers with their help. The server software supports a multi-tenant \"farm\" option useful for small groups or heavy users. [https://www.npmjs.com/package/wiki npm]"
+    },
+    {
+      "type": "paragraph",
+      "id": "74269607fa946000",
+      "text": "A community of open-source developers maintain both the client-side and server-side applications most frequently used to browse and edit pages. Pages themselves are composed of paragraph-sized items of various kinds. This same community provides a core set of plugins for rich content pages and a variety of experimental plugins that push boundaries of web computing. [https://github.com/fedwiki github]"
+    },
+    {
+      "type": "paragraph",
+      "id": "be5beb04ec02236f",
+      "text": "Ward Cunningham started the federation in 2011 with a workshop project called Smallest Federated Wiki or simply SFW. The data visualization and sharing mechanisms were supported by Nike's Sustainable Business and Innovation group. Early history has been documented in a series of video screencasts. Search for \"video\"."
+    }
+  ],
+  "journal": [
+    {
+      "type": "create",
+      "item": {
+        "title": "Federated Wiki",
+        "story": []
+      },
+      "date": 1418521457737
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "530fa0c6d830da7d"
+      },
+      "id": "530fa0c6d830da7d",
+      "type": "add",
+      "date": 1418521468150
+    },
+    {
+      "type": "edit",
+      "id": "530fa0c6d830da7d",
+      "item": {
+        "type": "paragraph",
+        "id": "530fa0c6d830da7d",
+        "text": "Federated Wiki sites share pages circulating within a creative commons. A single-page browser application can read from many sites at once and save changes in that browser. Users who host their own sites can login there to have their edits shared back to the federation as they edit."
+      },
+      "date": 1418521991680
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "74269607fa946000"
+      },
+      "id": "74269607fa946000",
+      "type": "add",
+      "after": "530fa0c6d830da7d",
+      "date": 1418522205755
+    },
+    {
+      "type": "edit",
+      "id": "74269607fa946000",
+      "item": {
+        "type": "paragraph",
+        "id": "74269607fa946000",
+        "text": "A community of open-source developers maintain both the client-side and server-side applications most frequently used to browse and edit pages. Pages themselves are composed of paragraph-sized items of various kinds. This same community provides a core set of plugins for rich content pages and a variety of experimental plugins that push boundaries of web computing."
+      },
+      "date": 1418522793324
+    },
+    {
+      "type": "edit",
+      "id": "74269607fa946000",
+      "item": {
+        "type": "paragraph",
+        "id": "74269607fa946000",
+        "text": "A community of open-source developers maintain both the client-side and server-side applications most frequently used to browse and edit pages. Pages themselves are composed of paragraph-sized items of various kinds. This same community provides a core set of plugins for rich content pages and a variety of experimental plugins that push boundaries of web computing. [https://github.com/fedwiki github]"
+      },
+      "date": 1418522877756
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "be5beb04ec02236f"
+      },
+      "id": "be5beb04ec02236f",
+      "type": "add",
+      "after": "74269607fa946000",
+      "date": 1418522935324
+    },
+    {
+      "type": "edit",
+      "id": "be5beb04ec02236f",
+      "item": {
+        "type": "paragraph",
+        "id": "be5beb04ec02236f",
+        "text": "Ward Cunningham started the federation in 2011 with a workshop project called Smallest Federated Wiki or simply SFW. The data visualization and sharing mechanisms were supported by Nike's Sustainable Business and Innovation group. Early history has been documented in a series of video screencasts."
+      },
+      "date": 1418523559948
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "efb2a20c1ef9eacf"
+      },
+      "id": "efb2a20c1ef9eacf",
+      "type": "add",
+      "after": "be5beb04ec02236f",
+      "date": 1418523670124
+    },
+    {
+      "type": "edit",
+      "id": "efb2a20c1ef9eacf",
+      "item": {
+        "type": "reference",
+        "id": "efb2a20c1ef9eacf",
+        "site": "sites.fed.wiki.org",
+        "title": "sites.fed.wiki.org",
+        "text": "Catalog of federated wiki sites with domain names for page titles and brief descriptions tuned for search."
+      },
+      "date": 1418523717019
+    },
+    {
+      "type": "move",
+      "order": [
+        "530fa0c6d830da7d",
+        "efb2a20c1ef9eacf",
+        "74269607fa946000",
+        "be5beb04ec02236f"
+      ],
+      "id": "efb2a20c1ef9eacf",
+      "date": 1418523723158
+    },
+    {
+      "type": "edit",
+      "id": "be5beb04ec02236f",
+      "item": {
+        "type": "paragraph",
+        "id": "be5beb04ec02236f",
+        "text": "Ward Cunningham started the federation in 2011 with a workshop project called Smallest Federated Wiki or simply SFW. The data visualization and sharing mechanisms were supported by Nike's Sustainable Business and Innovation group. Early history has been documented in a series of video screencasts. Search for \"video\"."
+      },
+      "date": 1418523815810
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "d72fef48db142972"
+      },
+      "id": "d72fef48db142972",
+      "type": "add",
+      "after": "be5beb04ec02236f",
+      "date": 1418523843204
+    },
+    {
+      "type": "edit",
+      "id": "d72fef48db142972",
+      "item": {
+        "type": "paragraph",
+        "id": "d72fef48db142972",
+        "text": "We publish federated wiki software as a Node.js package ready to run on a variety of platforms. This is usefully run on a personal laptop or an industrial server in the cloud. Most people get started by joining a community and launching servers in support of that community's purpose."
+      },
+      "date": 1418524089665
+    },
+    {
+      "type": "edit",
+      "id": "d72fef48db142972",
+      "item": {
+        "type": "paragraph",
+        "id": "d72fef48db142972",
+        "text": "We publish federated wiki software as a Node.js package ready to run on a variety of platforms. This is usefully run on a personal laptop or an industrial server in the cloud. Most people get started by joining a community and launching sites and/or servers with their help. [https://www.npmjs.com/package/wiki npm]"
+      },
+      "date": 1418524277519
+    },
+    {
+      "type": "edit",
+      "id": "d72fef48db142972",
+      "item": {
+        "type": "paragraph",
+        "id": "d72fef48db142972",
+        "text": "We publish federated wiki software as a Node.js package ready to run on a variety of platforms. This is usefully run on a personal laptop or an industrial server in the cloud. Most people get started by joining a community and launching sites and/or servers with their help. The server software supports a multi-tenant \"farm\" option useful for small groups or heavy users. [https://www.npmjs.com/package/wiki npm]"
+      },
+      "date": 1418524419231
+    },
+    {
+      "type": "move",
+      "order": [
+        "530fa0c6d830da7d",
+        "efb2a20c1ef9eacf",
+        "74269607fa946000",
+        "d72fef48db142972",
+        "be5beb04ec02236f"
+      ],
+      "id": "d72fef48db142972",
+      "date": 1418524447194
+    },
+    {
+      "type": "move",
+      "order": [
+        "530fa0c6d830da7d",
+        "efb2a20c1ef9eacf",
+        "d72fef48db142972",
+        "74269607fa946000",
+        "be5beb04ec02236f"
+      ],
+      "id": "74269607fa946000",
+      "date": 1418524455903
+    }
+  ]
+}
