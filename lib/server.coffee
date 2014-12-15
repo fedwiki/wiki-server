@@ -399,6 +399,24 @@ module.exports = exports = (argv) ->
       return res.e(e) if e
       res.json(sitemap)
 
+  app.get '/system/export.json', cors, (req, res) ->
+    pagehandler.pages (e, sitemap) ->
+      return res.e(e) if e
+      async.map(
+        sitemap,
+        (stub, done) ->
+          pagehandler.get(stub.slug, (error, page) ->
+            return done(e) if e
+            done(null, {slug: stub.slug, page})
+          )
+        ,
+        (e, pages) ->
+          return res.e(e) if e
+          res.json(pages.reduce( (dict, combined) ->
+            dict[combined.slug] = combined.page
+            dict
+          , {}))
+      )
 
   app.post '/persona_login',
            cors,
