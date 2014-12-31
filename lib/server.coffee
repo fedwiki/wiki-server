@@ -42,6 +42,7 @@ random = require './random_id'
 defargs = require './defaultargs'
 wiki = require 'wiki-client/lib/wiki'
 pluginsFactory = require './plugins'
+sitemapFactory = require './sitemap'
 Persona = require './persona_auth'
 
 render = (page) ->
@@ -94,6 +95,8 @@ module.exports = exports = (argv) ->
 
   # Require the database adapter and initialize it with options.
   app.pagehandler = pagehandler = require(argv.database.type)(argv)
+
+  app.sitemaphandler = sitemaphandler = sitemapFactory(argv)
 
   #### Setting up Authentication ####
   # The owner of a server is simply the open id url that the wiki
@@ -194,6 +197,7 @@ module.exports = exports = (argv) ->
 
     # Add static route to the client
   app.use(express.static(argv.client))
+
 
     # Add static routes to the plugins client.
   glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
@@ -393,11 +397,11 @@ module.exports = exports = (argv) ->
       files = files.map (file) -> file.slice(12)
       res.send(files)
 
-
+#
+  sitemapLoc = path.join(argv.status, 'sitemap.json')
   app.get '/system/sitemap.json', cors, (req, res) ->
-    pagehandler.pages (e, sitemap) ->
-      return res.e(e) if e
-      res.json(sitemap)
+    res.sendFile(sitemapLoc)
+
 
   app.get '/system/export.json', cors, (req, res) ->
     pagehandler.pages (e, sitemap) ->
@@ -486,6 +490,11 @@ module.exports = exports = (argv) ->
         res.send('ok')
         # log 'saved'
 
+      # update sitemap
+      console.log "about to update sitemap for: " + req.params[0]
+      sitemaphandler.update(req.params[0], page)
+
+
 
     # log action
 
@@ -535,6 +544,11 @@ module.exports = exports = (argv) ->
     # Should replace most WebSocketServers below.
     plugins = pluginsFactory(argv)
     plugins.startServers({server: serv, argv})
+    ### Sitemap ###
+    # create sitemap at start-up
+    console.log "calling createSitemap"
+    sitemaphandler.createSitemap(pagehandler)
+
 
   # Return app when called, so that it can be watched for events and shutdown with .close() externally.
   app
