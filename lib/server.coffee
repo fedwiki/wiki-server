@@ -491,10 +491,7 @@ module.exports = exports = (argv) ->
         # log 'saved'
 
       # update sitemap
-      console.log "about to update sitemap for: " + req.params[0]
       sitemaphandler.update(req.params[0], page)
-
-
 
     # log action
 

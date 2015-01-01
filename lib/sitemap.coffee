@@ -22,11 +22,13 @@ module.exports = exports = (argv) ->
     undefined
 
   sitemapUpdate = (file, page, cb) ->
-    entry = {}
-    entry["slug"] = file
-    entry["title"] = page.title
-    entry["date"] = lastEdit(page.journal)
-    entry["synopsis"] = synopsis(page)
+    
+    entry = {
+      'slug': file
+      'title': page.title
+      'date': lastEdit(page.journal)
+      'synopsis': synopsis(page)
+    }
 
     slugs = sitemap.map (page) -> page.slug
 
