@@ -3,6 +3,9 @@
 fs = require 'fs'
 path = require 'path'
 events = require 'events'
+writeFileAtomic = require 'write-file-atomic'
+
+mkdirp = require 'mkdirp'
 
 synopsis = require 'wiki-client/lib/synopsis'
 
@@ -22,7 +25,7 @@ module.exports = exports = (argv) ->
     undefined
 
   sitemapUpdate = (file, page, cb) ->
-    
+
     entry = {
       'slug': file
       'title': page.title
@@ -39,18 +42,17 @@ module.exports = exports = (argv) ->
     else
       sitemap.push entry
 
-    fs.exists argv.status, (exists) ->
-      if exists
-        fs.writeFile sitemapLoc, JSON.stringify(sitemap), (e) ->
-          console.log "Error saving sitemap" if e
-      else
-        mkdirp argv.status, ->
-          fs.writeFile sitemapLoc, JSON.stringify(sitemap), (e) ->
-            console.log "Error saving sitemap" if e
-
     cb()
 
-
+  sitemapSave = (sitemap) ->
+    fs.exists argv.status, (exists) ->
+      if exists
+        writeFileAtomic sitemapLoc, JSON.stringify(sitemap), (e) ->
+          console.log "Error saving sitemap: " + e if e
+      else
+        mkdirp argv.status, ->
+          writeFileAtomic sitemapLoc, JSON.stringify(sitemap), (e) ->
+            console.log "Error saving sitemap: " + e if e
 
 
   serial = (item) ->
@@ -59,9 +61,11 @@ module.exports = exports = (argv) ->
       sitemapUpdate(item.file, item.page, (e) ->
         process.nextTick( ->
           serial(queue.shift())
-        ))
+        )
+      )
     else
       itself.stop()
+      sitemapSave(sitemap)
 
   #### Public stuff ####
 
@@ -85,18 +89,9 @@ module.exports = exports = (argv) ->
         console.log "createSitemap: error " + e
         return e
       sitemap = newsitemap
-      fs.exists argv.status, (exists) ->
-        if exists
-          fs.writeFile sitemapLoc, JSON.stringify(sitemap), (e) ->
-            console.log "Error saving sitemap" if e
 
-        else
-          mkdirp argv.status, ->
-            fs.writeFile sitemapLoc, JSON.stringify(sitemap), (e) ->
-              console.log "Error saving sitemap" if e
-
-        process.nextTick ( ->
-          serial(queue.shift()))
+      process.nextTick ( ->
+        serial(queue.shift()))
 
   itself.update = (file, page) ->
     queue.push({file, page})
