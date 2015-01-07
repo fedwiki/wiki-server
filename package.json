@@ -40,7 +40,8 @@
     "optimist": "*",
     "qs": "~2.3",
     "serve-static": "^1.6.3",
-    "underscore": "*"
+    "underscore": "*",
+    "write-file-atomic": "*"
   },
   "scripts": {
     "test": "mocha"
