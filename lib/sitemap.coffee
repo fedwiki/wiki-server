@@ -44,15 +44,17 @@ module.exports = exports = (argv) ->
 
     cb()
 
-  sitemapSave = (sitemap) ->
+  sitemapSave = (sitemap, cb) ->
     fs.exists argv.status, (exists) ->
       if exists
         writeFileAtomic sitemapLoc, JSON.stringify(sitemap), (e) ->
-          console.log "Error saving sitemap: " + e if e
+          return cb(e) if e
+          cb()
       else
         mkdirp argv.status, ->
           writeFileAtomic sitemapLoc, JSON.stringify(sitemap), (e) ->
-            console.log "Error saving sitemap: " + e if e
+            return cb(e) if e
+            cb()
 
 
   serial = (item) ->
@@ -64,8 +66,10 @@ module.exports = exports = (argv) ->
         )
       )
     else
-      itself.stop()
-      sitemapSave(sitemap)
+      sitemapSave sitemap, (e) ->
+        console.log "Problems saving sitemap: "+ e if e
+        itself.stop()
+
 
   #### Public stuff ####
 

@@ -400,7 +400,14 @@ module.exports = exports = (argv) ->
 #
   sitemapLoc = path.join(argv.status, 'sitemap.json')
   app.get '/system/sitemap.json', cors, (req, res) ->
-    res.sendFile(sitemapLoc)
+    fs.exists sitemapLoc, (exists) ->
+      if exists
+        res.sendFile(sitemapLoc)
+      else
+        sitemaphandler.createSitemap (pagehandler)
+        # wait for the sitemap file to be written, before sending
+        sitemaphandler.once 'finished', ->
+          res.sendFile(sitemapLoc)
 
 
   app.get '/system/export.json', cors, (req, res) ->
