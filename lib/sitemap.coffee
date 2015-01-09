@@ -15,6 +15,12 @@ module.exports = exports = (argv) ->
 
   queue = []
 
+  sitemapPageHandler = null
+
+  # ms since last update we will remove sitemap from memory
+  sitemapTimeoutMs = 1200000
+  sitemapTimeoutHandler = null
+
   sitemapLoc = path.join(argv.status, 'sitemap.json')
 
   working = false
@@ -56,6 +62,22 @@ module.exports = exports = (argv) ->
             return cb(e) if e
             cb()
 
+  sitemapRestore = (cb) ->
+    fs.exists sitemapLoc, (exists) ->
+      if exists
+        fs.readFile(sitemapLoc, (err, data) ->
+          return cb(err) if err
+          try
+            sitemap = JSON.parse(data)
+          catch e
+            return cb(e)
+          process.nextTick( ->
+            serial(queue.shift()))
+        )
+      else
+        # sitemap file does not exist, so needs creating
+        itself.createSitemap(sitemapPageHandler)
+
 
   serial = (item) ->
     if item
@@ -75,9 +97,14 @@ module.exports = exports = (argv) ->
 
   itself = new events.EventEmitter
   itself.start = ->
+    clearTimeout(sitemapTimeoutHandler)
     working = true
     @emit 'working'
   itself.stop = ->
+    clearsitemap = ->
+      console.log "removing sitemap from memory"
+      sitemap = []
+    sitemapTimeoutHandler = setTimeout clearsitemap, sitemapTimeoutMs
     working = false
     @emit 'finished'
 
@@ -87,6 +114,9 @@ module.exports = exports = (argv) ->
   itself.createSitemap = (pagehandler) ->
 
     itself.start()
+
+    # we save the pagehandler, so we can recreate the sitemap if it is removed
+    sitemapPageHandler = pagehandler if !sitemapPageHandler?
 
     pagehandler.pages (e, newsitemap) ->
       if e
@@ -99,7 +129,12 @@ module.exports = exports = (argv) ->
 
   itself.update = (file, page) ->
     queue.push({file, page})
-    serial(queue.shift()) unless working
+    if sitemap = [] and !working
+      itself.start()
+      sitemapRestore (e) ->
+        console.log "Problems restoring sitemap: " + e if e
+    else
+      serial(queue.shift()) unless working
 
 
 
