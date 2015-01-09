@@ -15,6 +15,12 @@ module.exports = exports = (argv) ->
 
   queue = []
 
+  sitemapPageHandler = null
+
+  # ms since last update we will remove sitemap from memory
+  sitemapTimeoutMs = 1200000
+  sitemapTimeoutHandler = null
+
   sitemapLoc = path.join(argv.status, 'sitemap.json')
 
   working = false
@@ -44,15 +50,33 @@ module.exports = exports = (argv) ->
 
     cb()
 
-  sitemapSave = (sitemap) ->
+  sitemapSave = (sitemap, cb) ->
     fs.exists argv.status, (exists) ->
       if exists
         writeFileAtomic sitemapLoc, JSON.stringify(sitemap), (e) ->
-          console.log "Error saving sitemap: " + e if e
+          return cb(e) if e
+          cb()
       else
         mkdirp argv.status, ->
           writeFileAtomic sitemapLoc, JSON.stringify(sitemap), (e) ->
-            console.log "Error saving sitemap: " + e if e
+            return cb(e) if e
+            cb()
+
+  sitemapRestore = (cb) ->
+    fs.exists sitemapLoc, (exists) ->
+      if exists
+        fs.readFile(sitemapLoc, (err, data) ->
+          return cb(err) if err
+          try
+            sitemap = JSON.parse(data)
+          catch e
+            return cb(e)
+          process.nextTick( ->
+            serial(queue.shift()))
+        )
+      else
+        # sitemap file does not exist, so needs creating
+        itself.createSitemap(sitemapPageHandler)
 
 
   serial = (item) ->
@@ -64,16 +88,23 @@ module.exports = exports = (argv) ->
         )
       )
     else
-      itself.stop()
-      sitemapSave(sitemap)
+      sitemapSave sitemap, (e) ->
+        console.log "Problems saving sitemap: "+ e if e
+        itself.stop()
+
 
   #### Public stuff ####
 
   itself = new events.EventEmitter
   itself.start = ->
+    clearTimeout(sitemapTimeoutHandler)
     working = true
     @emit 'working'
   itself.stop = ->
+    clearsitemap = ->
+      console.log "removing sitemap from memory"
+      sitemap = []
+    sitemapTimeoutHandler = setTimeout clearsitemap, sitemapTimeoutMs
     working = false
     @emit 'finished'
 
@@ -83,6 +114,9 @@ module.exports = exports = (argv) ->
   itself.createSitemap = (pagehandler) ->
 
     itself.start()
+
+    # we save the pagehandler, so we can recreate the sitemap if it is removed
+    sitemapPageHandler = pagehandler if !sitemapPageHandler?
 
     pagehandler.pages (e, newsitemap) ->
       if e
@@ -95,7 +129,12 @@ module.exports = exports = (argv) ->
 
   itself.update = (file, page) ->
     queue.push({file, page})
-    serial(queue.shift()) unless working
+    if sitemap = [] and !working
+      itself.start()
+      sitemapRestore (e) ->
+        console.log "Problems restoring sitemap: " + e if e
+    else
+      serial(queue.shift()) unless working
 
 
 
