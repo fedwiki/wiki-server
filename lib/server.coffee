@@ -404,7 +404,8 @@ module.exports = exports = (argv) ->
       if exists
         res.sendFile(sitemapLoc)
       else
-        sitemaphandler.createSitemap (pagehandler)
+        # only createSitemap if we are not already creating one
+        sitemaphandler.createSitemap (pagehandler) if !sitemaphandler.isWorking()
         # wait for the sitemap file to be written, before sending
         sitemaphandler.once 'finished', ->
           res.sendFile(sitemapLoc)
