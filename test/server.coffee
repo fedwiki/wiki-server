@@ -32,6 +32,17 @@ describe 'server', ->
         res.body.should.be.empty
         done()
 
+  it 'new site should have an empty sitemap', (done) ->
+    request
+    .get('/system/sitemap.json')
+    .expect(200)
+    .expect('Content-Type', /json/)
+    .end (err, res) ->
+      if err
+        throw err
+      res.body.should.be.empty
+      done()
+
   it 'should create a page', (done) ->
     body = JSON.stringify({
       type: 'create'
@@ -200,6 +211,19 @@ describe 'server', ->
           throw err
         res.body.length.should.equal[1]
         res.body[0].should.equal['adsf-test-page']
+        done()
+
+  it 'sitemap should now have one page', (done) ->
+    request
+      .get('/system/sitemap.json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end (err, res) ->
+        if err
+          throw err
+        res.body.length.should.equal[1]
+        res.body[0].slug.should.equal['adsf-test-page']
+        res.body[0].synopsis.should.equal['this is the first paragraph']
         done()
 
 
