@@ -14,5 +14,6 @@ config.json
 /client/plugins/pushpin/**/*.js
 /client/chart/
 /client/garden/
+/default-data/status/sitemap.json
 node_modules
 npm-debug.log
