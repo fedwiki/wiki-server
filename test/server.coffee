@@ -9,6 +9,12 @@ argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests',
 describe 'server', ->
   app = {}
   before((done) ->
+    # as starting the server this was does not create a sitemap file, create an empty one
+    sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
+    fs.mkdirSync path.join('/tmp', 'sfwtests', testid)
+    fs.mkdirSync path.join('/tmp', 'sfwtests', testid, 'status')
+    fs.writeFileSync sitemapLoc, JSON.stringify([])
+
     app = server(argv)
     app.once("owner-set", ->
       app.listen app.startOpts.port, app.startOpts.host, done
@@ -31,17 +37,6 @@ describe 'server', ->
           throw err
         res.body.should.be.empty
         done()
-
-  it 'new site should have an empty sitemap', (done) ->
-    request
-    .get('/system/sitemap.json')
-    .expect(200)
-    .expect('Content-Type', /json/)
-    .end (err, res) ->
-      if err
-        throw err
-      res.body.should.be.empty
-      done()
 
   it 'should create a page', (done) ->
     body = JSON.stringify({
@@ -213,18 +208,6 @@ describe 'server', ->
         res.body[0].should.equal['adsf-test-page']
         done()
 
-  it 'sitemap should now have one page', (done) ->
-    request
-      .get('/system/sitemap.json')
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end (err, res) ->
-        if err
-          throw err
-        res.body.length.should.equal[1]
-        res.body[0].slug.should.equal['adsf-test-page']
-        res.body[0].synopsis.should.equal['this is the first paragraph']
-        done()
 
 
   after( ->
