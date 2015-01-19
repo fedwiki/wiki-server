@@ -43,6 +43,7 @@ defargs = require './defaultargs'
 wiki = require 'wiki-client/lib/wiki'
 pluginsFactory = require './plugins'
 sitemapFactory = require './sitemap'
+factoriesFactory = require './factory'
 Persona = require './persona_auth'
 
 render = (page) ->
@@ -97,6 +98,7 @@ module.exports = exports = (argv) ->
   app.pagehandler = pagehandler = require(argv.database.type)(argv)
 
   app.sitemaphandler = sitemaphandler = sitemapFactory(argv)
+  app.factorieshandler = factorieshandler = factoriesFactory(argv)
 
   #### Setting up Authentication ####
   # The owner of a server is simply the open id url that the wiki
@@ -312,20 +314,17 @@ module.exports = exports = (argv) ->
       }
       res.render('static.html', info)
 
+  factoriesLoc = path.join(argv.status, 'factories.json')
   app.get ///system/factories.json///, (req, res) ->
-    res.status(200)
-    res.header('Content-Type', 'application/json')
-# Plugins are located in packages in argv.packageDir, with package names of the form wiki-plugin-*
-    glob path.join(argv.packageDir, 'wiki-plugin-*', 'factory.json'), (e, files) ->
-      if e then return res.e(e)
-      files = files.map (file) ->
-        return fs.createReadStream(file).on('error', res.e).pipe(JSONStream.parse())
-
-      es.concat.apply(null, files)
-        .on('error', res.e)
-        .pipe(JSONStream.stringify())
-        .pipe(res)
-
+    fs.exists factoriesLoc, (exists) ->
+      if exists
+        res.sendFile(factoriesLoc)
+      else
+        # only createFactories if we are not already creating one
+        factorieshandler.createFactories if !factorieshandler.isWorking()
+        # wait for the factories file to be written, before sending
+        factorieshandler.once 'finished', ->
+          res.sendFile(factoriesLoc)
 
   ###### Json Routes ######
   # Handle fetching local and remote json pages.
@@ -549,6 +548,10 @@ module.exports = exports = (argv) ->
     # Should replace most WebSocketServers below.
     plugins = pluginsFactory(argv)
     plugins.startServers({server: serv, argv})
+    ### Factories ###
+    # create factories at start-up
+    console.log "calling createFactories"
+    factorieshandler.createFactories()
     ### Sitemap ###
     # create sitemap at start-up
     sitemaphandler.createSitemap(pagehandler)
