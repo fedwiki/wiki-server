@@ -551,7 +551,6 @@ module.exports = exports = (argv) ->
     plugins.startServers({server: serv, argv})
     ### Sitemap ###
     # create sitemap at start-up
-    console.log "calling createSitemap"
     sitemaphandler.createSitemap(pagehandler)
 
 
