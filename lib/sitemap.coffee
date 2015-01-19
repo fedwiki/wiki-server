@@ -121,6 +121,7 @@ module.exports = exports = (argv) ->
     pagehandler.pages (e, newsitemap) ->
       if e
         console.log "createSitemap: error " + e
+        itself.stop()
         return e
       sitemap = newsitemap
 
@@ -133,6 +134,7 @@ module.exports = exports = (argv) ->
       itself.start()
       sitemapRestore (e) ->
         console.log "Problems restoring sitemap: " + e if e
+        itself.createSitemap(sitemapPageHandler)
     else
       serial(queue.shift()) unless working
 
