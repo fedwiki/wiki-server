@@ -6,17 +6,19 @@
     <meta content='width=device-width, height=device-height, initial-scale=1.0, user-scalable=no' name='viewport'>
     <link id='favicon' href='/favicon.png' rel='icon' type='image/png'>
 
+    <link href='/style.css' rel='stylesheet' type='text/css' media='screen'>
+    <link href='/style/print.css' rel='stylesheet' type='text/css' media='print'>
     <link href='/style/persona-buttons.css' rel='stylesheet' type='text/css'>
+    <link href='/js/jquery-ui-1.10.1.custom.min.css' rel='stylesheet' type='text/css'>
     <!-- <link href='/theme/granite.css' rel='stylesheet' type='text/css'> -->
+
     <script src='/js/jquery-1.9.1.min.js' type='text/javascript'></script>
     <script src='/js/jquery-migrate-1.1.1.min.js' type='text/javascript'></script>
     <script src='/js/jquery-ui-1.10.1.custom.min.js' type='text/javascript'></script>
-    <link href='/js/jquery-ui-1.10.1.custom.min.css' rel='stylesheet' type='text/css'>
     <script src='/js/modernizr.custom.63710.js' type='text/javascript'></script>
     <script src='/js/underscore-min.js' type='text/javascript'></script>
     <script src="https://login.persona.org/include.js"></script>
-    <link href='/style.css' rel='stylesheet' type='text/css' media='screen'>
-    <link href='/style/print.css' rel='stylesheet' type='text/css' media='print'>
+
     <script src='/client.js' type='text/javascript'></script>
     <script>Modernizr.load([{test: Modernizr.cors, nope: '/js/jquery.ie.cors.js'}]);</script>
   </head>
@@ -27,7 +29,7 @@
       {{/pages}}
     </section>
     <footer class={{loginStatus}}>
-      
+
       <div id='site-owner' class='footer-item'>{{ownedBy}}</div>
 
       {{#authenticated}}
@@ -36,7 +38,7 @@
       {{^authenticated}}
       <a href='#' class='persona-button' id='persona-login-btn'><span>{{loginBtnTxt}}</span></a>
       {{/authenticated}}
-      
+
       <span class='searchbox'>
         Search:
         <input class='search' name='search' type='text'>
