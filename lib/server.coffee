@@ -59,8 +59,11 @@ render = (page) ->
         else if story.type is 'image'
           f.div {class: "item image"},
             f.img({class: "thumbnail", src: story.url}),
-            f.p(story.text or story.caption or 'uploaded image')
-        else f.div {class: "item"}, f.p(wiki.resolveLinks(story.text or '', sanitize))
+            f.p(wiki.resolveLinks(story.text or story.caption or 'uploaded image'))
+        else if story.type is 'html'
+          f.div {class: "item html"},
+          f.p(wiki.resolveLinks(story.text or '', sanitize))
+        else f.div {class: "item"}, f.p(wiki.resolveLinks(story.text or ''))
       ).join('\n')
 
 # Set export objects for node and coffee to a function that generates a sfw server.
