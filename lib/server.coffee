@@ -26,6 +26,7 @@ es = require 'event-stream'
 JSONStream = require 'JSONStream'
 async = require 'async'
 f = require('flates')
+sanitize = require 'sanitize-caja'
 
 # Express 4 middleware
 logger = require 'morgan'
@@ -59,7 +60,7 @@ render = (page) ->
           f.div {class: "item image"},
             f.img({class: "thumbnail", src: story.url}),
             f.p(story.text or story.caption or 'uploaded image')
-        else f.div {class: "item error"}, f.p(story.type)
+        else f.div {class: "item"}, f.p(wiki.resolveLinks(story.text or '', sanitize))
       ).join('\n')
 
 # Set export objects for node and coffee to a function that generates a sfw server.
