@@ -54,7 +54,7 @@ render = (page) ->
     f.div {class: "story"},
       page.story.map((story) ->
         if story.type is 'paragraph'
-          f.div {class: "item paragraph"}, f.p(story.text)
+          f.div {class: "item paragraph"}, f.p(wiki.resolveLinks(story.text))
         else if story.type is 'image'
           f.div {class: "item image"},
             f.img({class: "thumbnail", src: story.url}),
@@ -290,7 +290,7 @@ module.exports = exports = (argv) ->
         pages: [
           page: file
           generated: """data-server-generated=true"""
-          story: wiki.resolveLinks(render(page))
+          story: render(page)
         ]
         user: req.session.email
         authenticated: is_authenticated(req)
