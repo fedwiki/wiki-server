@@ -53,7 +53,9 @@
     "sinon": "1.12",
     "expect.js": "*",
     "supertest": "*",
-    "wiki-client": "*"
+    "wiki-client": "*",
+    "grunt": "~0.4",
+    "grunt-git-authors": "~2"
   },
   "optionalDependencies": {
     "ws": "*"
