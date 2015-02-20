@@ -1,3 +1,11 @@
+###
+ * Federated Wiki : Node Server
+ *
+ * Copyright Ward Cunningham and other contributors
+ * Licensed under the MIT license.
+ * https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt
+###
+
 # **server.coffee** is the main guts of the express version
 # of (Smallest Federated Wiki)[https://github.com/WardCunningham/Smallest-Federated-Wiki].
 # The CLI and Farm are just front ends
