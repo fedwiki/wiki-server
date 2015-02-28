@@ -1,3 +1,12 @@
+###
+ * Federated Wiki : Node Server
+ *
+ * Copyright Ward Cunningham and other contributors
+ * Licensed under the MIT license.
+ * https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt
+###
+
+
 # **defaultargs.coffee** when called on the argv object this
 # module will create reasonable defaults for options not supplied,
 # based on what information is provided.

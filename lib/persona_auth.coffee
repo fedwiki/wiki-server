@@ -1,3 +1,11 @@
+###
+ * Federated Wiki : Node Server
+ *
+ * Copyright Ward Cunningham and other contributors
+ * Licensed under the MIT license.
+ * https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt
+###
+
 # Middleware and Backend for Persona based verified email addresses
 
 https = require 'https'

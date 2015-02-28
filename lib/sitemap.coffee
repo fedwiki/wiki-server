@@ -1,3 +1,11 @@
+###
+ * Federated Wiki : Node Server
+ *
+ * Copyright Ward Cunningham and other contributors
+ * Licensed under the MIT license.
+ * https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt
+###
+
 # **sitemap.coffee**
 
 fs = require 'fs'

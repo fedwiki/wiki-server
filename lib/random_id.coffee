@@ -1,3 +1,11 @@
+###
+ * Federated Wiki : Node Server
+ *
+ * Copyright Ward Cunningham and other contributors
+ * Licensed under the MIT license.
+ * https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt
+###
+
 # **random_id.coffee**
 # Simple random hex generator, takes an optional number of
 # chars that defaults to 16 and returns a random id.

@@ -44,5 +44,4 @@ founding project, [SFW](https://github.com/WardCunningham/Smallest-Federated-Wik
 ## License
 
 You may use the Wiki under either the
-[MIT License](https://github.com/WardCunningham/wiki/blob/master/mit-license.txt) or the
-[GNU General Public License](https://github.com/WardCunningham/wiki/blob/master/gpl-license.txt) (GPL) Version 2.
+[MIT License](https://github.com/WardCunningham/wiki/blob/master/LICENSE.txt)

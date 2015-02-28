@@ -53,7 +53,9 @@
     "sinon": "1.12",
     "expect.js": "*",
     "supertest": "*",
-    "wiki-client": "*"
+    "wiki-client": "*",
+    "grunt": "~0.4",
+    "grunt-git-authors": "~2"
   },
   "optionalDependencies": {
     "ws": "*"
@@ -64,6 +66,12 @@
   "testling": {
     "harness": "mocha"
   },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/fedwiki/wiki-node-server.git"

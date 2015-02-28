@@ -1,3 +1,10 @@
+###
+ * Federated Wiki : Node Server
+ *
+ * Copyright Ward Cunningham and other contributors
+ * Licensed under the MIT license.
+ * https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt
+###
 # **page.coffee**
 # Module for interacting with pages persisted on the server.
 # Everything is stored using json flat files.
