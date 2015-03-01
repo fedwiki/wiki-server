@@ -1,7 +1,7 @@
 {
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "author": {
     "name": "Ward Cunningham",
     "email": "ward@c2.com",
