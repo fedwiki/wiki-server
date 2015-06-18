@@ -2,10 +2,31 @@ module.exports = function( grunt ) {
 
   "use strict";
 
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-git-authors');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec',
+          require: [
+            'coffee-script/register',
+            'should'
+        ]
+        },
+        src: [
+          'test/defaultargs.coffee',
+          'test/page.coffee',
+          'test/random.coffee',
+          'test/server.coffee',
+          'test/sitemap.coffee'
+        ]
+      }
+    },
 
     authors: {
       prior: [
@@ -18,6 +39,13 @@ module.exports = function( grunt ) {
         "Paul Rodwell <paul.rodwell@btinternet.com>",
         "Austin King <shout@ozten.com>"
       ]
+    },
+
+    watch: {
+      all: {
+        files: ['lib/*.coffee', 'test/*.coffee'],
+        tasks: ['mochaTest']
+      }
     }
   });
 
