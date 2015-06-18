@@ -2,6 +2,8 @@ module.exports = function( grunt ) {
 
   "use strict";
 
+  grunt.loadNpmTasks('grunt-git-authors');
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
@@ -18,32 +20,5 @@ module.exports = function( grunt ) {
       ]
     }
   });
-
-  grunt.registerTask( "update-authors", function () {
-  var getAuthors = require("grunt-git-authors"),
-  done = this.async();
-
-  getAuthors({
-    priorAuthors: grunt.config( "authors.prior")
-  }, function(error, authors) {
-    if (error) {
-      grunt.log.error(error);
-      return done(false);
-    }
-
-    authors = authors.map(function(author) {
-      if (author.match( /^Peter deHaan </) ) {
-        return "Peter deHaan (http://about.me/peterdehaan)";
-      } else {
-        return author;
-      }
-    });
-
-    grunt.file.write("AUTHORS.txt",
-    "Authors ordered by first contribution\n\n" +
-    authors.join("\n") + "\n");
-  });
-});
-
 
 }
