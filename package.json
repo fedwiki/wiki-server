@@ -54,6 +54,7 @@
     "expect.js": "*",
     "supertest": "*",
     "wiki-client": "*",
+    "wiki-plugin-activity": "*",
     "grunt": "~0.4",
     "grunt-contrib-watch": "~0.6",
     "grunt-mocha-test": "~0.12",

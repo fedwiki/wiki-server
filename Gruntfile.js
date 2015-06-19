@@ -16,7 +16,7 @@ module.exports = function( grunt ) {
           require: [
             'coffee-script/register',
             'should'
-        ]
+          ]
         },
         src: [
           'test/defaultargs.coffee',
