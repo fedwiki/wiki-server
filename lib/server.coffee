@@ -198,8 +198,10 @@ module.exports = exports = (argv) ->
   app.use(sessions({
     cookieName: 'session',
     secret: 'notsosecret-needsreplacing',
-    duration: 24 * 60 * 60 * 1000,
-    activeDuration: 1000 * 60 * 5,
+    # make the session long - 90 days for now
+    duration: 90 * 24 * 60 * 60 * 1000,
+    # add 12 hours to session if less than 12 hours to expiry
+    activeDuration: 12 * 60 * 60 * 1000,
     cookie: {
       httpOnly: true
     }
