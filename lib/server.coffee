@@ -359,6 +359,13 @@ module.exports = exports = (argv) ->
         return res.e e
       res.status(status or 200).send(page)
 
+
+  ###### Theme Routes ######
+  # If themes doesn't exist send 404 and let the client
+  # deal with it.
+  app.get /^\/theme\/(\w+\.\w+)$/, cors, (req,res) ->
+    res.sendFile(path.join(argv.status, 'theme', req.params[0]))
+
   ###### Favicon Routes ######
   # If favLoc doesn't exist send 404 and let the client
   # deal with it.
