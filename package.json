@@ -72,9 +72,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fedwiki/wiki-node-server.git"
+    "url": "https://github.com/fedwiki/wiki-server.git"
   },
   "bugs": {
-    "url": "https://github.com/fedwiki/wiki-node-server/issues"
+    "url": "https://github.com/fedwiki/wiki-server/issues"
   }
 }
