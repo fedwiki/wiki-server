@@ -119,6 +119,9 @@ module.exports = exports = (argv) ->
   # If the user is logged in, user will contain their identity
   user = ''
 
+  updateOwner = (id) ->
+    owner = id
+
 
   # Attempt to figure out if the wiki is claimed or not,
   # if it is return the owner, if not set the owner
@@ -434,7 +437,7 @@ module.exports = exports = (argv) ->
           , {}))
       )
 
-  app.post '/login', cors, securityhandler.login()
+  app.post '/login', cors, securityhandler.login(updateOwner)
 
   app.post '/logout', cors, (req, res) ->
     req.session.reset()
