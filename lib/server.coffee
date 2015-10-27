@@ -119,28 +119,11 @@ module.exports = exports = (argv) ->
   # If the user is logged in, user will contain their identity
   user = ''
 
+  # Called from authentication when the site is claimed,
+  # to update the name of the owner held here.
   updateOwner = (id) ->
     owner = id
 
-
-  # Attempt to figure out if the wiki is claimed or not,
-  # if it is return the owner, if not set the owner
-  # to the id if it is provided.
-  setOwner = (id, cb) ->
-    fs.exists argv.id, (exists) ->
-      if exists
-        fs.readFile(argv.id, (err, data) ->
-          if err then return cb err
-          owner += data
-          cb())
-      else if id
-        fs.writeFile(argv.id, id, (err) ->
-          if err then return cb err
-          loga "Claimed by #{id}"
-          owner = id
-          cb())
-      else
-        cb()
 
   #### Middleware ####
   #
