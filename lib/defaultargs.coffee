@@ -42,13 +42,14 @@ module.exports = (argv) ->
   else
     argv.database.type = 'wiki-storage-' + argv.database.type
 
-  argv.security or= ''
-  if argv.security != ''
-    argv.security = 'wiki-security-' + argv.security if argv.security != './security'
+  if typeof(argv.security) is 'string'
+    argv.security = JSON.parse(argv.security)
+  argv.security or= {}
+  argv.database.type or= './security'
+  if argv.security.type.charAt(0) is '.'
+    console.log "\n\nWARNING: Using default security module."
   else
-    console.log "\n\nERROR: No security module configured."
-    console.log "    Starting in read-only mode."
-    argv.security = './security'
+    argv.security.type = 'wiki-security-' + argv.security.type
 
   #resolve all relative paths
   argv.root = path.resolve(argv.root)
