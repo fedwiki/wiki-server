@@ -59,6 +59,9 @@ module.exports = exports = (log, loga, argv) ->
       ownerName = owner
     ownerName
 
+  security.getUser = (req) ->
+    return ''
+
   security.isAuthorized = ->
     # If site is not owned, everybody is authorized. Same as original...
     if owner == ''
@@ -66,14 +69,8 @@ module.exports = exports = (log, loga, argv) ->
     else
       return false
 
-  security.login = () ->
-    # should never be called...
-    (req, res) ->
-      res.send "Not Implemented", 501
+  security.defineRoutes = (app, cors, updateOwner) ->
+    # default security does not have any routes
 
-  security.logout = () ->
-    # should never be called...
-    (req, res) ->
-      res.send "Not Implemented", 501
 
   security

@@ -420,25 +420,10 @@ module.exports = exports = (argv) ->
           , {}))
       )
 
-  app.post '/login', cors, securityhandler.login(updateOwner)
+  ##### Define security routes #####
 
-  app.post '/logout', cors, (req, res) ->
-    req.session.reset()
-    securityhandler.logout()
-    res.send("OK")
+  securityhandler.defineRoutes app, cors, updateOwner
 
-
-
-  ### persona specific routes - needs reworking...
-  app.post '/persona_login',
-           cors,
-           persona.verify_assertion(getOwner, setOwner)
-
-
-  app.post '/persona_logout', cors, (req, res) ->
-    req.session.reset()
-    res.send("OK")
-  ###
 
 
   ##### Put routes #####
