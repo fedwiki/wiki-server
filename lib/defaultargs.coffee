@@ -45,7 +45,7 @@ module.exports = (argv) ->
   if typeof(argv.security) is 'string'
     argv.security = JSON.parse(argv.security)
   argv.security or= {}
-  argv.database.type or= './security'
+  argv.security.type or= './security'
   if argv.security.type.charAt(0) is '.'
     console.log "\n\nWARNING: Using default security module."
   else
