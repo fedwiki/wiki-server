@@ -366,7 +366,13 @@ module.exports = exports = (argv) ->
   app.get /^\/theme\/(\w+\.\w+)$/, cors, (req,res) ->
     res.sendFile(path.join(argv.status, 'theme', req.params[0]), (e) ->
       if (e)
-        res.status(e.status).end())
+        # swallow the error if the theme does not exist...
+        if req.path is '/theme/style.css'
+          res.set('Content-Type', 'text/css')
+          res.send('')
+        else
+          res.sendStatus(404)
+      )
 
   ###### Favicon Routes ######
   # If favLoc doesn't exist send 404 and let the client
