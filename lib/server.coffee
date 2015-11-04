@@ -79,6 +79,9 @@ module.exports = exports = (argv) ->
   # Create the main application object, app.
   app = express()
 
+  # remove x-powered-by header
+  app.disable('x-powered-by')
+
   # defaultargs.coffee exports a function that takes the argv object
   # that is passed in and then does its
   # best to supply sane defaults for any arguments that are missing.
