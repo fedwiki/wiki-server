@@ -42,14 +42,11 @@ module.exports = (argv) ->
   else
     argv.database.type = 'wiki-storage-' + argv.database.type
 
-  if typeof(argv.security) is 'string'
-    argv.security = JSON.parse(argv.security)
-  argv.security or= {}
-  argv.security.type or= './security'
-  if argv.security.type.charAt(0) is '.'
+  argv.security_type or= './security'
+  if argv.security_type is './security'
     console.log "\n\nWARNING: Using default security module."
   else
-    argv.security.type = 'wiki-security-' + argv.security.type
+    argv.security_type = 'wiki-security-' + argv.security_type
 
   #resolve all relative paths
   argv.root = path.resolve(argv.root)

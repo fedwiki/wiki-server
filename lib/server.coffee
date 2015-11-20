@@ -111,7 +111,7 @@ module.exports = exports = (argv) ->
   app.sitemaphandler = sitemaphandler = sitemapFactory(argv)
 
   # Require the security adapter and initialize it with options.
-  app.securityhandler = securityhandler = require(argv.security.type)(log, loga, argv)
+  app.securityhandler = securityhandler = require(argv.security_type)(log, loga, argv)
 
   # If the site is owned, owner will contain the name of the owner
   owner = ''
@@ -206,7 +206,7 @@ module.exports = exports = (argv) ->
 
   # Add static routes to the security client.
   if argv.security != './security'
-    app.use('/security', express.static(path.join(argv.packageDir, argv.security.type, 'client')))
+    app.use('/security', express.static(path.join(argv.packageDir, argv.security_type, 'client')))
 
 
 
