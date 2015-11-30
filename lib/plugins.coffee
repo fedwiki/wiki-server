@@ -3,7 +3,7 @@
  *
  * Copyright Ward Cunningham and other contributors
  * Licensed under the MIT license.
- * https://github.com/fedwiki/wiki-node-server/blob/master/LICENSE.txt
+ * https://github.com/fedwiki/wiki-server/blob/master/LICENSE.txt
 ###
 
 # support server-side plugins

@@ -1,17 +1,17 @@
-# Wiki-Node-Server
+# Wiki-Server
 
 Federated wiki node.js server as a npm module.
 
-**N.B.** Following a code re-organization over the New Year 2013/4 this 
-repository now only contains the code for the node.js server implementation. 
-You will also notice that the GitHub reposistory name and location has 
-changed, it is now fedwiki/wiki-node-server. It you have previously forked, 
-and cloned, this repository you will want to update your clone's upstream 
+**N.B.** Following a code re-organization over the New Year 2013/4 this
+repository now only contains the code for the node.js server implementation.
+You will also notice that the GitHub reposistory name and location has
+changed, it is now fedwiki/wiki-server. It you have previously forked,
+and cloned, this repository you will want to update your clone's upstream
 remote to reflect this change.
 
-This package is now published as ```wiki-server```. The ```wiki``` 
-package which depends on this package, to provide the federated wiki server, 
-can be found as [fedwiki/wiki-node].
+This package is now published as ```wiki-server```. The ```wiki```
+package which depends on this package, to provide the federated wiki server,
+can be found as [fedwiki/wiki].
 
 * * *
 

@@ -2,10 +2,11 @@ language: node_js
 node_js:
   - "0.10"
   - "0.12"
-  - "iojs"
+  - "4.2"
 install:
   - npm install
 before_install:
   - npm install -g grunt-cli
 script:
   - grunt mochaTest
+sudo: false
