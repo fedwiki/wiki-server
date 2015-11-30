@@ -52,7 +52,6 @@ defargs = require './defaultargs'
 wiki = require 'wiki-client/lib/wiki'
 pluginsFactory = require './plugins'
 sitemapFactory = require './sitemap'
-Persona = require './persona_auth'
 
 render = (page) ->
   return f.div({class: "twins"}, f.p('')) + '\n' +
@@ -105,38 +104,29 @@ module.exports = exports = (argv) ->
         res.end 'Server ' + error
         log "Res sent:", res.statusCode, error
       else
-        log "Allready fired", error
+        log "Already fired", error
     next()
 
   # Require the database adapter and initialize it with options.
   app.pagehandler = pagehandler = require(argv.database.type)(argv)
 
+  # Require the sitemap adapter and initialize it with options.
   app.sitemaphandler = sitemaphandler = sitemapFactory(argv)
 
-  #### Setting up Authentication ####
-  # The owner of a server is simply the open id url that the wiki
-  # has been claimed with.  It is persisted at argv.status/open_id.identity,
-  # and kept in memory as owner.  A falsy owner implies an unclaimed wiki.
+  # Require the security adapter and initialize it with options.
+  app.securityhandler = securityhandler = require(argv.security_type)(log, loga, argv)
+
+  # If the site is owned, owner will contain the name of the owner
   owner = ''
 
-  # Attempt to figure out if the wiki is claimed or not,
-  # if it is return the owner, if not set the owner
-  # to the id if it is provided.
-  setOwner = (id, cb) ->
-    fs.exists argv.id, (exists) ->
-      if exists
-        fs.readFile(argv.id, (err, data) ->
-          if err then return cb err
-          owner += data
-          cb())
-      else if id
-        fs.writeFile(argv.id, id, (err) ->
-          if err then return cb err
-          loga "Claimed by #{id}"
-          owner = id
-          cb())
-      else
-        cb()
+  # If the user is logged in, user will contain their identity
+  user = ''
+
+  # Called from authentication when the site is claimed,
+  # to update the name of the owner held here.
+  updateOwner = (id) ->
+    owner = id
+
 
   #### Middleware ####
   #
@@ -174,12 +164,6 @@ module.exports = exports = (argv) ->
     ).on 'error', (e) ->
       cb(e, 'Page not found', 404)
 
-  persona = Persona(log, loga, argv)
-
-  # Persona middleware needs access to this module's owner variable
-  getOwner = ->
-    owner
-
   #### Express configuration ####
   # Set up all the standard express server options,
   # including hbs to use handlebars/mustache templates
@@ -209,7 +193,7 @@ module.exports = exports = (argv) ->
       httpOnly: true
     }
     }))
-  app.use(persona.authenticate_session(getOwner))
+
   app.use(ourErrorHandler)
 
     # Add static route to the client
@@ -223,6 +207,10 @@ module.exports = exports = (argv) ->
       pluginPath = '/plugins/' + pluginName
       app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
 
+  # Add static routes to the security client.
+  if argv.security != './security'
+    app.use('/security', express.static(path.join(argv.packageDir, argv.security_type, 'client')))
+
 
 
   ##### Set up standard environments. #####
@@ -233,15 +221,6 @@ module.exports = exports = (argv) ->
 
   # Show all of the options a server is using.
   log argv
-
-  # authenticated indicates that we have a logged in user.
-  # The req.isAuthenticated returns true on an unclaimed wiki
-  # so we must also check that we have a logged in user
-  is_authenticated = (req) ->
-    if req.isAuthenticated()
-      if !! req.session.email
-        return true
-    return false
 
   #### Routes ####
   # Routes currently make up the bulk of the Express port of
@@ -266,25 +245,23 @@ module.exports = exports = (argv) ->
   app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res) ->
     urlPages = (i for i in req.params[0].split('/') by 2)[1..]
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
+    user = securityhandler.getUser(req)
     info = {
       pages: []
-      authenticated: is_authenticated(req)
-      user: req.session.email
+      authenticated: if user
+        true
+      else
+        false
+      user: user
       seedNeighbors: argv.neighbors
+      owned: if owner
+        true
+      else
+        false
       ownedBy: if owner
-        'Site owned by ' + owner.substr(0, owner.indexOf('@'))
+        owner
       else
         ''
-      loginStatus: if owner
-        if req.isAuthenticated()
-          'logout'
-        else 'login'
-      else 'claim'
-      loginBtnTxt: if owner
-        if req.isAuthenticated()
-          'Sign out'
-        else 'Sign in with your Email'
-      else 'Claim with your Email'
     }
     for page, idx in urlPages
       if urlLocs[idx] is 'view'
@@ -303,29 +280,27 @@ module.exports = exports = (argv) ->
       if e then return res.e e
       if status is 404
         return res.status(status).send(page)
+      user = securityhandler.getUser(req)
       info = {
         pages: [
           page: file
           generated: """data-server-generated=true"""
           story: render(page)
         ]
-        user: req.session.email
-        authenticated: is_authenticated(req)
+        authenticated: if user
+          true
+        else
+          false
+        user: user
         seedNeighbors: argv.neighbors
+        owned: if owner
+          true
+        else
+          false
         ownedBy: if owner
-          'Site owned by ' + owner.substr(0, owner.indexOf('@'))
+          owner
         else
           ''
-        loginStatus: if owner
-          if req.isAuthenticated()
-            'logout'
-          else 'login'
-        else 'claim'
-        loginBtnTxt: if owner
-          if req.isAuthenticated()
-            'Sign out'
-          else 'Sign in with your Email'
-        else 'Claim with your Email'
       }
       res.render('static.html', info)
 
@@ -384,16 +359,16 @@ module.exports = exports = (argv) ->
   app.get '/favicon.png', cors, (req,res) ->
     res.sendFile(favLoc)
 
-  authenticated = (req, res, next) ->
-    if req.isAuthenticated()
+  authorized = (req, res, next) ->
+    if securityhandler.isAuthorized(req)
       next()
     else
       console.log 'rejecting', req.path
-      res.send(403)
+      res.sendStatus(403)
 
   # Accept favicon image posted to the server, and if it does not already exist
   # save it.
-  app.post '/favicon.png', authenticated, (req, res) ->
+  app.post '/favicon.png', authorized, (req, res) ->
     favicon = req.body.image.replace(///^data:image/png;base64,///, "")
     buf = new Buffer(favicon, 'base64')
     fs.exists argv.status, (exists) ->
@@ -462,18 +437,15 @@ module.exports = exports = (argv) ->
           , {}))
       )
 
-  app.post '/persona_login',
-           cors,
-           persona.verify_assertion(getOwner, setOwner)
+  ##### Define security routes #####
+
+  securityhandler.defineRoutes app, cors, updateOwner
 
 
-  app.post '/persona_logout', cors, (req, res) ->
-    req.session.reset()
-    res.send("OK")
 
   ##### Put routes #####
 
-  app.put /^\/page\/([a-z0-9-]+)\/action$/i, authenticated, (req, res) ->
+  app.put /^\/page\/([a-z0-9-]+)\/action$/i, authorized, (req, res) ->
     action = JSON.parse(req.body.action)
     # Handle all of the possible actions to be taken on a page,
     actionCB = (e, page, status) ->
@@ -571,9 +543,11 @@ module.exports = exports = (argv) ->
 
   #### Start the server ####
   # Wait to make sure owner is known before listening.
-  setOwner null, (e) ->
+  securityhandler.retrieveOwner (e) ->
     # Throw if you can't find the initial owner
     if e then throw e
+    owner = securityhandler.getOwner()
+    console.log "owner: " + owner
     app.emit 'owner-set'
 
   app.on 'running-serv', (serv) ->

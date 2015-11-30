@@ -42,6 +42,12 @@ module.exports = (argv) ->
   else
     argv.database.type = 'wiki-storage-' + argv.database.type
 
+  argv.security_type or= './security'
+  if argv.security_type is './security'
+    console.log "\n\nWARNING: Using default security module."
+  else
+    argv.security_type = 'wiki-security-' + argv.security_type
+
   #resolve all relative paths
   argv.root = path.resolve(argv.root)
   argv.packageDir = path.resolve(argv.packageDir)
