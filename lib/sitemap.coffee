@@ -12,6 +12,8 @@ fs = require 'fs'
 path = require 'path'
 events = require 'events'
 writeFileAtomic = require 'write-file-atomic'
+_ = require 'lodash'
+xml2js = require 'xml2js'
 
 mkdirp = require 'mkdirp'
 
@@ -30,6 +32,7 @@ module.exports = exports = (argv) ->
   sitemapTimeoutHandler = null
 
   sitemapLoc = path.join(argv.status, 'sitemap.json')
+  xmlSitemapLoc = path.join(argv.status, 'sitemap.xml')
 
   working = false
 
@@ -86,6 +89,27 @@ module.exports = exports = (argv) ->
         # sitemap file does not exist, so needs creating
         itself.createSitemap(sitemapPageHandler)
 
+  xmlSitemapSave = (sitemap, cb) ->
+    xmlmap = []
+    _.each sitemap, (page) ->
+      result = {}
+      result["loc"] = argv.url + "/" + page.slug + ".html"
+      date = new Date(page.date)
+      result["lastmod"] = date.toISOString().substring(0,10)
+      xmlmap.push result
+    xmlmap = {'urlset': {"$": {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"},'url': xmlmap}}
+    builder = new xml2js.Builder()
+    xml = builder.buildObject(xmlmap)
+    fs.exists argv.status, (exists) ->
+      if exists
+        writeFileAtomic xmlSitemapLoc, xml, (e) ->
+          return cb(e) if e
+          cb()
+      else
+        mkdirp argv.status, ->
+          writeFileAtomic xmlSitemapLoc, xml, (e) ->
+            return cb(e) if e
+            cb()
 
   serial = (item) ->
     if item
@@ -98,6 +122,9 @@ module.exports = exports = (argv) ->
     else
       sitemapSave sitemap, (e) ->
         console.log "Problems saving sitemap: "+ e if e
+        itself.stop()
+      xmlSitemapSave sitemap, (e) ->
+        console.log "Problems saving sitemap(xml)"+ e if e
         itself.stop()
 
 

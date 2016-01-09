@@ -417,6 +417,16 @@ module.exports = exports = (argv) ->
         sitemaphandler.once 'finished', ->
           res.sendFile(sitemapLoc)
 
+  xmlSitemapLoc = path.join(argv.status, 'sitemap.xml')
+  app.get '/sitemap.xml', (req, res) ->
+    fs.exists sitemapLoc, (exists) ->
+      if exists
+        res.sendFile(xmlSitemapLoc)
+      else
+        sitemaphandler.createSitemap (pagehandler) if !sitemaphandler.isWorking()
+        sitemaphandler.once 'finished', ->
+          res.sendFile(xmlSitemapLoc)
+
 
   app.get '/system/export.json', cors, (req, res) ->
     pagehandler.pages (e, sitemap) ->
