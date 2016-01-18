@@ -560,11 +560,11 @@ module.exports = exports = (argv) ->
     console.log "owner: " + owner
     app.emit 'owner-set'
 
-  app.on 'running-serv', (serv) ->
+  app.on 'running-serv', (server) ->
     ### Plugins ###
     # Should replace most WebSocketServers below.
     plugins = pluginsFactory(argv)
-    plugins.startServers({server: serv, argv})
+    plugins.startServers({server, argv, app})
     ### Sitemap ###
     # create sitemap at start-up
     sitemaphandler.createSitemap(pagehandler)
