@@ -92,6 +92,7 @@ module.exports = exports = (argv) ->
   xmlSitemapSave = (sitemap, cb) ->
     xmlmap = []
     _.each sitemap, (page) ->
+      return unless page.date
       result = {}
       result["loc"] = argv.url + "/" + page.slug + ".html"
       date = new Date(page.date)
