@@ -566,7 +566,7 @@ module.exports = exports = (argv) ->
     ### Plugins ###
     # Should replace most WebSocketServers below.
     plugins = pluginsFactory(argv)
-    plugins.startServers({server, argv, app})
+    plugins.startServers({argv, app})
     ### Sitemap ###
     # create sitemap at start-up
     sitemaphandler.createSitemap(pagehandler)
