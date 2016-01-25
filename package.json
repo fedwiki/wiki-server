@@ -61,9 +61,6 @@
     "grunt-mocha-test": "~0.12",
     "grunt-git-authors": "~3"
   },
-  "optionalDependencies": {
-    "ws": "*"
-  },
   "engines": {
     "node": ">=0.10"
   },

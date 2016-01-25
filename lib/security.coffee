@@ -27,6 +27,8 @@ module.exports = exports = (log, loga, argv) ->
 
   owner = ''
 
+  admin = argv.admin
+
   # save the location of the identity file
   idFile = argv.id
 
@@ -68,6 +70,10 @@ module.exports = exports = (log, loga, argv) ->
       return true
     else
       return false
+
+  # Wiki server admin
+  security.isAdmin = ->
+    return false
 
   security.defineRoutes = (app, cors, updateOwner) ->
     # default security does not have any routes

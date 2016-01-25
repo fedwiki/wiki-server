@@ -242,9 +242,11 @@ module.exports = exports = (argv) ->
   # Can also be handled by the client, but it also sets up
   # the login status, and related footer html, which the client
   # relies on to know if it is logged in or not.
-  app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res) ->
+  app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res, next) ->
     urlPages = (i for i in req.params[0].split('/') by 2)[1..]
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
+    if urlLocs[0] is 'plugin'
+      return next()
     user = securityhandler.getUser(req)
     info = {
       pages: []
@@ -560,11 +562,11 @@ module.exports = exports = (argv) ->
     console.log "owner: " + owner
     app.emit 'owner-set'
 
-  app.on 'running-serv', (serv) ->
+  app.on 'running-serv', (server) ->
     ### Plugins ###
     # Should replace most WebSocketServers below.
     plugins = pluginsFactory(argv)
-    plugins.startServers({server: serv, argv})
+    plugins.startServers({argv, app})
     ### Sitemap ###
     # create sitemap at start-up
     sitemaphandler.createSitemap(pagehandler)
