@@ -94,8 +94,10 @@ module.exports = exports = (argv) ->
     _.each sitemap, (page) ->
       result = {}
       result["loc"] = argv.url + "/" + page.slug + ".html"
-      date = new Date(page.date)
-      result["lastmod"] = date.toISOString().substring(0,10)
+      if page.date?
+        date = new Date(page.date)
+        if !(isNaN(date.valueOf()))
+          result["lastmod"] = date.toISOString().substring(0,10)
       xmlmap.push result
     xmlmap = {'urlset': {"$": {"xmlns": "http://www.sitemaps.org/schemas/sitemap/0.9"},'url': xmlmap}}
     builder = new xml2js.Builder()
