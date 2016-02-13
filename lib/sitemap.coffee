@@ -141,6 +141,7 @@ module.exports = exports = (argv) ->
     clearsitemap = ->
       console.log "removing sitemap from memory"
       sitemap = []
+      clearTimeout(sitemapTimeoutHandler)
     sitemapTimeoutHandler = setTimeout clearsitemap, sitemapTimeoutMs
     working = false
     @emit 'finished'
