@@ -245,7 +245,7 @@ module.exports = exports = (argv) ->
   app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res, next) ->
     urlPages = (i for i in req.params[0].split('/') by 2)[1..]
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
-    if urlLocs[0] is 'plugin'
+    if ['plugin', 'auth'].indexOf(urlLocs[0]) > -1
       return next()
     user = securityhandler.getUser(req)
     info = {
