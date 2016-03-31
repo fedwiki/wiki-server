@@ -260,6 +260,10 @@ module.exports = exports = (argv) ->
         true
       else
         false
+      isOwner: if securityhandler.isAuthorized(req)
+        true
+      else
+        false
       ownedBy: if owner
         owner
       else
@@ -296,6 +300,10 @@ module.exports = exports = (argv) ->
         user: user
         seedNeighbors: argv.neighbors
         owned: if owner
+          true
+        else
+          false
+        isOwner: if securityhandler.isAuthorized(req)
           true
         else
           false
