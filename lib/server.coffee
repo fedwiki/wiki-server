@@ -182,6 +182,10 @@ module.exports = exports = (argv) ->
   app.use(bodyParser.urlencoded({ extended: true, limit: argv.uploadLimit}))
   app.use(methodOverride())
   # app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
+  cookieValue = {
+    httpOnly: true
+  }
+  cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
   app.use(sessions({
     cookieName: 'session',
     secret: 'notsosecret-needsreplacing',
@@ -189,9 +193,7 @@ module.exports = exports = (argv) ->
     duration: 6.75 * 24 * 60 * 60 * 1000,
     # add 3 hours to session if less than 3 hours to expiry
     activeDuration: 3 * 60 * 60 * 1000,
-    cookie: {
-      httpOnly: true
-    }
+    cookie: cookieValue
     }))
 
   app.use(ourErrorHandler)
