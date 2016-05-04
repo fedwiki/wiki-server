@@ -36,8 +36,8 @@
     "express": "^4.9.5",
     "flates": "0.0.5",
     "glob": "^7.0.3",
-    "hbs": "*",
-    "lodash": "^4.8.2",
+    "express-hbs": "*",
+    "lodash": "^4.11.2",
     "method-override": "^2.2.0",
     "mkdirp": "*",
     "morgan": "^1.3.1",
@@ -55,14 +55,16 @@
     "expect.js": "*",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-git-authors": "~3",
+    "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "~0.12",
     "mocha": "*",
-    "should": "^8.3.0",
-    "sinon": "1.17",
+    "should": "^8.3.1",
+    "sinon": "^1.17.4",
     "supertest": "*",
     "wiki-client": "^0.7.6",
-    "wiki-plugin-activity": "*"
+    "wiki-plugin-activity": "*",
+    "grunt-nsp": "*",
+    "grunt-retire": "*"
   },
   "engines": {
     "node": ">=0.10"

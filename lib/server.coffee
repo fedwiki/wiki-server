@@ -28,7 +28,7 @@ http = require 'http'
 # From npm
 mkdirp = require 'mkdirp'
 express = require 'express'
-hbs = require 'hbs'
+hbs = require 'express-hbs'
 glob = require 'glob'
 es = require 'event-stream'
 JSONStream = require 'JSONStream'
@@ -171,7 +171,7 @@ module.exports = exports = (argv) ->
 
   app.set('views', path.join(__dirname, '..', '..', 'wiki-client', '/views'))
   app.set('view engine', 'html')
-  app.engine('html', hbs.__express)
+  app.engine('html', hbs.express4())
   app.set('view options', layout: false)
 
     # use logger, at least in development, probably needs a param to configure (or turn off).
