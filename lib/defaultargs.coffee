@@ -27,9 +27,10 @@ module.exports = (argv) ->
   argv.db or= path.join(argv.data, 'pages')
   argv.status or= path.join(argv.data, 'status')
   argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
-  argv.id or= path.join(argv.status, 'persona.identity')
+  argv.id or= path.join(argv.status, 'owner.json')
   argv.uploadLimit or= '5mb'
   argv.neighbors or= ''
+  argv.debug or= false
 
   if typeof(argv.database) is 'string'
     argv.database = JSON.parse(argv.database)

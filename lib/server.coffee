@@ -181,16 +181,15 @@ module.exports = exports = (argv) ->
   app.use(bodyParser.json({ limit: argv.uploadLimit}))
   app.use(bodyParser.urlencoded({ extended: true, limit: argv.uploadLimit}))
   app.use(methodOverride())
-  # app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
   cookieValue = {
     httpOnly: true
   }
   cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
   app.use(sessions({
     cookieName: 'session',
-    secret: 'notsosecret-needsreplacing',
-    # make the session a bit shorter than a week
-    duration: 6.75 * 24 * 60 * 60 * 1000,
+    secret: argv.cookieSecret,
+    # make the session long, so should only need to login when server is restarted.
+    duration: 365 * 24 * 60 * 60 * 1000,
     # add 3 hours to session if less than 3 hours to expiry
     activeDuration: 3 * 60 * 60 * 1000,
     cookie: cookieValue
