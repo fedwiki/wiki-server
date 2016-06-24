@@ -29,6 +29,7 @@ module.exports = (argv) ->
   argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
   argv.id or= path.join(argv.status, 'owner.json')
   argv.uploadLimit or= '5mb'
+  argv.cookieSecret or= require('crypto').randomBytes(64).toString('hex')
   argv.neighbors or= ''
   argv.debug or= false
 
