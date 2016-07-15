@@ -41,7 +41,7 @@
     "qs": "6",
     "sanitize-caja": "*",
     "serve-static": "^1.6.3",
-    "lodash": "3",
+    "lodash": "4.13.1",
     "xml2js": "0.4",
     "write-file-atomic": "*"
   },
@@ -56,8 +56,8 @@
     "supertest": "*",
     "wiki-client": "*",
     "wiki-plugin-activity": "*",
-    "grunt": "~0.4",
-    "grunt-contrib-watch": "~0.6",
+    "grunt": "~1.0.1",
+    "grunt-contrib-watch": "~1.0.0",
     "grunt-mocha-test": "~0.12",
     "grunt-git-authors": "~3"
   },
