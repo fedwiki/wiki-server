@@ -34,6 +34,7 @@
     "flates": "0.0.5",
     "glob": "*",
     "hbs": "*",
+    "lodash": "^4.13.1",
     "method-override": "^2.2.0",
     "mkdirp": "*",
     "morgan": "^1.3.1",
@@ -41,25 +42,24 @@
     "qs": "6",
     "sanitize-caja": "*",
     "serve-static": "^1.6.3",
-    "lodash": "3",
-    "xml2js": "0.4",
-    "write-file-atomic": "*"
+    "write-file-atomic": "*",
+    "xml2js": "0.4"
   },
   "scripts": {
     "test": "mocha"
   },
   "devDependencies": {
+    "expect.js": "*",
+    "grunt": "^1.0.1",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-git-authors": "~3",
+    "grunt-mocha-test": "~0.12",
     "mocha": "*",
     "should": "*",
     "sinon": "1.17",
-    "expect.js": "*",
     "supertest": "*",
     "wiki-client": "*",
-    "wiki-plugin-activity": "*",
-    "grunt": "~0.4",
-    "grunt-contrib-watch": "~0.6",
-    "grunt-mocha-test": "~0.12",
-    "grunt-git-authors": "~3"
+    "wiki-plugin-activity": "*"
   },
   "engines": {
     "node": ">=0.10"
