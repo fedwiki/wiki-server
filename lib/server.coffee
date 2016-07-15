@@ -249,6 +249,7 @@ module.exports = exports = (argv) ->
       return next()
     user = securityhandler.getUser(req)
     info = {
+      title: 'Federated Wiki'
       pages: []
       authenticated: if user
         true
