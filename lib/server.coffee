@@ -247,9 +247,10 @@ module.exports = exports = (argv) ->
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
     if urlLocs[0] is 'plugin'
       return next()
+    title = urlPages[..].pop().replace(/-+/g,' ')
     user = securityhandler.getUser(req)
     info = {
-      title: 'Federated Wiki'
+      title
       pages: []
       authenticated: if user
         true
@@ -283,7 +284,7 @@ module.exports = exports = (argv) ->
       if e then return res.e e
       if status is 404
         return res.status(status).send(page)
-      page.title ||= slug
+      page.title ||= slug.replace(/-+/g,' ')
       page.story ||= []
       user = securityhandler.getUser(req)
 
