@@ -186,12 +186,13 @@ module.exports = exports = (argv) ->
   }
   cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
   app.use(sessions({
-    cookieName: 'session',
+    cookieName: 'wikiSession',
+    requestKey: 'session',
     secret: argv.cookieSecret,
-    # make the session long, so should only need to login when server is restarted.
-    duration: 365 * 24 * 60 * 60 * 1000,
-    # add 3 hours to session if less than 3 hours to expiry
-    activeDuration: 3 * 60 * 60 * 1000,
+    # make the session a week long
+    duration: 7 * 24 * 60 * 60 * 1000,
+    # add 12 hours to session if less than 12 hours to expiry
+    activeDuration: 12 * 60 * 60 * 1000,
     cookie: cookieValue
     }))
 
