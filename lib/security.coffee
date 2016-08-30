@@ -64,12 +64,9 @@ module.exports = exports = (log, loga, argv) ->
   security.getUser = (req) ->
     return ''
 
-  security.isAuthorized = ->
-    # If site is not owned, everybody is authorized. Same as original...
-    if owner == ''
-      return true
-    else
-      return false
+  security.isAuthorized = (req) ->
+    # nobody is authorized - everything is read-only
+    return false
 
   # Wiki server admin
   security.isAdmin = ->
