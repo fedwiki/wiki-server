@@ -58,7 +58,7 @@ render = (page) ->
   f.div({class: "header"}, f.h1(
     f.a({href: '/', style: 'text-decoration: none'},
       f.img({height: '32px', src: '/favicon.png'})) +
-      ' ' + page.title)) + '\n' +
+      ' ' + (page.title))) + '\n' +
     f.div {class: "story"},
       page.story.map((story) ->
         if story.type is 'paragraph'
@@ -249,8 +249,10 @@ module.exports = exports = (argv) ->
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
     if ['plugin', 'auth'].indexOf(urlLocs[0]) > -1
       return next()
+    title = urlPages[..].pop().replace(/-+/g,' ')
     user = securityhandler.getUser(req)
     info = {
+      title
       pages: []
       authenticated: if user
         true
@@ -280,18 +282,22 @@ module.exports = exports = (argv) ->
     res.render('static.html', info)
 
   app.get ///([a-z0-9-]+)\.html$///, (req, res, next) ->
-    file = req.params[0]
-    log(file)
-    if file is 'runtests'
+    slug = req.params[0]
+    log(slug)
+    if slug is 'runtests'
       return next()
-    pagehandler.get file, (e, page, status) ->
+    pagehandler.get slug, (e, page, status) ->
       if e then return res.e e
       if status is 404
         return res.status(status).send(page)
+      page.title ||= slug.replace(/-+/g,' ')
+      page.story ||= []
       user = securityhandler.getUser(req)
+
       info = {
+        title: page.title
         pages: [
-          page: file
+          page: slug
           generated: """data-server-generated=true"""
           story: render(page)
         ]
