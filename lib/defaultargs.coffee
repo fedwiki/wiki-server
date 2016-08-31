@@ -49,6 +49,7 @@ module.exports = (argv) ->
     console.log "\n\nWARNING: Using default security module."
   else
     argv.security_type = 'wiki-security-' + argv.security_type
+  argv.security_legacy or= false
 
   #resolve all relative paths
   argv.root = path.resolve(argv.root)
