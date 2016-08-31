@@ -57,14 +57,14 @@
     "grunt-contrib-watch": "^1.0.0",
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "~0.12",
+    "grunt-nsp": "*",
+    "grunt-retire": "*",
     "mocha": "*",
-    "should": "^8.3.1",
+    "should": "^11.1.0",
     "sinon": "^1.17.4",
     "supertest": "*",
     "wiki-client": "^0.7.6",
-    "wiki-plugin-activity": "*",
-    "grunt-nsp": "*",
-    "grunt-retire": "*"
+    "wiki-plugin-activity": "*"
   },
   "engines": {
     "node": ">=0.10"
