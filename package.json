@@ -2,9 +2,6 @@
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
   "version": "0.9.0-5",
-  "publishConfig": {
-    "tag": "next"
-  },
   "author": {
     "name": "Ward Cunningham",
     "email": "ward@c2.com",
@@ -34,7 +31,7 @@
     "errorhandler": "^1.2.0",
     "event-stream": "^3.3.4",
     "express": "^4.9.5",
-    "express-hbs": "*",
+    "express-hbs": "^1.0.3",
     "flates": "0.0.5",
     "glob": "^7.0.6",
     "lodash": "^4.15.0",
@@ -58,12 +55,12 @@
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "~0.12",
     "grunt-nsp": "*",
-    "grunt-retire": "*",
+    "grunt-retire": "^1.0.3",
     "mocha": "^2.5.3",
     "should": "^11.1.0",
     "sinon": "^1.17.5",
     "supertest": "^2.0.0",
-    "wiki-client": "^0.7.9",
+    "wiki-client": "^0.8.0",
     "wiki-plugin-activity": "*"
   },
   "engines": {
