@@ -4,7 +4,7 @@ server = require '..'
 path = require 'path'
 random = require '../lib/random_id'
 testid = random()
-argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), port: 55555})
+argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), port: 55555, security_legacy: true})
 
 describe 'server', ->
   app = {}

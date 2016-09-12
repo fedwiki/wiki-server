@@ -55,19 +55,23 @@ module.exports = exports = (log, loga, argv) ->
 
   # Return the owners name
   security.getOwner = ->
-    if ~owner.indexOf '@'
-      ownerName = owner.substr(0, owner.indexOf('@'))
+    if !owner.name?
+      ownerName = ''
     else
-      ownerName = owner
+      ownerName = owner.name
     ownerName
 
   security.getUser = (req) ->
     return ''
 
-  security.isAuthorized = ->
-    # If site is not owned, everybody is authorized. Same as original...
+  security.isAuthorized = (req) ->
+    # nobody is authorized - everything is read-only
+    # unless legacy support, when unclaimed sites can be editted.
     if owner == ''
-      return true
+      if argv.security_legacy
+        return true
+      else
+        return false
     else
       return false
 

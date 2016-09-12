@@ -28,7 +28,7 @@ http = require 'http'
 # From npm
 mkdirp = require 'mkdirp'
 express = require 'express'
-hbs = require 'hbs'
+hbs = require 'express-hbs'
 glob = require 'glob'
 es = require 'event-stream'
 JSONStream = require 'JSONStream'
@@ -171,7 +171,7 @@ module.exports = exports = (argv) ->
 
   app.set('views', path.join(__dirname, '..', '..', 'wiki-client', '/views'))
   app.set('view engine', 'html')
-  app.engine('html', hbs.__express)
+  app.engine('html', hbs.express4())
   app.set('view options', layout: false)
 
     # use logger, at least in development, probably needs a param to configure (or turn off).
@@ -181,17 +181,19 @@ module.exports = exports = (argv) ->
   app.use(bodyParser.json({ limit: argv.uploadLimit}))
   app.use(bodyParser.urlencoded({ extended: true, limit: argv.uploadLimit}))
   app.use(methodOverride())
-  # app.use(session({ secret: 'notsecret', resave: true, saveUninitialized: true, cookie: { httpOnly: true}}))
+  cookieValue = {
+    httpOnly: true
+  }
+  cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
   app.use(sessions({
-    cookieName: 'session',
-    secret: 'notsosecret-needsreplacing',
-    # make the session a bit shorter than a week
-    duration: 6.75 * 24 * 60 * 60 * 1000,
-    # add 3 hours to session if less than 3 hours to expiry
-    activeDuration: 3 * 60 * 60 * 1000,
-    cookie: {
-      httpOnly: true
-    }
+    cookieName: 'wikiSession',
+    requestKey: 'session',
+    secret: argv.cookieSecret,
+    # make the session a week long
+    duration: 7 * 24 * 60 * 60 * 1000,
+    # add 12 hours to session if less than 12 hours to expiry
+    activeDuration: 12 * 60 * 60 * 1000,
+    cookie: cookieValue
     }))
 
   app.use(ourErrorHandler)
@@ -245,7 +247,7 @@ module.exports = exports = (argv) ->
   app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res, next) ->
     urlPages = (i for i in req.params[0].split('/') by 2)[1..]
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
-    if urlLocs[0] is 'plugin'
+    if ['plugin', 'auth'].indexOf(urlLocs[0]) > -1
       return next()
     title = urlPages[..].pop().replace(/-+/g,' ')
     user = securityhandler.getUser(req)
@@ -259,6 +261,10 @@ module.exports = exports = (argv) ->
       user: user
       seedNeighbors: argv.neighbors
       owned: if owner
+        true
+      else
+        false
+      isOwner: if securityhandler.isAuthorized(req)
         true
       else
         false
@@ -302,6 +308,10 @@ module.exports = exports = (argv) ->
         user: user
         seedNeighbors: argv.neighbors
         owned: if owner
+          true
+        else
+          false
+        isOwner: if securityhandler.isAuthorized(req)
           true
         else
           false

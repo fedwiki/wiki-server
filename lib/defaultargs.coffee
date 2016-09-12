@@ -27,9 +27,11 @@ module.exports = (argv) ->
   argv.db or= path.join(argv.data, 'pages')
   argv.status or= path.join(argv.data, 'status')
   argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
-  argv.id or= path.join(argv.status, 'persona.identity')
+  argv.id or= path.join(argv.status, 'owner.json')
   argv.uploadLimit or= '5mb'
+  argv.cookieSecret or= require('crypto').randomBytes(64).toString('hex')
   argv.neighbors or= ''
+  argv.debug or= false
 
   if typeof(argv.database) is 'string'
     argv.database = JSON.parse(argv.database)
@@ -47,6 +49,7 @@ module.exports = (argv) ->
     console.log "\n\nWARNING: Using default security module."
   else
     argv.security_type = 'wiki-security-' + argv.security_type
+  argv.security_legacy or= false
 
   #resolve all relative paths
   argv.root = path.resolve(argv.root)
