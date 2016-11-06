@@ -190,9 +190,9 @@ module.exports = exports = (argv) ->
     requestKey: 'session',
     secret: argv.cookieSecret,
     # make the session a week long
-    duration: 7 * 24 * 60 * 60 * 1000,
+    duration: argv.session_duration * 24 * 60 * 60 * 1000,
     # add 12 hours to session if less than 12 hours to expiry
-    activeDuration: 12 * 60 * 60 * 1000,
+    activeDuration: 24 * 60 * 60 * 1000,
     cookie: cookieValue
     }))
 

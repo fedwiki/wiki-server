@@ -30,6 +30,7 @@ module.exports = (argv) ->
   argv.id or= path.join(argv.status, 'owner.json')
   argv.uploadLimit or= '5mb'
   argv.cookieSecret or= require('crypto').randomBytes(64).toString('hex')
+  argv.session_duration or= 7
   argv.neighbors or= ''
   argv.debug or= false
 
