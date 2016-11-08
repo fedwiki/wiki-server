@@ -185,11 +185,13 @@ module.exports = exports = (argv) ->
     httpOnly: true
   }
   cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
+  # use secureProxy as TLS is terminated in outside the node process
+  cookieValue['secureProxy'] = true if argv.secure_cookie
   app.use(sessions({
     cookieName: 'wikiSession',
     requestKey: 'session',
     secret: argv.cookieSecret,
-    # make the session a week long
+    # make the session session_duration days long
     duration: argv.session_duration * 24 * 60 * 60 * 1000,
     # add 12 hours to session if less than 12 hours to expiry
     activeDuration: 24 * 60 * 60 * 1000,
