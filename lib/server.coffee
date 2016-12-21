@@ -44,6 +44,7 @@ methodOverride = require 'method-override'
 sessions = require 'client-sessions'
 bodyParser = require 'body-parser'
 errorHandler = require 'errorhandler'
+request = require 'request'
 
 
 # Local files
@@ -471,6 +472,18 @@ module.exports = exports = (argv) ->
 
   securityhandler.defineRoutes app, cors, updateOwner
 
+  ##### Proxy routes #####
+
+  app.get '/proxy/*', authorized, (req, res) ->
+    pathParts = req.path.split('/')
+    remoteHost = pathParts[2]
+    pathParts.splice(0,3)
+    remoteResource = pathParts.join('/')
+    requestURL = 'http://' + remoteHost + '/' + remoteResource
+    if requestURL.endsWith('.json') or requestURL.endsWith('.png')
+      request(requestURL).pipe(res)
+    else
+      res.status(400).end()
 
 
   ##### Put routes #####
