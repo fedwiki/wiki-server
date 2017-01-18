@@ -480,8 +480,22 @@ module.exports = exports = (argv) ->
     pathParts.splice(0,3)
     remoteResource = pathParts.join('/')
     requestURL = 'http://' + remoteHost + '/' + remoteResource
+    console.log("PROXY Request: ", requestURL)
     if requestURL.endsWith('.json') or requestURL.endsWith('.png')
-      request(requestURL).pipe(res)
+      requestOptions = {
+        host: remoteHost
+        port: 80
+        path: remoteResource
+      }
+      try
+        request
+          .get(requestURL, requestOptions)
+          .on('error', (err) ->
+            console.log("ERROR: Request ", requestURL, err))
+          .pipe(res)
+      catch error
+        console.log "PROXY Error", error
+        res.status(500).end()
     else
       res.status(400).end()
 
