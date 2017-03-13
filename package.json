@@ -1,7 +1,7 @@
 {
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
-  "version": "0.9.1",
+  "version": "0.10.0-0",
   "publishConfig": {
     "tag": "next"
   },
