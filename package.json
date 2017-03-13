@@ -2,6 +2,9 @@
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
   "version": "0.9.1",
+  "publishConfig": {
+    "tag": "next"
+  },
   "author": {
     "name": "Ward Cunningham",
     "email": "ward@c2.com",
@@ -65,7 +68,7 @@
     "wiki-plugin-activity": "*"
   },
   "engines": {
-    "node": ">=4.x"
+    "node": ">=6.x"
   },
   "testling": {
     "harness": "mocha"
