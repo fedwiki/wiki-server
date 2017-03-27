@@ -4,12 +4,17 @@
     {
       "type": "paragraph",
       "id": "07ef6b0e53a77dd2",
-      "text": "This is our help documentation. Read a little bit. Then move on to our [http://sandbox.fed.wiki.org Sandbox] and give your new knowledge a workout. Still confused? Look through our [[Frequently Asked Questions]]."
+      "text": "Here we describe how to use the web interface to the federated wiki. Read [[About Federated Wiki]] to learn about the project. If you are just starting to write in your first wiki then read the [[Field Guide to the Federation]]."
+    },
+    {
+      "type": "paragraph",
+      "id": "6e236e59a759df32",
+      "text": "Tip: Use arrow keys to scroll left and right."
     },
     {
       "type": "html",
       "id": "d88b9a104822256b",
-      "text": "<h3>How To Read Content</h3>"
+      "text": "<h3>How To Read Content"
     },
     {
       "type": "paragraph",
@@ -39,7 +44,7 @@
     {
       "type": "html",
       "id": "be22840c9f21b356",
-      "text": "<h3>How To Add Content</h3>"
+      "text": "<h3>How To Add Content"
     },
     {
       "type": "paragraph",
@@ -94,12 +99,12 @@
     {
       "type": "html",
       "id": "243033dc6528eab1",
-      "text": "<h3>How to Remove Content</h3>"
+      "text": "<h3>How to Remove Content"
     },
     {
       "type": "paragraph",
       "id": "73e9a16ca95be40e",
-      "text": "How to [[Remove Paragraphs]] and some other editable items."
+      "text": "How to [[Remove Paragraphs]] and other editable items."
     },
     {
       "type": "paragraph",
@@ -109,7 +114,7 @@
     {
       "type": "html",
       "id": "d3a1bd6b0c947378",
-      "text": "<h3>How To Improve Wiki</h3>"
+      "text": "<h3>How To Improve Wiki"
     },
     {
       "type": "paragraph",
@@ -1265,60 +1270,157 @@
       "date": 1418273113292
     },
     {
+      "item": {
+        "type": "factory",
+        "id": "6abaa5c6559057c0"
+      },
+      "id": "6abaa5c6559057c0",
+      "type": "add",
+      "after": "4ecd1aedbb454789",
+      "date": 1418519427218
+    },
+    {
+      "type": "edit",
+      "id": "6abaa5c6559057c0",
+      "item": {
+        "type": "pagefold",
+        "id": "6abaa5c6559057c0",
+        "text": "html"
+      },
+      "date": 1418519432043
+    },
+    {
+      "type": "move",
+      "order": [
+        "07ef6b0e53a77dd2",
+        "d88b9a104822256b",
+        "6abaa5c6559057c0",
+        "9906193876ea1213",
+        "ddb43bb5cfbd9189",
+        "f1df1f71c9ee8a17",
+        "f88127fbb75f20c6",
+        "55a0377f63c23d93",
+        "be22840c9f21b356",
+        "1012dd3528d4c788",
+        "69fd0eba8fefe2aa",
+        "1db26c2e0c7ed126",
+        "208e32f178e91c99",
+        "fa3e22f363cd93d5",
+        "d03bcc1fd0278522",
+        "4cb87e0352907dfe",
+        "6f729deb0e1c75af",
+        "8bb136a087a9710f",
+        "9b96aa8af66cc688",
+        "243033dc6528eab1",
+        "73e9a16ca95be40e",
+        "c63dc8ff04ecdc31",
+        "d3a1bd6b0c947378",
+        "a2bb10949e81f2c6",
+        "d594101067de9a5c",
+        "c8fda36855c0da59",
+        "f2a7762b712791e5",
+        "a4eeb3d307944e60",
+        "4ecd1aedbb454789"
+      ],
+      "id": "6abaa5c6559057c0",
+      "date": 1418519437778
+    },
+    {
+      "type": "move",
+      "order": [
+        "07ef6b0e53a77dd2",
+        "d88b9a104822256b",
+        "9906193876ea1213",
+        "ddb43bb5cfbd9189",
+        "6abaa5c6559057c0",
+        "f1df1f71c9ee8a17",
+        "f88127fbb75f20c6",
+        "55a0377f63c23d93",
+        "be22840c9f21b356",
+        "1012dd3528d4c788",
+        "69fd0eba8fefe2aa",
+        "1db26c2e0c7ed126",
+        "208e32f178e91c99",
+        "fa3e22f363cd93d5",
+        "d03bcc1fd0278522",
+        "4cb87e0352907dfe",
+        "6f729deb0e1c75af",
+        "8bb136a087a9710f",
+        "9b96aa8af66cc688",
+        "243033dc6528eab1",
+        "73e9a16ca95be40e",
+        "c63dc8ff04ecdc31",
+        "d3a1bd6b0c947378",
+        "a2bb10949e81f2c6",
+        "d594101067de9a5c",
+        "c8fda36855c0da59",
+        "f2a7762b712791e5",
+        "a4eeb3d307944e60",
+        "4ecd1aedbb454789"
+      ],
+      "id": "6abaa5c6559057c0",
+      "date": 1418519515869
+    },
+    {
+      "type": "edit",
+      "id": "07ef6b0e53a77dd2",
+      "item": {
+        "type": "paragraph",
+        "id": "07ef6b0e53a77dd2",
+        "text": "Here we describe how to use the web interface to the federated wiki. Read [[About Federated Wiki]] to learn about the project. If you are just starting to write in your first wiki then read the [[Field Guide to Wiki]]."
+      },
+      "date": 1488039158808
+    },
+    {
+      "type": "edit",
+      "id": "07ef6b0e53a77dd2",
+      "item": {
+        "type": "paragraph",
+        "id": "07ef6b0e53a77dd2",
+        "text": "Here we describe how to use the web interface to the federated wiki. Read [[About Federated Wiki]] to learn about the project. If you are just starting to write in your first wiki then read the [[Field Guide to the Federation]]."
+      },
+      "date": 1488039205290
+    },
+    {
+      "type": "add",
+      "id": "6e236e59a759df32",
+      "item": {
+        "type": "paragraph",
+        "id": "6e236e59a759df32",
+        "text": "Tip: Use arrow keys to scroll left and right between pages."
+      },
+      "after": "07ef6b0e53a77dd2",
+      "date": 1488039288800
+    },
+    {
+      "type": "edit",
+      "id": "6e236e59a759df32",
+      "item": {
+        "type": "paragraph",
+        "id": "6e236e59a759df32",
+        "text": "Tip: Use arrow keys to scroll left and right."
+      },
+      "date": 1488039303256
+    },
+    {
+      "type": "remove",
+      "id": "6abaa5c6559057c0",
+      "date": 1488039420420
+    },
+    {
+      "type": "edit",
+      "id": "73e9a16ca95be40e",
+      "item": {
+        "type": "paragraph",
+        "id": "73e9a16ca95be40e",
+        "text": "How to [[Remove Paragraphs]] and other editable items."
+      },
+      "date": 1488041103204
+    },
+    {
       "type": "fork",
       "site": "fed.wiki.org",
-      "date": 1418289607167
-    },
-    {
-      "type": "edit",
-      "id": "d88b9a104822256b",
-      "item": {
-        "type": "html",
-        "id": "d88b9a104822256b",
-        "text": "<h3>How To Read Content<h3>"
-      },
-      "date": 1418291640726
-    },
-    {
-      "type": "edit",
-      "id": "be22840c9f21b356",
-      "item": {
-        "type": "html",
-        "id": "be22840c9f21b356",
-        "text": "<h3>How To Add Content</h3>"
-      },
-      "date": 1418291650940
-    },
-    {
-      "type": "edit",
-      "id": "243033dc6528eab1",
-      "item": {
-        "type": "html",
-        "id": "243033dc6528eab1",
-        "text": "<h3>How to Remove Content</h3>"
-      },
-      "date": 1418291658004
-    },
-    {
-      "type": "edit",
-      "id": "d3a1bd6b0c947378",
-      "item": {
-        "type": "html",
-        "id": "d3a1bd6b0c947378",
-        "text": "<h3>How To Improve Wiki</h3>"
-      },
-      "date": 1418291665532
-    },
-    {
-      "type": "edit",
-      "id": "d88b9a104822256b",
-      "item": {
-        "type": "html",
-        "id": "d88b9a104822256b",
-        "text": "<h3>How To Read Content</h3>"
-      },
-      "date": 1418521158127
+      "date": 1490577179025
     }
-  ],
-  "synopsys": "The first federated wiki page written and often first page viewed."
+  ]
 }
