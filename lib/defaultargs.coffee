@@ -62,6 +62,8 @@ module.exports = (argv) ->
   argv.client = path.resolve(argv.client)
   argv.db = path.resolve(argv.db)
   argv.status = path.resolve(argv.status)
+  argv.assets = path.resolve(argv.assets)
+  argv.recycler = path.resolve(argv.recycler)
   argv.id = path.resolve(argv.id)
 
   if /node_modules/.test(argv.data)
