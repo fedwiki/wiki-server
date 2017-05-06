@@ -2,9 +2,6 @@
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
   "version": "0.10.0-1",
-  "publishConfig": {
-    "tag": "next"
-  },
   "author": {
     "name": "Ward Cunningham",
     "email": "ward@c2.com",
