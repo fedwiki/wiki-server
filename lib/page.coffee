@@ -63,7 +63,7 @@ module.exports = exports = (argv) ->
     unless page?
       fs.exists(loc, (exists) =>
         if exists
-          load_parse(loc, cb)
+          load_parse(loc, cb, {plugin: undefined})
         else
           defloc = path.join(argv.root, 'default-data', 'pages', file)
           fs.exists(defloc, (exists) ->
