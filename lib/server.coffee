@@ -597,6 +597,16 @@ module.exports = exports = (argv) ->
   app.get '/', (req, res) ->
     res.redirect(index)
 
+  ##### Delete Routes #####
+
+  app.delete ///^/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
+    pageFile = req.params[0]
+    console.log "About to delete: ", pageFile
+    #res.send('ok')
+
+    res.status(500).send('Non existent test error')
+
+
 
   #### Start the server ####
   # Wait to make sure owner is known before listening.

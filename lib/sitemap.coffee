@@ -115,12 +115,15 @@ module.exports = exports = (argv) ->
 
   serial = (item) ->
     if item
-      itself.start()
-      sitemapUpdate(item.file, item.page, (e) ->
-        process.nextTick( ->
-          serial(queue.shift())
+      if item.action is "update"
+        itself.start()
+        sitemapUpdate(item.file, item.page, (e) ->
+          process.nextTick( ->
+            serial(queue.shift())
+          )
         )
-      )
+      else
+        
     else
       sitemapSave sitemap, (e) ->
         console.log "Problems saving sitemap: "+ e if e
@@ -166,8 +169,21 @@ module.exports = exports = (argv) ->
       process.nextTick ( ->
         serial(queue.shift()))
 
+  itself.removePage = (file) ->
+    action = "remove"
+    queue.push({action, file, ""})
+    if sitemap = [] and !working
+      itself.start()
+      sitemapRestore (e) ->
+        console.log "Problems restoring sitemap: " + e if e
+        itself.createSitemap(sitemapPageHandler)
+    else
+      serial(queue.shift()) unless working
+
+
   itself.update = (file, page) ->
-    queue.push({file, page})
+    action = "update"
+    queue.push({action, file, page})
     if sitemap = [] and !working
       itself.start()
       sitemapRestore (e) ->
