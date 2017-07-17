@@ -567,7 +567,9 @@ module.exports = exports = (argv) ->
     # If the action is a fork, get the page from the remote server,
     # otherwise ask pagehandler for it.
     if action.fork
-      remoteGet(action.fork, req.params[0], actionCB)
+      pagehandler.saveToRecycler req.params[0], (err) ->
+        if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
+        remoteGet(action.fork, req.params[0], actionCB)
     else if action.type is 'create'
       # Prevent attempt to write circular structure
       itemCopy = JSON.parse(JSON.stringify(action.item))
@@ -579,12 +581,14 @@ module.exports = exports = (argv) ->
           actionCB(null, itemCopy)
 
     else if action.type == 'fork'
-      if action.item # push
-        itemCopy = JSON.parse(JSON.stringify(action.item))
-        delete action.item
-        actionCB(null, itemCopy)
-      else # pull
-        remoteGet(action.site, req.params[0], actionCB)
+      pagehandler.saveToRecycler req.params[0], (err) ->
+        if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
+        if action.item # push
+          itemCopy = JSON.parse(JSON.stringify(action.item))
+          delete action.item
+          actionCB(null, itemCopy)
+        else # pull
+          remoteGet(action.site, req.params[0], actionCB)
     else
       pagehandler.get(req.params[0], actionCB)
 

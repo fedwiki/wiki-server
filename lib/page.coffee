@@ -60,25 +60,67 @@ module.exports = exports = (argv) ->
   # when called with page it writes.
   fileio = (action, file, page, cb) ->
     loc = path.join(argv.db, file)
-    if action is 'delete'
-      fs.exists(loc, (exists) ->
-        recycleLoc = path.join(argv.recycler, file)
-        fs.exists(path.dirname(recycleLoc), (exists) ->
-          if exists
-            fs.rename(loc, recycleLoc, (err) ->
-              cb(err)
-            )
-          else
-            mkdirp(path.dirname(recycleLoc), (err) ->
-              if err then cb(err)
+    switch action
+      when 'delete'
+        fs.exists(loc, (exists) ->
+          recycleLoc = path.join(argv.recycler, file)
+          fs.exists(path.dirname(recycleLoc), (exists) ->
+            if exists
               fs.rename(loc, recycleLoc, (err) ->
                 cb(err)
               )
-            )
+            else
+              mkdirp(path.dirname(recycleLoc), (err) ->
+                if err then cb(err)
+                fs.rename(loc, recycleLoc, (err) ->
+                  cb(err)
+                )
+              )
+          )
         )
-      )
-    else
-      unless page?
+      when 'recycle'
+        copyFile = (source, target, cb) ->
+
+          done = (err) ->
+            if !cbCalled
+              cb err
+              cbCalled = true
+            return
+
+          cbCalled = false
+
+          rd = fs.createReadStream(source)
+          rd.on 'error', (err) ->
+            done err
+            return
+
+          wr = fs.createWriteStream(target)
+          wr.on 'error', (err) ->
+            done err
+            return
+          wr.on 'close', (ex) ->
+            done()
+            return
+          rd.pipe wr
+          return
+
+        fs.exists(loc, (exists) ->
+          recycleLoc = path.join(argv.recycler, file)
+          fs.exists(path.dirname(recycleLoc), (exists) ->
+            if exists
+              copyFile(loc, recycleLoc, (err) ->
+                cb(err)
+              )
+            else
+              mkdirp(path.dirname(recycleLoc), (err) ->
+                if err then cb(err)
+                copyFile(loc, recycleLoc, (err) ->
+                  cb(err)
+                )
+              )
+          )
+        )
+      when 'get'
         fs.exists(loc, (exists) ->
           if exists
             load_parse(loc, cb, {plugin: undefined})
@@ -115,7 +157,7 @@ module.exports = exports = (argv) ->
                       )
             )
         )
-      else
+      when 'put'
         page = JSON.stringify(page, null, 2)
         fs.exists(path.dirname(loc), (exists) ->
           if exists
@@ -130,6 +172,8 @@ module.exports = exports = (argv) ->
               )
             )
         )
+      else
+        console.log "pagehandler: unrecognized action #{action}"
 
   # Control variable that tells if the serial queue is currently working.
   # Set back to false when all jobs are complete.
@@ -176,6 +220,10 @@ module.exports = exports = (argv) ->
 
   itself.delete = (file, cb) ->
     queue.push({action: 'delete', file, page: null, cb})
+    serial(queue.shift()) unless working
+
+  itself.saveToRecycler = (file, cb) ->
+    queue.push({action: 'recycle', file, page: null, cb})
     serial(queue.shift()) unless working
 
   editDate = (journal) ->
