@@ -61,6 +61,15 @@ module.exports = exports = (argv) ->
 
     cb()
 
+  sitemapRemovePage = (file, cb) ->
+    slugs = sitemap.map (page) -> page.slug
+    idx = slugs.indexOf(file)
+
+    if ~idx
+      _.pullAt(sitemap, idx)
+
+    cb()
+
   sitemapSave = (sitemap, cb) ->
     fs.exists argv.status, (exists) ->
       if exists
@@ -115,15 +124,25 @@ module.exports = exports = (argv) ->
 
   serial = (item) ->
     if item
-      if item.action is "update"
-        itself.start()
-        sitemapUpdate(item.file, item.page, (e) ->
-          process.nextTick( ->
-            serial(queue.shift())
+      switch item.action
+        when "update"
+          itself.start()
+          sitemapUpdate(item.file, item.page, (e) ->
+            process.nextTick( ->
+              serial(queue.shift())
+            )
           )
-        )
-      else
-        
+        when "remove"
+          itself.start()
+          sitemapRemovePage(item.file, (e) ->
+            process.nextTick( ->
+              serial(queue.shift())
+            )
+          )
+        else
+          console.log "Sitemap unexpected action #{item.action} for #{item.page}"
+          process.nextTick( ->
+            serial(queue.shift))
     else
       sitemapSave sitemap, (e) ->
         console.log "Problems saving sitemap: "+ e if e

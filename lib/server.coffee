@@ -602,9 +602,10 @@ module.exports = exports = (argv) ->
   app.delete ///^/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
     pageFile = req.params[0]
     console.log "About to delete: ", pageFile
-    #res.send('ok')
-
-    res.status(500).send('Non existent test error')
+    pagehandler.delete pageFile, (err) ->
+      if err then res.status(500).send(err)
+      sitemaphandler.removePage pageFile
+      res.status(200).send('')
 
 
 
