@@ -407,8 +407,48 @@ module.exports = exports = (argv) ->
   # Redirect remote favicons to the server they are needed from.
   app.get ///^/remote/([a-zA-Z0-9:\.-]+/favicon.png)$///, (req, res) ->
     remotefav = "http://#{req.params[0]}"
-
     res.redirect(remotefav)
+
+  ###### Recycler Routes ######
+  # These routes are only available to the site's owner
+
+  # Give the recycler a standard flag - use the Taiwan symbol as the use of
+  # negative space outward pointing arrows nicely indicates that items can be removed
+  recyclerFavLoc = path.join(argv.root, 'default-data', 'status', 'recycler.png')
+  app.get '/recycler/favicon.png', authorized, (req, res) ->
+    res.sendFile(recyclerFavLoc)
+
+  # Send an array of pages currently in the recycler via json
+  app.get '/recycler/system/slugs.json', authorized, (req, res) ->
+    console.log argv.recycler
+    fs.readdir argv.recycler, (e, files) ->
+      if e then return res.e e
+      doRecyclermap = (file, cb) ->
+        pagehandler.get file, (e, page, status) ->
+          return cb() if file.match /^\./
+          if e
+            console.log 'Problem building recycler map:', file, 'e: ',e
+            return cb()
+          cb null, {
+            slug:  file
+            title: page.title
+          }
+
+      async.map files, doRecyclermap, (e, recyclermap) ->
+        return cb(e) if e
+        res.send(recyclermap)
+
+  # Fetching page from the recycler
+  #///^/([a-z0-9-]+)\.json$///
+  app.get ///^/recycler/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
+    file = 'recycler/' + req.params[0]
+    console.log "get from recycler:", file
+    pagehandler.get file, (e, page, status) ->
+      if e then return res.e e
+      res.status(status or 200).send(page)
+
+  # Restore page from the recycler
+
 
   ###### Meta Routes ######
   # Send an array of pages in the database via json

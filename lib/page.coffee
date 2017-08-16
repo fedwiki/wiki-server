@@ -59,7 +59,11 @@ module.exports = exports = (argv) ->
   # Main file io function, when called without page it reads,
   # when called with page it writes.
   fileio = (action, file, page, cb) ->
-    loc = path.join(argv.db, file)
+    console.log 'page fileio ', file
+    if file.startsWith 'recycler/'
+      loc = path.join(argv.recycler, file.split('/')[1])
+    else
+      loc = path.join(argv.db, file)
     switch action
       when 'delete'
         fs.exists(loc, (exists) ->
@@ -121,6 +125,7 @@ module.exports = exports = (argv) ->
           )
         )
       when 'get'
+        console.log 'page get ', loc
         fs.exists(loc, (exists) ->
           if exists
             load_parse(loc, cb, {plugin: undefined})
