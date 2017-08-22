@@ -66,22 +66,32 @@ module.exports = exports = (argv) ->
       loc = path.join(argv.db, file)
     switch action
       when 'delete'
-        fs.exists(loc, (exists) ->
-          recycleLoc = path.join(argv.recycler, file)
-          fs.exists(path.dirname(recycleLoc), (exists) ->
+        if file.startsWith 'recycler/'
+          # delete from recycler
+          fs.exists(loc, (exists) ->
             if exists
-              fs.rename(loc, recycleLoc, (err) ->
+              fs.unlink(loc, (err) ->
                 cb(err)
               )
-            else
-              mkdirp(path.dirname(recycleLoc), (err) ->
-                if err then cb(err)
+          )
+        else
+          # move page to recycler
+          fs.exists(loc, (exists) ->
+            recycleLoc = path.join(argv.recycler, file)
+            fs.exists(path.dirname(recycleLoc), (exists) ->
+              if exists
                 fs.rename(loc, recycleLoc, (err) ->
                   cb(err)
                 )
-              )
+              else
+                mkdirp(path.dirname(recycleLoc), (err) ->
+                  if err then cb(err)
+                  fs.rename(loc, recycleLoc, (err) ->
+                    cb(err)
+                  )
+                )
+            )
           )
-        )
       when 'recycle'
         copyFile = (source, target, cb) ->
 

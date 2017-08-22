@@ -447,7 +447,13 @@ module.exports = exports = (argv) ->
       if e then return res.e e
       res.status(status or 200).send(page)
 
-  # Restore page from the recycler
+  # Delete page from the recycler
+  app.delete ///^/recycler/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
+    file = 'recycler/' + req.params[0]
+    console.log "about to delete from recycler: ", file
+    pagehandler.delete file, (err) ->
+      if err then res.status(500).send(err)
+      res.status(200).send('')
 
 
   ###### Meta Routes ######
