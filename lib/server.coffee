@@ -653,9 +653,11 @@ module.exports = exports = (argv) ->
     pageFile = req.params[0]
     console.log "About to delete: ", pageFile
     pagehandler.delete pageFile, (err) ->
-      if err then res.status(500).send(err)
-      sitemaphandler.removePage pageFile
-      res.status(200).send('')
+      if err
+        res.status(500).send(err)
+      else
+        sitemaphandler.removePage pageFile
+        res.status(200).send('')
 
 
 

@@ -59,7 +59,6 @@ module.exports = exports = (argv) ->
   # Main file io function, when called without page it reads,
   # when called with page it writes.
   fileio = (action, file, page, cb) ->
-    console.log 'page fileio ', file
     if file.startsWith 'recycler/'
       loc = path.join(argv.recycler, file.split('/')[1])
     else
@@ -77,20 +76,23 @@ module.exports = exports = (argv) ->
         else
           # move page to recycler
           fs.exists(loc, (exists) ->
-            recycleLoc = path.join(argv.recycler, file)
-            fs.exists(path.dirname(recycleLoc), (exists) ->
-              if exists
-                fs.rename(loc, recycleLoc, (err) ->
-                  cb(err)
-                )
-              else
-                mkdirp(path.dirname(recycleLoc), (err) ->
-                  if err then cb(err)
+            if exists
+              recycleLoc = path.join(argv.recycler, file)
+              fs.exists(path.dirname(recycleLoc), (exists) ->
+                if exists
                   fs.rename(loc, recycleLoc, (err) ->
                     cb(err)
                   )
-                )
-            )
+                else
+                  mkdirp(path.dirname(recycleLoc), (err) ->
+                    if err then cb(err)
+                    fs.rename(loc, recycleLoc, (err) ->
+                      cb(err)
+                    )
+                  )
+              )
+            else
+              cb('page does not exist')
           )
       when 'recycle'
         copyFile = (source, target, cb) ->
@@ -119,23 +121,25 @@ module.exports = exports = (argv) ->
           return
 
         fs.exists(loc, (exists) ->
-          recycleLoc = path.join(argv.recycler, file)
-          fs.exists(path.dirname(recycleLoc), (exists) ->
-            if exists
-              copyFile(loc, recycleLoc, (err) ->
-                cb(err)
-              )
-            else
-              mkdirp(path.dirname(recycleLoc), (err) ->
-                if err then cb(err)
+          if exists
+            recycleLoc = path.join(argv.recycler, file)
+            fs.exists(path.dirname(recycleLoc), (exists) ->
+              if exists
                 copyFile(loc, recycleLoc, (err) ->
                   cb(err)
                 )
-              )
-          )
+              else
+                mkdirp(path.dirname(recycleLoc), (err) ->
+                  if err then cb(err)
+                  copyFile(loc, recycleLoc, (err) ->
+                    cb(err)
+                  )
+                )
+            )
+          else
+            cb('page does not exist')
         )
       when 'get'
-        console.log 'page get ', loc
         fs.exists(loc, (exists) ->
           if exists
             load_parse(loc, cb, {plugin: undefined})
