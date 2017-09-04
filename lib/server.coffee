@@ -423,7 +423,6 @@ module.exports = exports = (argv) ->
 
   # Send an array of pages currently in the recycler via json
   app.get '/recycler/system/slugs.json', authorized, (req, res) ->
-    console.log argv.recycler
     fs.readdir argv.recycler, (e, files) ->
       if e then return res.e e
       doRecyclermap = (file, cb) ->
@@ -445,7 +444,6 @@ module.exports = exports = (argv) ->
   #///^/([a-z0-9-]+)\.json$///
   app.get ///^/recycler/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
     file = 'recycler/' + req.params[0]
-    console.log "get from recycler:", file
     pagehandler.get file, (e, page, status) ->
       if e then return res.e e
       res.status(status or 200).send(page)
@@ -453,7 +451,6 @@ module.exports = exports = (argv) ->
   # Delete page from the recycler
   app.delete ///^/recycler/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
     file = 'recycler/' + req.params[0]
-    console.log "about to delete from recycler: ", file
     pagehandler.delete file, (err) ->
       if err then res.status(500).send(err)
       res.status(200).send('')
@@ -654,7 +651,6 @@ module.exports = exports = (argv) ->
 
   app.delete ///^/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
     pageFile = req.params[0]
-    console.log "About to delete: ", pageFile
     pagehandler.delete pageFile, (err) ->
       if err
         res.status(500).send(err)
