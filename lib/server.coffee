@@ -204,6 +204,9 @@ module.exports = exports = (argv) ->
     # Add static route to the client
   app.use(express.static(argv.client))
 
+  # Add static route to assets
+  app.use('/assets', express.static(argv.assets))
+
 
     # Add static routes to the plugins client.
   glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
