@@ -86,6 +86,22 @@ describe 'sitemap', ->
           sitemap[0].synopsis.should.equal['edited']
           done()
 
+  it 'deleting a page should remove it from the sitemap', (done) ->
+
+    request
+      .delete('/adsf-test-page.json')
+      .send()
+      .expect(200)
+      .end (err, res) ->
+        if err
+          throw err
+        app.sitemaphandler.once 'finished', ->
+          try
+            sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
+          catch error
+            throw err
+          sitemap.should.be.empty
+          done()
 
 
 

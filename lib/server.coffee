@@ -407,8 +407,54 @@ module.exports = exports = (argv) ->
   # Redirect remote favicons to the server they are needed from.
   app.get ///^/remote/([a-zA-Z0-9:\.-]+/favicon.png)$///, (req, res) ->
     remotefav = "http://#{req.params[0]}"
-
     res.redirect(remotefav)
+
+  ###### Recycler Routes ######
+  # These routes are only available to the site's owner
+
+  # Give the recycler a standard flag - use the Taiwan symbol as the use of
+  # negative space outward pointing arrows nicely indicates that items can be removed
+  recyclerFavLoc = path.join(argv.root, 'default-data', 'status', 'recycler.png')
+  app.get '/recycler/favicon.png', authorized, (req, res) ->
+    res.sendFile(recyclerFavLoc)
+
+  # Send an array of pages currently in the recycler via json
+  app.get '/recycler/system/slugs.json', authorized, (req, res) ->
+    console.log argv.recycler
+    fs.readdir argv.recycler, (e, files) ->
+      if e then return res.e e
+      doRecyclermap = (file, cb) ->
+        pagehandler.get file, (e, page, status) ->
+          return cb() if file.match /^\./
+          if e
+            console.log 'Problem building recycler map:', file, 'e: ',e
+            return cb()
+          cb null, {
+            slug:  file
+            title: page.title
+          }
+
+      async.map files, doRecyclermap, (e, recyclermap) ->
+        return cb(e) if e
+        res.send(recyclermap)
+
+  # Fetching page from the recycler
+  #///^/([a-z0-9-]+)\.json$///
+  app.get ///^/recycler/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
+    file = 'recycler/' + req.params[0]
+    console.log "get from recycler:", file
+    pagehandler.get file, (e, page, status) ->
+      if e then return res.e e
+      res.status(status or 200).send(page)
+
+  # Delete page from the recycler
+  app.delete ///^/recycler/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
+    file = 'recycler/' + req.params[0]
+    console.log "about to delete from recycler: ", file
+    pagehandler.delete file, (err) ->
+      if err then res.status(500).send(err)
+      res.status(200).send('')
+
 
   ###### Meta Routes ######
   # Send an array of pages in the database via json
@@ -567,7 +613,9 @@ module.exports = exports = (argv) ->
     # If the action is a fork, get the page from the remote server,
     # otherwise ask pagehandler for it.
     if action.fork
-      remoteGet(action.fork, req.params[0], actionCB)
+      pagehandler.saveToRecycler req.params[0], (err) ->
+        if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
+        remoteGet(action.fork, req.params[0], actionCB)
     else if action.type is 'create'
       # Prevent attempt to write circular structure
       itemCopy = JSON.parse(JSON.stringify(action.item))
@@ -579,12 +627,14 @@ module.exports = exports = (argv) ->
           actionCB(null, itemCopy)
 
     else if action.type == 'fork'
-      if action.item # push
-        itemCopy = JSON.parse(JSON.stringify(action.item))
-        delete action.item
-        actionCB(null, itemCopy)
-      else # pull
-        remoteGet(action.site, req.params[0], actionCB)
+      pagehandler.saveToRecycler req.params[0], (err) ->
+        if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
+        if action.item # push
+          itemCopy = JSON.parse(JSON.stringify(action.item))
+          delete action.item
+          actionCB(null, itemCopy)
+        else # pull
+          remoteGet(action.site, req.params[0], actionCB)
     else
       pagehandler.get(req.params[0], actionCB)
 
@@ -596,6 +646,19 @@ module.exports = exports = (argv) ->
   # Traditional request to / redirects to index :)
   app.get '/', (req, res) ->
     res.redirect(index)
+
+  ##### Delete Routes #####
+
+  app.delete ///^/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
+    pageFile = req.params[0]
+    console.log "About to delete: ", pageFile
+    pagehandler.delete pageFile, (err) ->
+      if err
+        res.status(500).send(err)
+      else
+        sitemaphandler.removePage pageFile
+        res.status(200).send('')
+
 
 
   #### Start the server ####

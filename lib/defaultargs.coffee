@@ -27,7 +27,7 @@ module.exports = (argv) ->
   argv.db or= path.join(argv.data, 'pages')
   argv.status or= path.join(argv.data, 'status')
   argv.assets or= path.join(argv.data, 'assets')
-  argv.recycle or= path.join(argv.data, 'recycle')
+  argv.recycler or= path.join(argv.data, 'recycle')
   argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
   argv.id or= path.join(argv.status, 'owner.json')
   argv.uploadLimit or= '5mb'
@@ -62,6 +62,8 @@ module.exports = (argv) ->
   argv.client = path.resolve(argv.client)
   argv.db = path.resolve(argv.db)
   argv.status = path.resolve(argv.status)
+  argv.assets = path.resolve(argv.assets)
+  argv.recycler = path.resolve(argv.recycler)
   argv.id = path.resolve(argv.id)
 
   if /node_modules/.test(argv.data)
