@@ -11,7 +11,7 @@ remote to reflect this change.
 
 This package is now published as ```wiki-server```. The ```wiki```
 package which depends on this package, to provide the federated wiki server,
-can be found as [fedwiki/wiki].
+can be found as [fedwiki/wiki](https://github.com/fedwiki/wiki).
 
 * * *
 
