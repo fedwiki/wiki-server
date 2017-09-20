@@ -205,7 +205,7 @@ module.exports = exports = (argv) ->
   app.use(express.static(argv.client))
 
   # Add static route to assets
-  app.use('/assets', express.static(argv.assets))
+  app.use('/assets', cors, express.static(argv.assets))
 
 
     # Add static routes to the plugins client.
