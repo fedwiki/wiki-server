@@ -645,7 +645,11 @@ module.exports = exports = (argv) ->
 
   # Traditional request to / redirects to index :)
   app.get '/', (req, res) ->
-    res.redirect(index)
+    home = path.join argv.assets, 'home', 'index.html'
+    if fs.existsSync(home)
+      res.redirect("/assets/home/index.html")
+    else
+      res.redirect(index)
 
   ##### Delete Routes #####
 
