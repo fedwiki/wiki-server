@@ -521,13 +521,13 @@ module.exports = exports = (argv) ->
   ##### Proxy routes #####
 
   app.get '/proxy/*', authorized, (req, res) ->
-    pathParts = req.path.split('/')
+    pathParts = req.originalUrl.split('/')
     remoteHost = pathParts[2]
     pathParts.splice(0,3)
     remoteResource = pathParts.join('/')
     requestURL = 'http://' + remoteHost + '/' + remoteResource
     console.log("PROXY Request: ", requestURL)
-    if requestURL.endsWith('.json') or requestURL.endsWith('.png')
+    if requestURL.endsWith('.json') or requestURL.endsWith('.png') or pathParts[0] is "plugin"
       requestOptions = {
         host: remoteHost
         port: 80
