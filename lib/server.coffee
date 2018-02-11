@@ -50,7 +50,7 @@ request = require 'request'
 # Local files
 random = require './random_id'
 defargs = require './defaultargs'
-wiki = require 'wiki-client/lib/wiki'
+resolveClient = require 'wiki-client/lib/resolve'
 pluginsFactory = require './plugins'
 sitemapFactory = require './sitemap'
 
@@ -63,15 +63,15 @@ render = (page) ->
     f.div {class: "story"},
       page.story.map((story) ->
         if story.type is 'paragraph'
-          f.div {class: "item paragraph"}, f.p(wiki.resolveLinks(story.text))
+          f.div {class: "item paragraph"}, f.p(resolveClient.resolveLinks(story.text))
         else if story.type is 'image'
           f.div {class: "item image"},
             f.img({class: "thumbnail", src: story.url}),
-            f.p(wiki.resolveLinks(story.text or story.caption or 'uploaded image'))
+            f.p(resolveClient.resolveLinks(story.text or story.caption or 'uploaded image'))
         else if story.type is 'html'
           f.div {class: "item html"},
-          f.p(wiki.resolveLinks(story.text or '', sanitize))
-        else f.div {class: "item"}, f.p(wiki.resolveLinks(story.text or ''))
+          f.p(resolveClient.resolveLinks(story.text or '', sanitize))
+        else f.div {class: "item"}, f.p(resolveClient.resolveLinks(story.text or ''))
       ).join('\n')
 
 # Set export objects for node and coffee to a function that generates a sfw server.
@@ -521,13 +521,13 @@ module.exports = exports = (argv) ->
   ##### Proxy routes #####
 
   app.get '/proxy/*', authorized, (req, res) ->
-    pathParts = req.path.split('/')
+    pathParts = req.originalUrl.split('/')
     remoteHost = pathParts[2]
     pathParts.splice(0,3)
     remoteResource = pathParts.join('/')
     requestURL = 'http://' + remoteHost + '/' + remoteResource
     console.log("PROXY Request: ", requestURL)
-    if requestURL.endsWith('.json') or requestURL.endsWith('.png')
+    if requestURL.endsWith('.json') or requestURL.endsWith('.png') or pathParts[0] is "plugin"
       requestOptions = {
         host: remoteHost
         port: 80
