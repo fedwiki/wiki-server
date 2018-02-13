@@ -41,7 +41,7 @@
     "optimist": "*",
     "qs": "^6.4.0",
     "request": "^2.81.0",
-    "sanitize-caja": "^0.1.4",
+    "@mapbox/sanitize-caja": "^0.1.4",
     "serve-static": "^1.12.4",
     "write-file-atomic": "^2.3.0",
     "xml2js": "^0.4.19"
@@ -61,7 +61,7 @@
     "should": "^12.0.0",
     "sinon": "^3.2.1",
     "supertest": "^3.0.0",
-    "wiki-client": "^0.10.0",
+    "wiki-client": "^0.13.0",
     "wiki-plugin-activity": "*"
   },
   "engines": {

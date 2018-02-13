@@ -34,7 +34,7 @@ es = require 'event-stream'
 JSONStream = require 'JSONStream'
 async = require 'async'
 f = require('flates')
-sanitize = require 'sanitize-caja'
+sanitize = require '@mapbox/sanitize-caja'
 
 # Express 4 middleware
 logger = require 'morgan'
