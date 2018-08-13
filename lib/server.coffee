@@ -201,14 +201,16 @@ module.exports = exports = (argv) ->
 
   app.use(ourErrorHandler)
 
-    # Add static route to the client
+  # Add static route to the client
   app.use(express.static(argv.client))
+
+  ##### Define security routes #####
+  securityhandler.defineRoutes app, cors, updateOwner
 
   # Add static route to assets
   app.use('/assets', cors, express.static(argv.assets))
 
-
-    # Add static routes to the plugins client.
+  # Add static routes to the plugins client.
   glob "wiki-plugin-*/client", {cwd: argv.packageDir}, (e, plugins) ->
     plugins.map (plugin) ->
       pluginName = plugin.slice(12, -7)
@@ -218,7 +220,6 @@ module.exports = exports = (argv) ->
   # Add static routes to the security client.
   if argv.security != './security'
     app.use('/security', express.static(path.join(argv.packageDir, argv.security_type, 'client')))
-
 
 
   ##### Set up standard environments. #####
@@ -514,9 +515,6 @@ module.exports = exports = (argv) ->
           , {}))
       )
 
-  ##### Define security routes #####
-
-  securityhandler.defineRoutes app, cors, updateOwner
 
   ##### Proxy routes #####
 
