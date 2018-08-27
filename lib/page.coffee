@@ -205,12 +205,16 @@ module.exports = exports = (argv) ->
         fs.exists(path.dirname(loc), (exists) ->
           if exists
             fs.writeFile(loc, page, (err) ->
+              if err
+                console.log "ERROR: write file #{loc} ", err
               cb(err)
             )
           else
             mkdirp(path.dirname(loc), (err) ->
               if err then cb(err)
               fs.writeFile(loc, page, (err) ->
+                if err
+                  console.log "ERROR: write file #{loc} ", err 
                 cb(err)
               )
             )
