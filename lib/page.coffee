@@ -34,7 +34,31 @@ module.exports = exports = (argv) ->
       try
         page = JSON.parse(data)
       catch e
-        return cb(e)
+        errorPage = path.basename(loc)
+        errorPagePath = path.dirname(loc)
+        recyclePage = path.resolve(errorPagePath, '..', 'recycle', errorPage)
+        fs.exists(path.dirname(recyclePage), (exists) ->
+          if exists
+            fs.rename(loc, recyclePage, (err) ->
+              if err
+                console.log "ERROR: moving problem page #{loc} to recycler", err
+              else
+                console.log "ERROR: problem page #{loc} moved to recycler"
+              )
+          else
+            mkdirp(path.dirname(recyclePage), (err) ->
+              if err
+                console.log "ERROR: creating recycler", err
+              else
+                fs.rename(loc, recyclePage, (err) ->
+                  if err
+                    console.log "ERROR: moving problem page #{loc} to recycler", err
+                  else
+                    console.log "ERROR: problem page #{loc} moved to recycler"
+                  )
+              )
+            )
+        return cb(null, 'Error Parsing Page', 404)
       for key, val of annotations
         page[key] = val
       cb(null, page)
@@ -181,12 +205,16 @@ module.exports = exports = (argv) ->
         fs.exists(path.dirname(loc), (exists) ->
           if exists
             fs.writeFile(loc, page, (err) ->
+              if err
+                console.log "ERROR: write file #{loc} ", err
               cb(err)
             )
           else
             mkdirp(path.dirname(loc), (err) ->
               if err then cb(err)
               fs.writeFile(loc, page, (err) ->
+                if err
+                  console.log "ERROR: write file #{loc} ", err 
                 cb(err)
               )
             )
@@ -258,8 +286,8 @@ module.exports = exports = (argv) ->
       doSitemap = (file, cb) ->
         itself.get file, (e, page, status) ->
           return cb() if file.match /^\./
-          if e
-            console.log 'Problem building sitemap:', file, 'e: ', e
+          if e or status is 404
+            console.log 'Problem building sitemap:', file, 'e: ', e, 'status:', status
             return cb() # Ignore errors in the pagehandler get.
           cb null, {
             slug     : file
