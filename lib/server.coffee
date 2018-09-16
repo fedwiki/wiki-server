@@ -1,4 +1,4 @@
-fco###
+###
  * Federated Wiki : Node Server
  *
  * Copyright Ward Cunningham and other contributors
