@@ -133,7 +133,7 @@ module.exports = exports = (argv) ->
   #
   # Allow json to be got cross origin.
   cors = (req, res, next) ->
-    res.header('Access-Control-Allow-Origin', '*')
+    res.header 'Access-Control-Allow-Origin', req.get('origin')||'*'
     next()
 
 
