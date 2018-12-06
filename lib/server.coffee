@@ -18,8 +18,6 @@
 # can be installed with an:
 #     npm install
 
-require('coffee-trace')
-
 # Standard lib
 fs = require 'fs'
 path = require 'path'
