@@ -27,18 +27,19 @@ describe 'server', ->
   loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
 
 
-  it 'new site should have an empty list of pages', (done) ->
-    request
+  it 'new site should have an empty list of pages', () ->
+    await request
       .get('/system/slugs.json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         res.body.should.be.empty
-        done()
+      , (error) ->
+        throw error
+      .catch (error) ->
+        throw error
 
-  it 'should create a page', (done) ->
+  it 'should create a page', () ->
     body = JSON.stringify({
       type: 'create'
       item: {
@@ -57,19 +58,17 @@ describe 'server', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(200)
-      .end (err, res) ->
-        if err
-          throw err
-        done()
+      .catch (err) ->
+        throw err
 
-  it 'should move the paragraphs to the order given ', (done) ->
+  it 'should move the paragraphs to the order given ', () ->
     body = '{ "type": "move", "order": [ "a1", "a3", "a2", "a4"] }'
 
     request
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(200)
-      .end (err, res) ->
+      .then (res) ->
         if err
           throw err
         try
@@ -79,9 +78,12 @@ describe 'server', ->
         page.story[1].id.should.equal('a3')
         page.story[2].id.should.equal('a2')
         page.journal[1].type.should.equal('move')
-        done()
+      , (err) ->
+        throw err
+      .catch (err) ->
+        throw err
 
-  it 'should add a paragraph', (done) ->
+  it 'should add a paragraph', () ->
     body = JSON.stringify({
       type: 'add'
       after: 'a2'
@@ -92,9 +94,7 @@ describe 'server', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(200)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         try
           page = JSON.parse(fs.readFileSync(loc))
         catch err
@@ -102,9 +102,12 @@ describe 'server', ->
         page.story.length.should.equal(5)
         page.story[3].id.should.equal('a5')
         page.journal[2].type.should.equal('add')
-        done()
+      , (err) ->
+        throw err
+      .catch (err) ->
+        throw err
 
-  it 'should remove a paragraph with given id', (done) ->
+  it 'should remove a paragraph with given id', () ->
     body = JSON.stringify({
       type: 'remove'
       id: 'a2'
@@ -114,9 +117,7 @@ describe 'server', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(200)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         try
           page = JSON.parse(fs.readFileSync(loc))
         catch err
@@ -126,9 +127,12 @@ describe 'server', ->
         page.story[2].id.should.not.equal('a2')
         page.story[2].id.should.equal('a5')
         page.journal[3].type.should.equal('remove')
-        done()
+      , (err) ->
+        throw err
+      .catch (err) ->
+        throw err
 
-  it 'should edit a paragraph in place', (done) ->
+  it 'should edit a paragraph in place', () ->
     body = JSON.stringify({
       type: 'edit'
       item: {id: 'a3', type: 'paragraph', text: 'edited'}
@@ -139,18 +143,19 @@ describe 'server', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(200)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         try
           page = JSON.parse(fs.readFileSync(loc))
         catch err
           throw err
         page.story[1].text.should.equal('edited')
         page.journal[4].type.should.equal('edit')
-        done()
+      , (err) ->
+        throw err
+      .catch (err) ->
+        throw err
 
-  it 'should default to no change', (done) ->
+  it 'should default to no change', () ->
     body = JSON.stringify({
       type: 'asdf'
       })
@@ -159,9 +164,7 @@ describe 'server', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(500)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         try
           page = JSON.parse(fs.readFileSync(loc))
         catch err
@@ -171,9 +174,12 @@ describe 'server', ->
         page.story[0].id.should.equal('a1')
         page.story[3].text.should.equal('this is the fourth paragraph')
         page.journal[4].type.should.equal('edit')
-        done()
+      , (err) ->
+        throw err
+      .catch (err) ->
+        throw err
 
-  it 'should refuse to create over a page', (done) ->
+  it 'should refuse to create over a page', () ->
     body = JSON.stringify({
       type: 'create'
       item: { title: 'Doh'}
@@ -184,29 +190,29 @@ describe 'server', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(409)
-      .end (err, res) ->
-        #console.log err
-        #console.log res
-        if err
-          throw err
+      .then (res) ->
         try
           page = JSON.parse(fs.readFileSync(loc))
         catch err
           throw err
         page.title.should.not.equal('Doh')
-        done()
+      , (err) ->
+        throw err
+      .catch (err) ->
+        throw err
 
-  it 'site should now have one page', (done) ->
+  it 'site should now have one page', () ->
     request
       .get('/system/slugs.json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         res.body.length.should.equal[1]
         res.body[0].should.equal['adsf-test-page']
-        done()
+      , (err) ->
+        throw err
+      .catch (err) ->
+        throw err
 
 
 

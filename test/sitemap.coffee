@@ -20,18 +20,18 @@ describe 'sitemap', ->
   # location of the sitemap
   sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
 
-  it 'new site should have an empty sitemap', (done) ->
+  it 'new site should have an empty sitemap', () ->
     request
     .get('/system/sitemap.json')
     .expect(200)
     .expect('Content-Type', /json/)
-    .end (err, res) ->
-      if err
-        throw err
+    .then (res) ->
       res.body.should.be.empty
-      done()
+    , (err) ->
+      throw err
 
-  it 'creating a page should add it to the sitemap', (done) ->
+
+  it 'creating a page should add it to the sitemap', () ->
     body = JSON.stringify({
       type: 'create'
       item: {
@@ -50,9 +50,7 @@ describe 'sitemap', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(200)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         # sitemap update does not happen until after the put has returned, so wait for it to finish
         app.sitemaphandler.once 'finished', ->
           try
@@ -61,9 +59,10 @@ describe 'sitemap', ->
             throw err
           sitemap[0].slug.should.equal['adsf-test-page']
           sitemap[0].synopsis.should.equal['this is the first paragraph']
-          done()
+      , (err) ->
+        throw err
 
-  it 'synopsis should reflect edit to first paragraph', (done) ->
+  it 'synopsis should reflect edit to first paragraph', () ->
     body = JSON.stringify({
       type: 'edit'
       item: {id: 'a1', type: 'paragraph', text: 'edited'}
@@ -74,9 +73,7 @@ describe 'sitemap', ->
       .put('/page/adsf-test-page/action')
       .send("action=" + body)
       .expect(200)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         app.sitemaphandler.once 'finished', ->
           try
             sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
@@ -84,24 +81,24 @@ describe 'sitemap', ->
             throw err
           sitemap[0].slug.should.equal['adsf-test-page']
           sitemap[0].synopsis.should.equal['edited']
-          done()
+      , (err) ->
+        throw err
 
-  it 'deleting a page should remove it from the sitemap', (done) ->
+  it 'deleting a page should remove it from the sitemap', () ->
 
     request
       .delete('/adsf-test-page.json')
       .send()
       .expect(200)
-      .end (err, res) ->
-        if err
-          throw err
+      .then (res) ->
         app.sitemaphandler.once 'finished', ->
           try
             sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
           catch error
             throw err
           sitemap.should.be.empty
-          done()
+      , (err) ->
+        throw err
 
 
 
