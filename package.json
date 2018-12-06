@@ -20,12 +20,12 @@
     }
   ],
   "dependencies": {
+    "@mapbox/sanitize-caja": "^0.1.4",
     "JSONStream": "^1.3.1",
     "async": "^2.1.5",
     "body-parser": "^1.17.1",
     "client-sessions": "^0.8.0",
-    "coffee-script": "^1.12.4",
-    "coffee-trace": "*",
+    "coffeescript": "^2.3.2",
     "config-chain": "^1.1.11",
     "cookie-parser": "^1.3.3",
     "errorhandler": "^1.5.0",
@@ -36,12 +36,10 @@
     "glob": "^7.1.1",
     "lodash": "^4.17.4",
     "method-override": "^2.3.7",
-    "mkdirp": "*",
-    "morgan": "^1.8.1",
-    "optimist": "*",
+    "mkdirp": "0.5.1",
+    "morgan": "^1.9.1",
     "qs": "^6.4.0",
     "request": "^2.81.0",
-    "@mapbox/sanitize-caja": "^0.1.4",
     "serve-static": "^1.12.4",
     "write-file-atomic": "^2.3.0",
     "xml2js": "^0.4.19"
@@ -50,18 +48,17 @@
     "test": "mocha"
   },
   "devDependencies": {
-    "expect.js": "*",
+    "expect.js": "0.3.1",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "^0.13.2",
-    "grunt-nsp": "*",
     "grunt-retire": "^1.0.7",
-    "mocha": "^2.5.3",
+    "mocha": "^5.2.0",
     "should": "^12.0.0",
-    "sinon": "^3.2.1",
+    "sinon": "^7.1.1",
     "supertest": "^3.0.0",
-    "wiki-client": "^0.13.0",
+    "wiki-client": "*",
     "wiki-plugin-activity": "*"
   },
   "engines": {
