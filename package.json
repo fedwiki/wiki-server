@@ -59,7 +59,8 @@
     "sinon": "^7.1.1",
     "supertest": "^3.0.0",
     "wiki-client": "*",
-    "wiki-plugin-activity": "*"
+    "wiki-plugin-activity": "*",
+    "wiki-plugin-video": "^0.2.6"
   },
   "engines": {
     "node": ">=6.x"

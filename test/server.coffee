@@ -4,7 +4,7 @@ server = require '..'
 path = require 'path'
 random = require '../lib/random_id'
 testid = random()
-argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), port: 55555, security_legacy: true})
+argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), packageDir: path.join(__dirname, '..', 'node_modules'), port: 55555, security_legacy: true})
 
 describe 'server', ->
   app = {}
@@ -26,6 +26,14 @@ describe 'server', ->
   # location of the test page
   loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
 
+  it 'factories should return a list of plugin', () ->
+    await request
+      .get('/system/factories.json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then (res) ->
+        res.body[0].name.should.equal('Video')
+        res.body[0].category.should.equal('format')
 
   it 'new site should have an empty list of pages', () ->
     await request
