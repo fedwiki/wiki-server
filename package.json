@@ -56,7 +56,7 @@
     "wiki-plugin-video": "^0.2.6"
   },
   "engines": {
-    "node": ">=6.x"
+    "node": ">=8.x"
   },
   "testling": {
     "harness": "mocha"
