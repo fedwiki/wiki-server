@@ -342,7 +342,7 @@ module.exports = exports = (argv) ->
             return cb()
 
       async.map files, doFactories, (e, factories) ->
-        res.e if e
+        res.e(e) if e
         res.end(JSON.stringify factories)
 
 
