@@ -18,8 +18,6 @@
 # can be installed with an:
 #     npm install
 
-require('coffee-trace')
-
 # Standard lib
 fs = require 'fs'
 path = require 'path'
@@ -30,8 +28,6 @@ mkdirp = require 'mkdirp'
 express = require 'express'
 hbs = require 'express-hbs'
 glob = require 'glob'
-es = require 'event-stream'
-JSONStream = require 'JSONStream'
 async = require 'async'
 f = require('flates')
 sanitize = require '@mapbox/sanitize-caja'
@@ -335,13 +331,19 @@ module.exports = exports = (argv) ->
 # Plugins are located in packages in argv.packageDir, with package names of the form wiki-plugin-*
     glob path.join(argv.packageDir, 'wiki-plugin-*', 'factory.json'), (e, files) ->
       if e then return res.e(e)
-      files = files.map (file) ->
-        return fs.createReadStream(file).on('error', res.e).pipe(JSONStream.parse())
 
-      es.concat.apply(null, files)
-        .on('error', res.e)
-        .pipe(JSONStream.stringify())
-        .pipe(res)
+      doFactories = (file, cb) ->
+        fs.readFile file, (err, data) ->
+          return cb() if err
+          try
+            factory = JSON.parse data
+            cb null, factory
+          catch err
+            return cb()
+
+      async.map files, doFactories, (e, factories) ->
+        res.e(e) if e
+        res.end(JSON.stringify factories)
 
 
   ###### Json Routes ######
