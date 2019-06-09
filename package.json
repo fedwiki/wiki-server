@@ -22,38 +22,38 @@
   "dependencies": {
     "@mapbox/sanitize-caja": "^0.1.4",
     "async": "^2.6.2",
-    "body-parser": "^1.17.1",
+    "body-parser": "^1.19.0",
     "client-sessions": "^0.8.0",
-    "coffeescript": "^2.3.2",
+    "coffeescript": "^2.4.1",
     "cookie-parser": "^1.4.4",
-    "errorhandler": "^1.5.0",
-    "express": "^4.15.4",
-    "express-hbs": "^1.0.5",
+    "errorhandler": "^1.5.1",
+    "express": "^4.17.1",
+    "express-hbs": "^1.1.1",
     "flates": "0.0.5",
-    "glob": "^7.1.1",
+    "glob": "^7.1.4",
     "lodash": "^4.17.4",
     "method-override": "^2.3.7",
     "mkdirp": "0.5.1",
     "morgan": "^1.9.1",
     "request": "^2.88.0",
-    "write-file-atomic": "^2.4.2",
+    "write-file-atomic": "^2.4.3",
     "xml2js": "^0.4.19"
   },
   "scripts": {
     "test": "mocha"
   },
   "devDependencies": {
-    "grunt": "^1.0.1",
+    "grunt": "^1.0.4",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "^0.13.2",
-    "grunt-retire": "^1.0.7",
+    "grunt-retire": "^1.0.8",
     "mocha": "^5.2.0",
     "should": "^12.0.0",
     "supertest": "^3.4.2",
     "wiki-client": "^0.14.3",
     "wiki-plugin-activity": "^0.3.4",
-    "wiki-plugin-video": "^0.2.7"
+    "wiki-plugin-video": "^0.2.8"
   },
   "engines": {
     "node": ">=8.x"
