@@ -47,6 +47,7 @@ request = require 'request'
 random = require './random_id'
 defargs = require './defaultargs'
 resolveClient = require 'wiki-client/lib/resolve'
+viewsClient = require 'wiki-client/lib/views'
 pluginsFactory = require './plugins'
 sitemapFactory = require './sitemap'
 
@@ -166,7 +167,7 @@ module.exports = exports = (argv) ->
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
 
-  app.set('views', path.join(__dirname, '..', '..', 'wiki-client', '/views'))
+  app.set('views', viewsClient.path())
   app.set('view engine', 'html')
   app.engine('html', hbs.express4())
   app.set('view options', layout: false)
