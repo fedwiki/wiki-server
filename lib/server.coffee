@@ -166,7 +166,8 @@ module.exports = exports = (argv) ->
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
 
-  app.set('views', path.join(__dirname, '..', '..', 'wiki-client', '/views'))
+  app.set('views',
+    path.join(require.resolve('wiki-client/package.json'), '..', 'views'))
   app.set('view engine', 'html')
   app.engine('html', hbs.express4())
   app.set('view options', layout: false)
