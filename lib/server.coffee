@@ -58,6 +58,7 @@ render = (page) ->
       ' ' + (page.title))) + '\n' +
     f.div {class: "story"},
       page.story.map((story) ->
+        return '' unless story
         if story.type is 'paragraph'
           f.div {class: "item paragraph"}, f.p(resolveClient.resolveLinks(story.text))
         else if story.type is 'image'
