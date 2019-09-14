@@ -11,6 +11,8 @@
 fs = require 'fs'
 path = require 'path'
 glob = require 'glob'
+events = require 'events'
+forward = require './forward'
 
 module.exports = exports = (argv) ->
 
@@ -35,6 +37,9 @@ module.exports = exports = (argv) ->
 
 	startServers = (params) ->
 		glob "wiki-plugin-*", {cwd: argv.packageDir}, (e, plugins) ->
+			emitter = new events.EventEmitter()
+			forward.init params.app, emitter
+			params.emitter = emitter
 			startServer params, plugin for plugin in plugins
 
 

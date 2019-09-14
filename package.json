@@ -36,6 +36,7 @@
     "mkdirp": "0.5.1",
     "morgan": "^1.9.1",
     "request": "^2.88.0",
+    "wiki-security-friends": "^0.2.2",
     "write-file-atomic": "^2.4.3",
     "xml2js": "^0.4.19"
   },
