@@ -36,10 +36,10 @@ module.exports = exports = (argv) ->
 					console.log 'failed to start plugin', plugin, e?.stack or e
 
 	startServers = (params) ->
+		emitter = new events.EventEmitter()
+		forward.init params.app, emitter
+		params.emitter = emitter
 		glob "wiki-plugin-*", {cwd: argv.packageDir}, (e, plugins) ->
-			emitter = new events.EventEmitter()
-			forward.init params.app, emitter
-			params.emitter = emitter
 			startServer params, plugin for plugin in plugins
 
 
