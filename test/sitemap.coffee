@@ -8,11 +8,14 @@ argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests',
 
 describe 'sitemap', ->
   app = {}
-  before((done) ->
+  runningServer = null
+  beforeEach((done) ->
     app = server(argv)
     app.once("owner-set", ->
-      app.listen app.startOpts.port, app.startOpts.host, done
+      runningServer = app.listen app.startOpts.port, app.startOpts.host, done
     ))
+  afterEach () ->
+    runningServer.close()
 
 
   request = request('http://localhost:55556')
