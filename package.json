@@ -1,7 +1,7 @@
 {
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
-  "version": "0.15.2",
+  "version": "0.16.0",
   "author": {
     "name": "Ward Cunningham",
     "email": "ward@c2.com",
@@ -28,7 +28,7 @@
     "cookie-parser": "^1.4.4",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
-    "express-hbs": "^1.1.1",
+    "express-hbs": "^2.2.0",
     "flates": "0.0.5",
     "glob": "^7.1.4",
     "lodash": "^4.17.14",
