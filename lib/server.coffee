@@ -167,6 +167,15 @@ module.exports = exports = (argv) ->
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
 
+  # 
+  staticPathOptions = {
+    dotfiles: 'ignore'
+    etag: true
+    immutable: false
+    lastModified: false
+    maxAge: '1h'
+  }
+
   app.set('views',
     path.join(require.resolve('wiki-client/package.json'), '..', 'views'))
   app.set('view engine', 'html')
@@ -200,7 +209,7 @@ module.exports = exports = (argv) ->
   app.use(ourErrorHandler)
 
   # Add static route to the client
-  app.use(express.static(argv.client))
+  app.use(express.static(argv.client, staticPathOptions))
 
   ##### Define security routes #####
   securityhandler.defineRoutes app, cors, updateOwner
@@ -213,11 +222,11 @@ module.exports = exports = (argv) ->
     plugins.map (plugin) ->
       pluginName = plugin.slice(12, -7)
       pluginPath = '/plugins/' + pluginName
-      app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
+      app.use(pluginPath, express.static(path.join(argv.packageDir, plugin), staticPathOptions))
 
   # Add static routes to the security client.
   if argv.security != './security'
-    app.use('/security', express.static(path.join(argv.packageDir, argv.security_type, 'client')))
+    app.use('/security', express.static(path.join(argv.packageDir, argv.security_type, 'client'), staticPathOptions))
 
 
   ##### Set up standard environments. #####
