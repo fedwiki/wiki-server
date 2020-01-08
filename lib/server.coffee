@@ -473,8 +473,8 @@ module.exports = exports = (argv) ->
   ###### Meta Routes ######
   # Send an array of pages in the database via json
   app.get '/system/slugs.json', cors, (req, res) ->
-    fs.readdir argv.db, (e, files) ->
-      if e then return res.e e
+    pagehandler.slugs (err, files) ->
+      if err then res.status(500).send(err)
       res.send(files)
 
 # Returns a list of installed plugins. (does this get called anymore!)

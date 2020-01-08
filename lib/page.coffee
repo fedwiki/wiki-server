@@ -300,4 +300,12 @@ module.exports = exports = (argv) ->
         return cb(e) if e
         cb null, sitemap.filter (item) -> if item? then true
 
+  itself.slugs = (cb) ->
+    fs.readdir argv.db, (e, files) ->
+      if e
+        console.log 'Problem reading pages directory', e
+        cb(e)
+      else
+        cb(null, files)
+
   itself
