@@ -191,7 +191,7 @@ module.exports = exports = (argv) ->
   itself.removePage = (file) ->
     action = "remove"
     queue.push({action, file, ""})
-    if sitemap = [] and !working
+    if sitemap is [] and !working
       itself.start()
       sitemapRestore (e) ->
         console.log "Problems restoring sitemap: " + e if e
@@ -203,7 +203,7 @@ module.exports = exports = (argv) ->
   itself.update = (file, page) ->
     action = "update"
     queue.push({action, file, page})
-    if sitemap = [] and !working
+    if sitemap is [] and !working
       itself.start()
       sitemapRestore (e) ->
         console.log "Problems restoring sitemap: " + e if e

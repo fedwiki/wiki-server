@@ -24,20 +24,21 @@
     "async": "^2.6.2",
     "body-parser": "^1.19.0",
     "client-sessions": "^0.8.0",
-    "coffeescript": "^2.4.1",
+    "coffeescript": "^2.5.0",
     "cookie-parser": "^1.4.4",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
-    "express-hbs": "^2.2.0",
+    "express-hbs": "^2.3.0",
     "flates": "0.0.5",
     "glob": "^7.1.4",
     "lodash": "^4.17.14",
     "method-override": "^2.3.7",
+    "minisearch": "^2.1.3",
     "mkdirp": "0.5.1",
     "morgan": "^1.9.1",
     "request": "^2.88.0",
     "write-file-atomic": "^2.4.3",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.23"
   },
   "scripts": {
     "test": "mocha"
@@ -53,7 +54,7 @@
     "supertest": "^3.4.2",
     "wiki-client": "^0.14.3",
     "wiki-plugin-activity": "^0.3.4",
-    "wiki-plugin-video": "^0.2.8"
+    "wiki-plugin-video": "^0.2.9"
   },
   "engines": {
     "node": ">=8.x"
