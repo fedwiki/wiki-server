@@ -109,7 +109,6 @@ module.exports = exports = (argv) ->
             serial(queue.shift())))
 
   serial = (item) ->
-    console.log 'in serial', item
     if item
       switch item.action
         when "update"
@@ -140,8 +139,10 @@ module.exports = exports = (argv) ->
       when 'paragraph'
         pageText += ' ' + currentItem.text.replace /\[{1,2}|\]{1,2}/g, ''
       when 'markdown'
-        # will extract text, but for now...
+        # really need to extract text from the markdown, but for now just remove link brackets...
         pageText += ' ' + currentItem.text.replace /\[{1,2}|\]{1,2}/g, ''
+      when 'html'
+        pageText += ' ' + currentItem.text.replace /<[^>]*>/g, ''
       else
         if currentItem.text?
           for line in currentItem.text.split /\r\n?|\n/
