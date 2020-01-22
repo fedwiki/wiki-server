@@ -18,17 +18,18 @@ mkdirp = require 'mkdirp'
 miniSearch = require 'minisearch'
 
 module.exports = exports = (argv) ->
+  
+  wikiName = new URL(argv.url).hostname
 
-  siteIndex = new miniSearch({
-    fields: ['title', 'content']
-  })
+  siteIndex = []
 
   queue = []
 
   searchPageHandler = null
 
   # ms since last update we will remove index from memory
-  searchTimeoutMs = 1200000
+  # orig - searchTimeoutMs = 1200000
+  searchTimeoutMs = 120000     # temp reduce to 2 minutes
   searchTimeoutHandler = null
 
   siteIndexLoc = path.join(argv.status, 'site-index.json')
@@ -37,7 +38,8 @@ module.exports = exports = (argv) ->
 
   searchPageUpdate = (slug, page, origStory, cb) ->
     # to update we have to remove the page first, and then readd it
-    console.time 'search update'
+    timeLabel = "SITE INDEX update #{slug} - #{wikiName}"
+    console.time timeLabel
     origText = origStory.reduce( extractPageText, '')
     try
       siteIndex.remove {
@@ -47,7 +49,7 @@ module.exports = exports = (argv) ->
       }
     catch err
       # swallow error, if the page was not in index
-      console.log "removing #{slug} from index failed", err unless err.message.includes('not in the index')
+      console.log "SITE INDEX *** removing #{slug} from index failed", err unless err.message.includes('not in the index')
 
     newText = page.story.reduce( extractPageText, '')
     siteIndex.add {
@@ -55,13 +57,13 @@ module.exports = exports = (argv) ->
       'title': page.title
       'content': newText
     }
-    console.timeEnd 'search update'
-    console.log "#{slug} updated in index"
+    console.timeEnd timeLabel
     cb()
 
   searchPageRemove = (slug, title, origStory, cb) ->
     # remove page from index
-    console.time 'search page remove'
+    timeLabel = "SITE INDEX page remove #{slug} - #{wikiName}"
+    console.time timeLabel
     origText = origStory.reduce( extractPageText, '')
     try
       siteIndex.remove {
@@ -71,40 +73,43 @@ module.exports = exports = (argv) ->
       }
     catch err
       # swallow error, if the page was not in index
-      console.log "removing #{slug} from index failed", err unless err.message.includes('not in the index')
-    console.timeEnd 'search page remove'
-    console.log "#{slug} removed from index"
+      console.log "removing #{slug} from index #{wikiName} failed", err unless err.message.includes('not in the index')
+    console.timeEnd timeLabel
     cb()
 
   searchSave = (siteIndex, cb) ->
     # save index to file
-    console.time 'save index'
+    timeLabel = "SITE INDEX #{wikiName} : Saved"
+    console.time timeLabel
 
     fs.exists argv.status, (exists) ->
       if exists
         writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
-          console.timeEnd 'save index'
+          console.timeEnd timeLabel
           return cb(e) if e
           cb()
       else
         mkdirp argv.status, ->
         writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
-          console.timeEnd 'save index'
+          console.timeEnd timeLabel
           return cb(e) if e
           cb()
 
 
   searchRestore = (cb) ->
     # restore index, or create if it doesn't already exist
+    timeLabel = "SITE INDEX #{wikiName} : Restored"
+    console.time timeLabel
     fs.exists siteIndexLoc, (exists) ->
       if exists
         fs.readFile(siteIndexLoc, (err, data) ->
           return cb(err) if err
           try
-            searchIndex = miniSearch.loadJSON data,
+            siteIndex = miniSearch.loadJSON data,
               fields: ['title', 'content']
           catch e
             return cb(e)
+          console.timeEnd timeLabel
           process.nextTick( ->
             serial(queue.shift())))
 
@@ -126,12 +131,12 @@ module.exports = exports = (argv) ->
             )
           )
         else
-          console.log "Search unexpected action #{item.action} for #{item.page}"
+          console.log "SITE INDEX *** unexpected action #{item.action} for #{item.page}"
           process.nextTick( ->
             serial(queue.shift))
     else
       searchSave siteIndex, (e) ->
-        console.log "Problems saving search index: " + e if e
+        console.log "SITE INDEX *** save failed: " + e if e
         itself.stop()
 
   extractPageText = (pageText, currentItem) ->
@@ -159,8 +164,8 @@ module.exports = exports = (argv) ->
     @emit 'indexing'
   itself.stop = ->
     clearsearch = ->
-      console.log "removing index from memory"
-      # siteIndex = []
+      console.log "SITE INDEX #{wikiName} : removed from memory"
+      siteIndex = []
       clearTimeout(searchTimeoutHandler)
     searchTimeoutHandler = setTimeout clearsearch, searchTimeoutMs
     working = false
@@ -176,11 +181,12 @@ module.exports = exports = (argv) ->
     # we save the pagehandler, so we can recreate the site index if it is removed
     searchPageHandler = pagehandler if !searchPageHandler?
 
-    console.time 'create index'
+    timeLabel = "SITE INDEX #{wikiName} : Created"
+    console.time timeLabel
 
     pagehandler.slugs (e, slugs) ->
       if e
-        console.log "createIndex: error", e
+        console.log "SITE INDEX *** createIndex #{wikiName} error:", e
         itself.stop()
         return e
       
@@ -192,7 +198,7 @@ module.exports = exports = (argv) ->
         return new Promise (resolve) ->
           pagehandler.get slug, (err, page) ->
             if err
-              console.log 'site index: error reading page', slug
+              console.log "SITE INDEX *** #{wikiName}: error reading page", slug
               return
             # page
             pageText = page.story.reduce( extractPageText, '')
@@ -205,18 +211,17 @@ module.exports = exports = (argv) ->
   
       Promise.all(indexPromises)
       .then () ->
-        console.log 'all pages indexed...'
-        console.timeEnd 'create index'
+        console.timeEnd timeLabel
         process.nextTick ( ->
           serial(queue.shift()))
       
   itself.removePage = (slug, title, origStory) ->
     action = "remove"
     queue.push({action, slug, title, origStory})
-    if siteIndex is [] and !working
+    if Array.isArray(siteIndex) and !working
       itself.start()
       searchRestore (e) ->
-        console.log "Problems restoring search index:" + e if e
+        console.log "SITE INDEX *** Problems restoring search index #{wikiName}:" + e if e
         itself.createIndex(searchPageHandler)
     else
       serial(queue.shift()) unless working
@@ -224,11 +229,11 @@ module.exports = exports = (argv) ->
   itself.update = (slug, page, origStory) ->
     action = "update"
     queue.push({action, slug, page, origStory})
-    if siteIndex is [] and !working
+    if Array.isArray(siteIndex) and !working
       itself.start()
-      searchRestore (e) ->
-        console.log "Problems restoring search index:" + e if e
-        itself.createIndex(searchPageHandler)
+      searchRestore( (e) ->
+        console.log "SITE INDEX *** Problems restoring search index #{wikiName}:" + e if e
+        itself.createIndex(searchPageHandler))
     else
       serial(queue.shift()) unless working
         
