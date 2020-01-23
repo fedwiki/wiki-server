@@ -12,7 +12,6 @@ fs = require 'fs'
 path = require 'path'
 events = require 'events'
 writeFileAtomic = require 'write-file-atomic'
-_ = require 'lodash'
 mkdirp = require 'mkdirp'
 
 miniSearch = require 'minisearch'

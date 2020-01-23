@@ -584,7 +584,7 @@ module.exports = exports = (argv) ->
       # result of a list comprehension by way of a switch expression.
       try
         # save the original page, so we can remove it from the index.
-        origStory = page.story or []
+        origStory = Object.assign([], page.story) or []
         page.story = switch action.type
           when 'move'
             action.order.map (id) ->
@@ -636,7 +636,7 @@ module.exports = exports = (argv) ->
       sitemaphandler.update(req.params[0], page)
 
       # update site index
-      searchhandler.update(req.params[0],page,origStory)
+      searchhandler.update(req.params[0], page, origStory)
 
     # log action
 
@@ -689,7 +689,7 @@ module.exports = exports = (argv) ->
     # we need the original page text to remove it from the index, so get the original text before deleting it
     pagehandler.get pageFile, (e, page, status) ->
       title = page.title
-      origStory = page.story or []
+      origStory = Object.assign([], page.story) or []
       pagehandler.delete pageFile, (err) ->
         if err
           res.status(500).send(err)
