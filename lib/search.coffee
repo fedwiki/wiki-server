@@ -32,8 +32,17 @@ module.exports = exports = (argv) ->
   searchTimeoutHandler = null
 
   siteIndexLoc = path.join(argv.status, 'site-index.json')
+  indexUpdateFlag = path.join(argv.status, 'index-updated')
 
   working = false
+
+  touch = (file, cb) ->
+    fs.stat indexUpdateFlag, (err, stats) ->
+      return cb() if err is null
+      fs.open indexUpdateFlag, 'w', (err,fd) ->
+        cb(err) if err
+        fs.close fd, (err) ->
+          cb(err)
 
   searchPageUpdate = (slug, page, origStory, cb) ->
     # to update we have to remove the page first, and then readd it
@@ -86,13 +95,15 @@ module.exports = exports = (argv) ->
         writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
           console.timeEnd timeLabel
           return cb(e) if e
-          cb()
+          touch indexUpdateFlag, (err) ->
+            cb()
       else
         mkdirp argv.status, ->
-        writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
-          console.timeEnd timeLabel
-          return cb(e) if e
-          cb()
+          writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
+            console.timeEnd timeLabel
+            return cb(e) if e
+            touch indexUpdateFlag, (err) ->
+              cb()
 
 
   searchRestore = (cb) ->
@@ -235,5 +246,30 @@ module.exports = exports = (argv) ->
         itself.createIndex(searchPageHandler))
     else
       serial(queue.shift()) unless working
+
+  itself.startUp = (pagehandler) ->
+    # called on server startup, here we check if wiki already is index
+    # we only create an index if there is either no index or there have been updates since last startup
+    console.log "SITE INDEX #{wikiName} : StartUp"
+    fs.stat siteIndexLoc, (err, stats) ->
+      if err is null
+        # site index exists, but has it been updated?
+        fs.stat indexUpdateFlag, (err, stats) ->
+          if !err
+            # index has been updated, so recreate it. 
+            itself.createIndex pagehandler
+            # remove the update flag once the index has been created
+            itself.once 'indexed', ->
+              fs.unlink indexUpdateFlag, (err) ->
+                console.log "+++ SITE INDEX #{wikiName} : unable to delete update flag" if err
+      else
+        # index does not exist, so create it
+        itself.createIndex pagehandler
+        # remove the update flag once the index has been created
+        itself.once 'indexed', ->
+          fs.unlink indexUpdateFlag, (err) ->
+            console.log "+++ SITE INDEX #{wikiName} : unable to delete update flag" if err
+
+
         
   itself

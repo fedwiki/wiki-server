@@ -719,7 +719,7 @@ module.exports = exports = (argv) ->
     # create sitemap at start-up
     sitemaphandler.createSitemap(pagehandler)
     # create site index at start-up
-    searchhandler.createIndex(pagehandler)
+    searchhandler.startUp(pagehandler)
 
 
   # Return app when called, so that it can be watched for events and shutdown with .close() externally.
