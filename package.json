@@ -52,7 +52,7 @@
     "mocha": "^5.2.0",
     "should": "^12.0.0",
     "supertest": "^3.4.2",
-    "wiki-client": "^0.14.3",
+    "wiki-client": "^0.20.0",
     "wiki-plugin-activity": "^0.3.4",
     "wiki-plugin-video": "^0.2.9"
   },
