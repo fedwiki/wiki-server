@@ -49,6 +49,7 @@ defargs = require './defaultargs'
 resolveClient = require 'wiki-client/lib/resolve'
 pluginsFactory = require './plugins'
 sitemapFactory = require './sitemap'
+searchFactory = require './search'
 
 render = (page) ->
   return f.div({class: "twins"}, f.p('')) + '\n' +
@@ -110,6 +111,9 @@ module.exports = exports = (argv) ->
 
   # Require the sitemap adapter and initialize it with options.
   app.sitemaphandler = sitemaphandler = sitemapFactory(argv)
+
+  # Require the site indexer and initialize it with options
+  app.searchhandler = searchhandler = searchFactory(argv)
 
   # Require the security adapter and initialize it with options.
   app.securityhandler = securityhandler = require(argv.security_type)(log, loga, argv)
@@ -473,8 +477,8 @@ module.exports = exports = (argv) ->
   ###### Meta Routes ######
   # Send an array of pages in the database via json
   app.get '/system/slugs.json', cors, (req, res) ->
-    fs.readdir argv.db, (e, files) ->
-      if e then return res.e e
+    pagehandler.slugs (err, files) ->
+      if err then res.status(500).send(err)
       res.send(files)
 
 # Returns a list of installed plugins. (does this get called anymore!)
@@ -508,6 +512,16 @@ module.exports = exports = (argv) ->
         sitemaphandler.once 'finished', ->
           res.sendFile(xmlSitemapLoc)
 
+  searchIndexLoc = path.join(argv.status, 'site-index.json')
+  app.get '/system/site-index.json', cors, (req, res) ->
+    fs.exists searchIndexLoc, (exists) ->
+      if exists
+        res.sendFile(searchIndexLoc)
+      else
+        # only create index if we are not already creating one
+        searchhandler.createIndex(pagehandler) if !searchhandler.isWorking()
+        searchhandler.once 'indexed', ->
+          res.sendFile(searchIndexLoc)
 
   app.get '/system/export.json', cors, (req, res) ->
     pagehandler.pages (e, sitemap) ->
@@ -569,6 +583,8 @@ module.exports = exports = (argv) ->
       # Using Coffee-Scripts implicit returns we assign page.story to the
       # result of a list comprehension by way of a switch expression.
       try
+        # save the original page, so we can remove it from the index.
+        origStory = Object.assign([], page.story) or []
         page.story = switch action.type
           when 'move'
             action.order.map (id) ->
@@ -619,6 +635,9 @@ module.exports = exports = (argv) ->
       # update sitemap
       sitemaphandler.update(req.params[0], page)
 
+      # update site index
+      searchhandler.update(req.params[0], page, origStory)
+
     # log action
 
     # If the action is a fork, get the page from the remote server,
@@ -667,12 +686,18 @@ module.exports = exports = (argv) ->
 
   app.delete ///^/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
     pageFile = req.params[0]
-    pagehandler.delete pageFile, (err) ->
-      if err
-        res.status(500).send(err)
-      else
-        sitemaphandler.removePage pageFile
-        res.status(200).send('')
+    # we need the original page text to remove it from the index, so get the original text before deleting it
+    pagehandler.get pageFile, (e, page, status) ->
+      title = page.title
+      origStory = Object.assign([], page.story) or []
+      pagehandler.delete pageFile, (err) ->
+        if err
+          res.status(500).send(err)
+        else
+          sitemaphandler.removePage pageFile
+          res.status(200).send('')
+          # update site index
+          searchhandler.removePage(req.params[0], title, origStory)
 
 
 
@@ -693,6 +718,8 @@ module.exports = exports = (argv) ->
     ### Sitemap ###
     # create sitemap at start-up
     sitemaphandler.createSitemap(pagehandler)
+    # create site index at start-up
+    searchhandler.startUp(pagehandler)
 
 
   # Return app when called, so that it can be watched for events and shutdown with .close() externally.
