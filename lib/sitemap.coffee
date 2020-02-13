@@ -30,7 +30,7 @@ module.exports = exports = (argv) ->
   sitemapPageHandler = null
 
   # ms since last update we will remove sitemap from memory
-  sitemapTimeoutMs = 1200000
+  sitemapTimeoutMs = 120000
   sitemapTimeoutHandler = null
 
   sitemapLoc = path.join(argv.status, 'sitemap.json')
@@ -151,7 +151,6 @@ module.exports = exports = (argv) ->
         itself.stop()
       xmlSitemapSave sitemap, (e) ->
         console.log "Problems saving sitemap(xml) #{wikiName}"+ e if e
-        itself.stop()
 
 
   #### Public stuff ####
@@ -193,7 +192,7 @@ module.exports = exports = (argv) ->
   itself.removePage = (file) ->
     action = "remove"
     queue.push({action, file, ""})
-    if sitemap is [] and !working
+    if sitemap.length is 0 and !working
       itself.start()
       sitemapRestore (e) ->
         console.log "Problems restoring sitemap #{wikiName} : " + e if e
@@ -205,7 +204,7 @@ module.exports = exports = (argv) ->
   itself.update = (file, page) ->
     action = "update"
     queue.push({action, file, page})
-    if sitemap is [] and !working
+    if sitemap.length is 0 and !working
       itself.start()
       sitemapRestore (e) ->
         console.log "Problems restoring sitemap #{wikiName} : " + e if e
