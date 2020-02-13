@@ -164,7 +164,7 @@ module.exports = exports = (argv) ->
             for line in currentItem.text.split /\r\n?|\n/
               pageText += ' ' + line.replace /\[{1,2}|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
     catch err
-      console.log "SITE INDEX *** #{wikiName} Error extracting text from '#{currentItem}'", err
+      console.log "SITE INDEX *** #{wikiName} Error extracting text from '#{currentItem.id}'", err
     pageText
 
 
