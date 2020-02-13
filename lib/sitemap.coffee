@@ -193,7 +193,7 @@ module.exports = exports = (argv) ->
   itself.removePage = (file) ->
     action = "remove"
     queue.push({action, file, ""})
-    if sitemap is [] and !working
+    if sitemap.length is 0 and !working
       itself.start()
       sitemapRestore (e) ->
         console.log "Problems restoring sitemap #{wikiName} : " + e if e
@@ -205,7 +205,7 @@ module.exports = exports = (argv) ->
   itself.update = (file, page) ->
     action = "update"
     queue.push({action, file, page})
-    if sitemap is [] and !working
+    if sitemap.length is 0 and !working
       itself.start()
       sitemapRestore (e) ->
         console.log "Problems restoring sitemap #{wikiName} : " + e if e
