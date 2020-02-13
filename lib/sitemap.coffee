@@ -30,7 +30,7 @@ module.exports = exports = (argv) ->
   sitemapPageHandler = null
 
   # ms since last update we will remove sitemap from memory
-  sitemapTimeoutMs = 1200000
+  sitemapTimeoutMs = 120000
   sitemapTimeoutHandler = null
 
   sitemapLoc = path.join(argv.status, 'sitemap.json')
