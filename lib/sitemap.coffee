@@ -151,7 +151,6 @@ module.exports = exports = (argv) ->
         itself.stop()
       xmlSitemapSave sitemap, (e) ->
         console.log "Problems saving sitemap(xml) #{wikiName}"+ e if e
-        itself.stop()
 
 
   #### Public stuff ####
