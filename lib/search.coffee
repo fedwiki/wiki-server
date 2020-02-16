@@ -48,7 +48,11 @@ module.exports = exports = (argv) ->
     # to update we have to remove the page first, and then readd it
     timeLabel = "SITE INDEX update #{slug} - #{wikiName}"
     console.time timeLabel
-    origText = origStory.reduce( extractPageText, '')
+    try
+      origText = origStory.reduce( extractPageText, '')
+    catch err
+      console.log "SITE INDEX *** #{wikiName} reduce to extract the original text on #{slug} failed", err.message
+      origText = ""
     try
       siteIndex.remove {
         'id': slug
@@ -59,7 +63,11 @@ module.exports = exports = (argv) ->
       # swallow error, if the page was not in index
       console.log "SITE INDEX *** removing #{slug} from index failed", err unless err.message.includes('not in the index')
 
-    newText = page.story.reduce( extractPageText, '')
+    try
+      newText = page.story.reduce( extractPageText, '')
+    catch err
+      console.log "SITE INDEX *** #{wikiName} reduce to extract the new text on #{slug} failed", err.message
+      newText = ""
     siteIndex.add {
       'id': slug
       'title': page.title
@@ -72,7 +80,11 @@ module.exports = exports = (argv) ->
     # remove page from index
     timeLabel = "SITE INDEX page remove #{slug} - #{wikiName}"
     console.time timeLabel
-    origText = origStory.reduce( extractPageText, '')
+    try
+      origText = origStory.reduce( extractPageText, '')
+    catch err
+      console.log "SITE INDEX *** #{wikiName} reduce to extract the text for removing #{slug} failed", err.message
+      origText = ""
     try
       siteIndex.remove {
         'id': slug
@@ -149,7 +161,7 @@ module.exports = exports = (argv) ->
         console.log "SITE INDEX *** save failed: " + e if e
         itself.stop()
 
-  extractPageText = (pageText, currentItem) ->
+  extractPageText = (pageText, currentItem, currentIndex, array) ->
     try
       switch currentItem.type
         when 'paragraph'
@@ -164,7 +176,7 @@ module.exports = exports = (argv) ->
             for line in currentItem.text.split /\r\n?|\n/
               pageText += ' ' + line.replace /\[{1,2}|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
     catch err
-      console.log "SITE INDEX *** #{wikiName} Error extracting text from '#{currentItem.id}'", err
+      console.log "SITE INDEX *** #{wikiName} Error extracting text from '#{currentIndex}' of #{JSON.stringify(array)}", err.message
     pageText
 
 
@@ -214,7 +226,11 @@ module.exports = exports = (argv) ->
               console.log "SITE INDEX *** #{wikiName}: error reading page", slug
               return
             # page
-            pageText = page.story.reduce( extractPageText, '')
+            try
+              pageText = page.story.reduce( extractPageText, '')
+            catch err
+              console.log "SITE INDEX *** #{wikiName} reduce to extract text on #{slug} failed", err.message
+              pageText = ""
             siteIndex.add {
               'id': slug
               'title': page.title
