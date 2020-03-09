@@ -541,7 +541,30 @@ module.exports = exports = (argv) ->
             dict
           , {}))
       )
+  
+  admin = (req, res, next) ->
+    if securityhandler.isAdmin(req)
+      next()
+    else
+      console.log 'rejecting', req.path
+      res.sendStatus(403)
 
+  app.get '/system/version.json', admin, (req, res) ->
+    versions = {}
+    wikiModule = module.parent.parent.parent
+    versions[wikiModule.require('./package').name] = wikiModule.require('./package').version
+    versions[wikiModule.require('wiki-server/package').name] = wikiModule.require('wiki-server/package').version
+    versions[wikiModule.require('wiki-client/package').name] = wikiModule.require('wiki-client/package').version
+    versions['security'] = {}
+    versions['plugins'] = {}
+
+    glob '+(wiki-security-*|wiki-plugin-*)', {cwd: argv.packageDir}, (e, plugins) ->
+      plugins.map (plugin) ->
+        if plugin.includes 'wiki-security'
+          versions.security[wikiModule.require(plugin + "/package").name] = wikiModule.require(plugin + "/package").version
+        else
+          versions.plugins[wikiModule.require(plugin + "/package").name] = wikiModule.require(plugin + "/package").version
+      res.json(versions)
 
   ##### Proxy routes #####
 
