@@ -195,7 +195,7 @@ module.exports = exports = (argv) ->
   app.use(methodOverride())
   cookieValue = {
     httpOnly: true
-    sameSite: 'strict'
+    sameSite: 'lax'
   }
   cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
   # use secureProxy as TLS is terminated in outside the node process
