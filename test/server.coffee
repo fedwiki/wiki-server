@@ -32,8 +32,8 @@ describe 'server', ->
       .expect(200)
       .expect('Content-Type', /json/)
       .then (res) ->
-        res.body[0].name.should.equal('Video')
-        res.body[0].category.should.equal('format')
+        res.body[1].name.should.equal('Video')
+        res.body[1].category.should.equal('format')
 
   it 'new site should have an empty list of pages', () ->
     await request
