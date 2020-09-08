@@ -1,0 +1,41 @@
+#!/bin/bash
+set -euo pipefail
+ITS=$'\n\r\t'
+
+readonly SCOPE="${1-MISSING}"
+
+usage() {
+  cat <<EOF
+Usage:
+  $(basename $0) SCOPE < package.original.json > package.json
+
+  both SCOPE and STDIN are required
+  SCOPE is expected to be the github username (or maybe orgname)
+  STDIN is expected to be a package.json
+
+EOF
+}
+
+main() {
+  # 1. set registry to github's
+  # 2. set the repo URL to the github fork
+  # 3. set the scope in the package name
+  jq ".publishConfig.registry=\"https://npm.pkg.github.com/\" \
+  |.repository.url=\"https://github.com/${SCOPE}/wiki-server\" \
+  |.name=\"@${SCOPE}/wiki-server\""
+}
+
+missing-scope() {
+  [ "${SCOPE}" = "MISSING" ]
+}
+
+missing-stdin() {
+  [ -t 0 ]
+}
+
+if missing-scope || missing-stdin; then
+  usage
+  exit 1
+else
+  main $@
+fi
