@@ -1,0 +1,49 @@
+#!/bin/bash
+set -euo pipefail
+IFS=$'\n\r\t'
+
+usage() {
+  cat <<EOF
+Usage: $(basename $0) SEGMENT [PREID]
+
+SEGMENT must be one of premajor, preminor, prepatch, or prerelease
+PREID is optional. Unless specified, it is computed from git branch
+
+Creates a node package tarball from the code in the current branch.
+It uses npm version and npm pack, but deliberately does NOT commit
+changes to git. We aim to enable wiki developers to install and test
+before submitting PRs.
+
+NOTE: modifies version in package.json and package-lock.json
+You probably don't want to check in those changes.
+
+EOF
+}
+
+main() {
+  readonly SEGMENT=${1-UNSPECIFIED}
+  if is-not-prerelease $SEGMENT; then
+    usage
+    exit 1
+  fi
+
+  readonly PREID=${2-$(convert-git-branch-to-semver-prerelease)}
+  npm version $SEGMENT --preid=$PREID --force --no-git-tag-version &>/dev/null
+  export PACKAGE=$(npm pack 2>/dev/null | tail -1)
+  echo $PACKAGE
+}
+
+is-not-prerelease() {
+  ! [[ " premajor preminor prepatch prerelease " =~ " $1 " ]]
+}
+
+convert-git-branch-to-semver-prerelease() {
+  # semver spec for pre-release: https://semver.org/#spec-item-9
+  # 1. remove any path-like prefixes
+  # 2. convert underscores to hyphens
+  # 3. strip all other invalid characters
+  local RAW_BRANCH=$(git branch --show-current)
+  basename $RAW_BRANCH | perl -pe 's/_/-/g;s/[^0-9A-Za-z-]//g'
+}
+
+main $@
