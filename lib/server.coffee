@@ -197,7 +197,9 @@ module.exports = exports = (argv) ->
     httpOnly: true
     sameSite: 'lax'
   }
-  cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
+  if argv.wiki_domain
+    if !argv.wiki_domain.endsWith('localhost')
+      cookieValue['domain'] = argv.wiki_domain
   # use secureProxy as TLS is terminated in outside the node process
   if argv.secure_cookie
     cookieName = 'wikiTlsSession'
