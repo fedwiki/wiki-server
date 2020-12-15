@@ -56,18 +56,19 @@ module.exports = exports = (argv) ->
         linkRe = /\[\[([^\]]+)\]\]/g
         match = undefined
         while (match = linkRe.exec(currentItem.text)) != null
-          collaborativeLinks.add asSlug match[1]
+          if not collaborativeLinks.has(asSlug(match[1]))
+            collaborativeLinks.set(asSlug(match[1]), currentItem.id)
       catch err
         console.log "METADATA *** #{wikiName} Error extracting links from #{currentIndex} of #{JSON.stringify(array)}", err.message
       collaborativeLinks
 
     try
-      pageLinksSet = page.story.reduce( extractPageLinks, new Set())
+      pageLinksMap = page.story.reduce( extractPageLinks, new Map())
     catch err
       console.log "METADATA *** #{wikiName} reduce to extract links on #{slug} failed", err.message
     #
-    if pageLinksSet.size > 0
-      pageLinks = Array.from(pageLinksSet)
+    if pageLinksMap.size > 0
+      pageLinks = Object.fromEntries(pageLinksMap)
     else
       pageLinks = []
 
