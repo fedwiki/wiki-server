@@ -402,11 +402,15 @@ module.exports = exports = (argv) ->
       )
 
   ###### Favicon Routes ######
-  # If favLoc doesn't exist send 404 and let the client
-  # deal with it.
+  # If favLoc doesn't exist send the default favicon.
   favLoc = path.join(argv.status, 'favicon.png')
+  defaultFavLoc = path.join(argv.root, 'default-data', 'status', 'favicon.png')
   app.get '/favicon.png', cors, (req,res) ->
-    res.sendFile(favLoc)
+    fs.exists favLoc, (exists) ->
+      if exists
+        res.sendFile(favLoc)
+      else
+        res.sendFile(defaultFavLoc)
 
   authorized = (req, res, next) ->
     if securityhandler.isAuthorized(req)
