@@ -319,7 +319,7 @@ module.exports = exports = (argv) ->
           if pageLinksMap.size > 0
             pageLinks = Object.fromEntries(pageLinksMap)
           else
-            pageLinks = {}
+            pageLinks = undefined
         
           cb null, {
             slug     : file
