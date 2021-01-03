@@ -197,7 +197,9 @@ module.exports = exports = (argv) ->
     httpOnly: true
     sameSite: 'lax'
   }
-  cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
+  if argv.wiki_domain
+    if !argv.wiki_domain.endsWith('localhost')
+      cookieValue['domain'] = argv.wiki_domain
   # use secureProxy as TLS is terminated in outside the node process
   if argv.secure_cookie
     cookieName = 'wikiTlsSession'
@@ -400,11 +402,15 @@ module.exports = exports = (argv) ->
       )
 
   ###### Favicon Routes ######
-  # If favLoc doesn't exist send 404 and let the client
-  # deal with it.
+  # If favLoc doesn't exist send the default favicon.
   favLoc = path.join(argv.status, 'favicon.png')
+  defaultFavLoc = path.join(argv.root, 'default-data', 'status', 'favicon.png')
   app.get '/favicon.png', cors, (req,res) ->
-    res.sendFile(favLoc)
+    fs.exists favLoc, (exists) ->
+      if exists
+        res.sendFile(favLoc)
+      else
+        res.sendFile(defaultFavLoc)
 
   authorized = (req, res, next) ->
     if securityhandler.isAuthorized(req)

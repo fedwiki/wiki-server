@@ -19,6 +19,10 @@ mkdirp = require 'mkdirp'
 
 synopsis = require 'wiki-client/lib/synopsis'
 
+asSlug = (name) ->
+  name.replace(/\s/g, '-').replace(/[^A-Za-z0-9-]/g, '').toLowerCase()
+
+
 module.exports = exports = (argv) ->
 
   wikiName = new URL(argv.url).hostname
@@ -45,11 +49,35 @@ module.exports = exports = (argv) ->
 
   sitemapUpdate = (file, page, cb) ->
 
+    extractPageLinks = (collaborativeLinks, currentItem, currentIndex, array) ->
+      # extract collaborative links 
+      # - this will need extending if we also extract the id of the item containing the link
+      try
+        linkRe = /\[\[([^\]]+)\]\]/g
+        match = undefined
+        while (match = linkRe.exec(currentItem.text)) != null
+          if not collaborativeLinks.has(asSlug(match[1]))
+            collaborativeLinks.set(asSlug(match[1]), currentItem.id)
+      catch err
+        console.log "METADATA *** #{wikiName} Error extracting links from #{currentIndex} of #{JSON.stringify(array)}", err.message
+      collaborativeLinks
+
+    try
+      pageLinksMap = page.story.reduce( extractPageLinks, new Map())
+    catch err
+      console.log "METADATA *** #{wikiName} reduce to extract links on #{slug} failed", err.message
+    #
+    if pageLinksMap.size > 0
+      pageLinks = Object.fromEntries(pageLinksMap)
+    else
+      pageLinks = undefined
+
     entry = {
       'slug': file
       'title': page.title
       'date': lastEdit(page.journal)
       'synopsis': synopsis(page)
+      'links': pageLinks
     }
 
     slugs = sitemap.map (page) -> page.slug
