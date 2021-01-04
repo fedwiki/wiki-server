@@ -66,6 +66,7 @@ module.exports = exports = (argv) ->
       pageLinksMap = page.story.reduce( extractPageLinks, new Map())
     catch err
       console.log "METADATA *** #{wikiName} reduce to extract links on #{file} failed", err.message
+      pageLinksMap = []
     #
     if pageLinksMap.size > 0
       pageLinks = Object.fromEntries(pageLinksMap)
