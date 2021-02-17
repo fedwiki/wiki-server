@@ -52,9 +52,9 @@
     "mocha": "^8.0.1",
     "should": "^13.2.3",
     "supertest": "^4.0.2",
-    "wiki-client": "^0.20.0",
-    "wiki-plugin-activity": "^0.4.5",
-    "wiki-plugin-video": "^0.2.9"
+    "wiki-client": "^0.22.0",
+    "wiki-plugin-activity": "^0.4.6",
+    "wiki-plugin-video": "^0.2.10"
   },
   "engines": {
     "node": ">=8.x"
