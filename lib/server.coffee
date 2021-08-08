@@ -306,7 +306,7 @@ module.exports = exports = (argv) ->
       info.pages.push(pageDiv)
     res.render('static.html', info)
 
-  app.get ///([a-z0-9-]+)\.html$///, (req, res, next) ->
+  app.get ///^\/([a-z0-9-]+)\.html$///, (req, res, next) ->
     slug = req.params[0]
     log(slug)
     if slug is 'runtests'
