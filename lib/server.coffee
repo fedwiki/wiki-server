@@ -671,7 +671,7 @@ module.exports = exports = (argv) ->
     # otherwise ask pagehandler for it.
     if action.fork
       pagehandler.saveToRecycler req.params[0], (err) ->
-        if err isnt 'page does not exist' 
+        if err and err isnt 'page does not exist' 
           console.log "Error saving #{req.params[0]} before fork: #{err}"
         remoteGet(action.fork, req.params[0], actionCB)
     else if action.type is 'create'
