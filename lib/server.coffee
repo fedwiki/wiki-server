@@ -446,20 +446,24 @@ module.exports = exports = (argv) ->
   # Send an array of pages currently in the recycler via json
   app.get '/recycler/system/slugs.json', authorized, (req, res) ->
     fs.readdir argv.recycler, (e, files) ->
-      if e then return res.e e
+
       doRecyclermap = (file, cb) ->
-        pagehandler.get file, (e, page, status) ->
-          return cb() if file.match /^\./
-          if e
+        recycleFile = 'recycler/' + file
+        pagehandler.get recycleFile, (e, page, status) ->
+          if e or status is 404
             console.log 'Problem building recycler map:', file, 'e: ',e
+            # this will leave an undefined/empty item in the array, which we will filter out later
             return cb()
           cb null, {
             slug:  file
             title: page.title
           }
 
+      if e then return res.e e
       async.map files, doRecyclermap, (e, recyclermap) ->
         return cb(e) if e
+        # remove any empty items
+        recyclermap = recyclermap.filter( (el) -> return !!el )
         res.send(recyclermap)
 
   # Fetching page from the recycler
