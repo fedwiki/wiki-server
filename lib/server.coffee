@@ -22,6 +22,7 @@
 fs = require 'fs'
 path = require 'path'
 http = require 'http'
+url = require 'url'
 
 # From npm
 mkdirp = require 'mkdirp'
@@ -31,6 +32,7 @@ glob = require 'glob'
 async = require 'async'
 f = require('flates')
 sanitize = require '@mapbox/sanitize-caja'
+fetch = require 'node-fetch'
 
 # Express 4 middleware
 logger = require 'morgan'
@@ -139,33 +141,24 @@ module.exports = exports = (argv) ->
 
 
   remoteGet = (remote, slug, cb) ->
-    [host, port] = remote.split(':')
-    getopts = {
-      host: host
-      port: port or 80
-      path: "/#{slug}.json"
-    }
-    # TODO: This needs more robust error handling, just trying to
-    # keep it from taking down the server.
-    http.get(getopts, (resp) ->
-      responsedata = ''
-      resp.on 'data', (chunk) ->
-        responsedata += chunk
+    # assume http, as we know no better at this point and we need to specify a protocol.
+    remoteURL = new URL("http://#{remote}/#{slug}.json").toString()
+    # set a two second timeout
+    fetch(remoteURL, {timeout: 2000})
+    .then (res) ->
+      if res.ok
+        return res
+      throw new Error(res.statusText)
+    .then (res) ->
+      return res.json()
+    .then (json) ->
+      cb(null, json, 200)
+    .catch (err) ->
+      console.error('Unable to fetch remote resource', remote, slug, err)
+      cb(err, 'Page not found', 404)
+    
 
-      resp.on 'error', (e) ->
-        cb(e, 'Page not found', 404)
-
-      resp.on 'end', ->
-        if resp.statusCode == 404
-          cb(null, 'Page not found', 404)
-        else if responsedata
-          cb(null, JSON.parse(responsedata), resp.statusCode)
-        else
-          cb(null, 'Page not found', 404)
-
-    ).on 'error', (e) ->
-      cb(e, 'Page not found', 404)
-
+      
   #### Express configuration ####
   # Set up all the standard express server options,
   # including hbs to use handlebars/mustache templates
@@ -678,7 +671,8 @@ module.exports = exports = (argv) ->
     # otherwise ask pagehandler for it.
     if action.fork
       pagehandler.saveToRecycler req.params[0], (err) ->
-        if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
+        if err isnt 'page does not exist' 
+          console.log "Error saving #{req.params[0]} before fork: #{err}"
         remoteGet(action.fork, req.params[0], actionCB)
     else if action.type is 'create'
       # Prevent attempt to write circular structure
