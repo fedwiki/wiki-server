@@ -226,7 +226,7 @@ module.exports = exports = (argv) ->
     plugins.map (plugin) ->
       pluginName = plugin.slice(12, -7)
       pluginPath = '/plugins/' + pluginName
-      app.use(pluginPath, express.static(path.join(argv.packageDir, plugin), staticPathOptions))
+      app.use(pluginPath, cors, express.static(path.join(argv.packageDir, plugin), staticPathOptions))
 
   # Add static routes to the security client.
   if argv.security != './security'
