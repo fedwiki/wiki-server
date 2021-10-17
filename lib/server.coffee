@@ -655,7 +655,7 @@ module.exports = exports = (argv) ->
       if not page.journal
         page.journal = []
       if action.fork
-        page.journal.push({type: "fork", site: action.fork})
+        page.journal.push({type: "fork", site: action.fork, date: action.date - 10})
         delete action.fork
       page.journal.push(action)
       pagehandler.put req.params[0], page, (e) ->
