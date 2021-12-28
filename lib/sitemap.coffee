@@ -58,6 +58,9 @@ module.exports = exports = (argv) ->
         while (match = linkRe.exec(currentItem.text)) != null
           if not collaborativeLinks.has(asSlug(match[1]))
             collaborativeLinks.set(asSlug(match[1]), currentItem.id)
+        if 'reference' == currentItem.type
+          if not collaborativeLinks.has(currentItem.slug)
+            collaborativeLinks.set(currentItem.slug, currentItem.id)
       catch err
         console.log "METADATA *** #{wikiName} Error extracting links from #{currentIndex} of #{JSON.stringify(array)}", err.message
       collaborativeLinks
