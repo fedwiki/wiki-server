@@ -176,7 +176,7 @@ module.exports = exports = (argv) ->
             for line in currentItem.text.split /\r\n?|\n/
               pageText += ' ' + line.replace /\[{2}|\[(?:[a-z](?:[-a-z0-9\+\.])*:(?:\/\/[\n\S]+))|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
     catch err
-      console.log "SITE INDEX *** #{wikiName} Error extracting text from '#{currentIndex}' of #{JSON.stringify(array)}", err.message
+      throw new Error("Error extracting text from #{currentIndex}")
     pageText
 
 
