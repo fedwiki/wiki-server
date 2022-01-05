@@ -165,18 +165,18 @@ module.exports = exports = (argv) ->
     try
       switch currentItem.type
         when 'paragraph'
-          pageText += ' ' + currentItem.text.replace /\[{1,2}|\]{1,2}/g, ''
+          pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
         when 'markdown'
-          # really need to extract text from the markdown, but for now just remove link brackets...
-          pageText += ' ' + currentItem.text.replace /\[{1,2}|\]{1,2}/g, ''
+          # really need to extract text from the markdown, but for now just remove link brackets, urls...
+          pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
         when 'html'
           pageText += ' ' + currentItem.text.replace /<[^>]*>/g, ''
         else
           if currentItem.text?
             for line in currentItem.text.split /\r\n?|\n/
-              pageText += ' ' + line.replace /\[{1,2}|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
+              pageText += ' ' + line.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
     catch err
-      console.log "SITE INDEX *** #{wikiName} Error extracting text from '#{currentIndex}' of #{JSON.stringify(array)}", err.message
+      throw new Error("Error extracting text from #{currentIndex}")
     pageText
 
 
