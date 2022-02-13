@@ -50,7 +50,7 @@ module.exports = (argv) ->
 
   argv.security_type or= './security'
   if argv.security_type is './security'
-    console.log "\n\nWARNING: Using default security module."
+    console.log "\n\nINFORMATION: Using default security module."
   else
     argv.security_type = 'wiki-security-' + argv.security_type
   argv.security_legacy or= false
