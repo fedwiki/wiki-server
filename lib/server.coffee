@@ -583,7 +583,7 @@ module.exports = exports = (argv) ->
     remoteResource = pathParts.join('/')
     requestURL = 'http://' + remoteHost + '/' + remoteResource
     console.log("PROXY Request: ", requestURL)
-    if requestURL.endsWith('.json') or requestURL.endsWith('.png') or pathParts[0] is "plugin"
+    if requestURL.endsWith('.json') or requestURL.endsWith('.png') or requestURL.endsWith('.jpg') or pathParts[0] is "plugin"
       requestOptions = {
         host: remoteHost
         port: 80
