@@ -162,21 +162,23 @@ module.exports = exports = (argv) ->
         itself.stop()
 
   extractPageText = (pageText, currentItem, currentIndex, array) ->
+    # console.log('extractPageText', pageText, currentItem, currentIndex, array)
     try
-      switch currentItem.type
-        when 'paragraph'
-          pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
-        when 'markdown'
-          # really need to extract text from the markdown, but for now just remove link brackets, urls...
-          pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
-        when 'html'
-          pageText += ' ' + currentItem.text.replace /<[^>]*>/g, ''
-        else
-          if currentItem.text?
-            for line in currentItem.text.split /\r\n?|\n/
-              pageText += ' ' + line.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
+      if currentItem.text?
+        switch currentItem.type
+          when 'paragraph'
+            pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
+          when 'markdown'
+            # really need to extract text from the markdown, but for now just remove link brackets, urls...
+            pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}|\\n/g, ' '
+          when 'html'
+            pageText += ' ' + currentItem.text.replace /<[^>]*>/g, ''
+          else
+            if currentItem.text?
+              for line in currentItem.text.split /\r\n?|\n/
+                pageText += ' ' + line.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
     catch err
-      throw new Error("Error extracting text from #{currentIndex}")
+      throw new Error("Error extracting text from #{currentIndex}, #{err}")
     pageText
 
 
@@ -230,6 +232,7 @@ module.exports = exports = (argv) ->
               pageText = page.story.reduce( extractPageText, '')
             catch err
               console.log "SITE INDEX *** #{wikiName} reduce to extract text on #{slug} failed", err.message
+              # console.log "page", page
               pageText = ""
             siteIndex.add {
               'id': slug
