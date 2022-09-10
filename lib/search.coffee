@@ -284,6 +284,17 @@ module.exports = exports = (argv) ->
             itself.once 'indexed', ->
               fs.unlink indexUpdateFlag, (err) ->
                 console.log "+++ SITE INDEX #{wikiName} : unable to delete update flag" if err
+          else
+            # not been updated, but is it the correct version?
+            fs.readFile siteIndexLoc, (err, data) ->
+              if !err
+                try
+                  testIndex = JSON.parse(data)
+                  if testIndex.serializationVersion != 2
+                    console.log('+++ SITE INDEX #{wikiName} : updating to latest version.')
+                    itself.createIndex pagehandler
+              else
+                console.log "+++ SITE INDEX #{wikiName} : error reading index"
       else
         # index does not exist, so create it
         itself.createIndex pagehandler

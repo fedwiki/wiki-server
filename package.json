@@ -33,7 +33,7 @@
     "glob": "^7.1.4",
     "lodash": "^4.17.19",
     "method-override": "^2.3.10",
-    "minisearch": "^3.3.0",
+    "minisearch": "^5.0.0",
     "mkdirp": "^0.5.5",
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.1",
