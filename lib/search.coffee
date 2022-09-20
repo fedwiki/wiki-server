@@ -37,9 +37,9 @@ module.exports = exports = (argv) ->
   working = false
 
   touch = (file, cb) ->
-    fs.stat indexUpdateFlag, (err, stats) ->
+    fs.stat file, (err, stats) ->
       return cb() if err is null
-      fs.open indexUpdateFlag, 'w', (err,fd) ->
+      fs.open file, 'w', (err,fd) ->
         cb(err) if err
         fs.close fd, (err) ->
           cb(err)
@@ -290,11 +290,22 @@ module.exports = exports = (argv) ->
               if !err
                 try
                   testIndex = JSON.parse(data)
-                  if testIndex.serializationVersion != 2
-                    console.log('+++ SITE INDEX #{wikiName} : updating to latest version.')
-                    itself.createIndex pagehandler
+                catch err
+                  testIndex = {}
+                if testIndex.serializationVersion != 2
+                  console.log "+++ SITE INDEX #{wikiName} : updating to latest version."
+                  itself.createIndex pagehandler
+                  # remove the update flag once the index has been created
+                  itself.once 'indexed', ->
+                    fs.unlink indexUpdateFlag, (err) ->
+                      console.log "+++ SITE INDEX #{wikiName} : unable to delete update flag" if err
               else
-                console.log "+++ SITE INDEX #{wikiName} : error reading index"
+                console.log "+++ SITE INDEX #{wikiName} : error reading index - attempting creating"
+                itself.createIndex pagehandler
+                # remove the update flag once the index has been created
+                itself.once 'indexed', ->
+                  fs.unlink indexUpdateFlag, (err) ->
+                    console.log "+++ SITE INDEX #{wikiName} : unable to delete update flag" if err
       else
         # index does not exist, so create it
         itself.createIndex pagehandler
