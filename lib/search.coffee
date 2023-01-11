@@ -172,7 +172,7 @@ module.exports = exports = (argv) ->
             # really need to extract text from the markdown, but for now just remove link brackets, urls...
             pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}|\\n/g, ' '
           when 'html'
-            pageText += ' ' + currentItem.text.replace /<[^>]*>/g, ''
+            pageText += ' ' + currentItem.text.replace /<[^\>]*>?/g, ''
           else
             if currentItem.text?
               for line in currentItem.text.split /\r\n?|\n/
