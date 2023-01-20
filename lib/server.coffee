@@ -610,12 +610,11 @@ module.exports = exports = (argv) ->
     actionCB = (e, page, status) ->
       #if e then return res.e e
       if status is 404
-        res.status(status).send(page)
+        # res.status(status).send(page)
+        return res.e page,status
       # Using Coffee-Scripts implicit returns we assign page.story to the
       # result of a list comprehension by way of a switch expression.
       try
-        # save the original page, so we can remove it from the index.
-        origStory = Object.assign([], page.story) or []
         page.story = switch action.type
           when 'move'
             action.order.map (id) ->
@@ -667,7 +666,7 @@ module.exports = exports = (argv) ->
       sitemaphandler.update(req.params[0], page)
 
       # update site index
-      searchhandler.update(req.params[0], page, origStory)
+      searchhandler.update(req.params[0], page)
 
     # log action
 
@@ -721,7 +720,6 @@ module.exports = exports = (argv) ->
     # we need the original page text to remove it from the index, so get the original text before deleting it
     pagehandler.get pageFile, (e, page, status) ->
       title = page.title
-      origStory = Object.assign([], page.story) or []
       pagehandler.delete pageFile, (err) ->
         if err
           res.status(500).send(err)
@@ -729,7 +727,7 @@ module.exports = exports = (argv) ->
           sitemaphandler.removePage pageFile
           res.status(200).send('')
           # update site index
-          searchhandler.removePage(req.params[0], title, origStory)
+          searchhandler.removePage(req.params[0])
 
 
 

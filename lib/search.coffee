@@ -44,53 +44,37 @@ module.exports = exports = (argv) ->
         fs.close fd, (err) ->
           cb(err)
 
-  searchPageUpdate = (slug, page, origStory, cb) ->
+  searchPageUpdate = (slug, page, cb) ->
     # to update we have to remove the page first, and then readd it
     timeLabel = "SITE INDEX update #{slug} - #{wikiName}"
     console.time timeLabel
+    
     try
-      origText = origStory.reduce( extractPageText, '')
+      pageText = page.story.reduce( extractPageText, '')
     catch err
-      console.log "SITE INDEX *** #{wikiName} reduce to extract the original text on #{slug} failed", err.message
-      origText = ""
-    try
-      siteIndex.remove {
+      console.log "SITE INDEX *** #{wikiName} reduce to extract the text on #{slug} failed", err.message
+      pageText = ""
+    if siteIndex.has slug
+      siteIndex.replace {
         'id': slug
         'title': page.title
-        'content': origText
+        'content': pageText
       }
-    catch err
-      # swallow error, if the page was not in index
-      console.log "SITE INDEX *** removing #{slug} from index failed", err unless err.message.includes('not in the index')
-
-    try
-      newText = page.story.reduce( extractPageText, '')
-    catch err
-      console.log "SITE INDEX *** #{wikiName} reduce to extract the new text on #{slug} failed", err.message
-      newText = ""
-    siteIndex.add {
-      'id': slug
-      'title': page.title
-      'content': newText
-    }
+    else
+      siteIndex.add {
+        'id': slug
+        'title': page.title
+        'content': pageText
+      }
     console.timeEnd timeLabel
     cb()
 
-  searchPageRemove = (slug, title, origStory, cb) ->
+  searchPageRemove = (slug, cb) ->
     # remove page from index
     timeLabel = "SITE INDEX page remove #{slug} - #{wikiName}"
     console.time timeLabel
     try
-      origText = origStory.reduce( extractPageText, '')
-    catch err
-      console.log "SITE INDEX *** #{wikiName} reduce to extract the text for removing #{slug} failed", err.message
-      origText = ""
-    try
-      siteIndex.remove {
-        'id': slug
-        'title': title
-        'content': origText
-      }
+      siteIndex.discard slug 
     catch err
       # swallow error, if the page was not in index
       console.log "removing #{slug} from index #{wikiName} failed", err unless err.message.includes('not in the index')
@@ -140,14 +124,14 @@ module.exports = exports = (argv) ->
       switch item.action
         when "update"
           itself.start()
-          searchPageUpdate(item.slug, item.page, item.origStory, (e) ->
+          searchPageUpdate(item.slug, item.page, (e) ->
             process.nextTick( ->
               serial(queue.shift())
             )
           )
         when "remove"
           itself.start()
-          searchPageRemove(item.slug, item.title, item.origStory, (e) ->
+          searchPageRemove(item.slug, item.title, (e) ->
             process.nextTick( ->
               serial(queue.shift())
             )
@@ -172,7 +156,7 @@ module.exports = exports = (argv) ->
             # really need to extract text from the markdown, but for now just remove link brackets, urls...
             pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}|\\n/g, ' '
           when 'html'
-            pageText += ' ' + currentItem.text.replace /<[^>]*>/g, ''
+            pageText += ' ' + currentItem.text.replace /<[^\>]*>?/g, ''
           else
             if currentItem.text?
               for line in currentItem.text.split /\r\n?|\n/
@@ -247,9 +231,9 @@ module.exports = exports = (argv) ->
         process.nextTick ( ->
           serial(queue.shift()))
       
-  itself.removePage = (slug, title, origStory) ->
+  itself.removePage = (slug) ->
     action = "remove"
-    queue.push({action, slug, title, origStory})
+    queue.push({action, slug })
     if Array.isArray(siteIndex) and !working
       itself.start()
       searchRestore (e) ->
@@ -258,9 +242,9 @@ module.exports = exports = (argv) ->
     else
       serial(queue.shift()) unless working
 
-  itself.update = (slug, page, origStory) ->
+  itself.update = (slug, page) ->
     action = "update"
-    queue.push({action, slug, page, origStory})
+    queue.push({action, slug, page})
     if Array.isArray(siteIndex) and !working
       itself.start()
       searchRestore( (e) ->
