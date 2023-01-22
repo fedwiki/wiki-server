@@ -131,7 +131,7 @@ module.exports = exports = (argv) ->
           )
         when "remove"
           itself.start()
-          searchPageRemove(item.slug, item.title, (e) ->
+          searchPageRemove(item.slug, (e) ->
             process.nextTick( ->
               serial(queue.shift())
             )
