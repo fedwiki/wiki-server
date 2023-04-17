@@ -5,7 +5,6 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-git-authors');
-  grunt.loadNpmTasks('grunt-retire');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -40,11 +39,6 @@ module.exports = function( grunt ) {
         "Paul Rodwell <paul.rodwell@btinternet.com>",
         "Austin King <shout@ozten.com>"
       ]
-    },
-
-    retire: {
-      node: ['.'],
-      options: {packageOnly: true}
     },
 
     watch: {
