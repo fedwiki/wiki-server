@@ -23,6 +23,7 @@ fs = require 'fs'
 path = require 'path'
 http = require 'http'
 url = require 'url'
+{ pipeline } = require 'node:stream/promises'
 
 # From npm
 mkdirp = require 'mkdirp'
@@ -42,7 +43,7 @@ methodOverride = require 'method-override'
 sessions = require 'client-sessions'
 bodyParser = require 'body-parser'
 errorHandler = require 'errorhandler'
-request = require 'request'
+
 
 
 # Local files
@@ -584,20 +585,16 @@ module.exports = exports = (argv) ->
     requestURL = 'http://' + remoteHost + '/' + remoteResource
     console.log("PROXY Request: ", requestURL)
     if requestURL.endsWith('.json') or requestURL.endsWith('.png') or requestURL.endsWith('.jpg') or pathParts[0] is "plugin"
-      requestOptions = {
-        host: remoteHost
-        port: 80
-        path: remoteResource
-      }
-      try
-        request
-          .get(requestURL, requestOptions)
-          .on('error', (err) ->
-            console.log("ERROR: Request ", requestURL, err))
-          .pipe(res)
-      catch error
-        console.log "PROXY Error", error
-        res.status(500).end()
+      fetch(requestURL, {timeout: 2000})
+      .then (fetchRes) ->
+        if fetchRes.ok
+          return fetchRes
+        throw new Error(fetchRes.statusText)
+      .then (fetchRes) ->
+        await pipeline(fetchRes.body, res)
+      .catch (err) ->
+        console.log("ERROR: Proxy Request ", requestURL, err)
+        res.status(500).end()  
     else
       res.status(400).end()
 
