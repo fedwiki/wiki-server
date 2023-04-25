@@ -591,6 +591,8 @@ module.exports = exports = (argv) ->
           return fetchRes
         throw new Error(fetchRes.statusText)
       .then (fetchRes) ->
+        res.set('content-type', fetchRes.headers.get('content-type'))
+        res.set('last-modified', fetchRes.headers.get('last-modified'))
         await pipeline(fetchRes.body, res)
       .catch (err) ->
         console.log("ERROR: Proxy Request ", requestURL, err)
