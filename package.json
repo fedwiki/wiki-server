@@ -53,8 +53,8 @@
     "should": "^13.2.3",
     "supertest": "^6.3.3",
     "wiki-client": "^0.24.0",
-    "wiki-plugin-activity": "^0.4.6",
-    "wiki-plugin-video": "^0.2.10"
+    "wiki-plugin-activity": "^0.5.0",
+    "wiki-plugin-video": "^0.3.0"
   },
   "engines": {
     "node": ">=12.x"
