@@ -1,0 +1,451 @@
+{
+  "title": "At The Edge",
+  "story": [
+    {
+      "type": "paragraph",
+      "id": "ec9486fedd1cc4a4",
+      "text": "We all know that feeling, we are reading somebodies wiki pages and we click and get..."
+    },
+    {
+      "type": "image",
+      "id": "a8135fa1c384a10c",
+      "text": "Page not found",
+      "size": "wide",
+      "width": 419,
+      "height": 62,
+      "url": "/images/e54822b4a3a2f81ac85273f9ddcbe4c2.jpg"
+    },
+    {
+      "type": "paragraph",
+      "id": "d8068ae4ab5cde68",
+      "text": "While this likely means that the page being looked for does not yet exist. There are some situations that might prevent reaching the places we expect the page to be."
+    },
+    {
+      "type": "paragraph",
+      "id": "ed937d9ecd137834",
+      "text": "Some things that might be preventing pages being found:"
+    },
+    {
+      "type": "markdown",
+      "id": "2a50b488dd0ca886",
+      "text": "* If you are browsing using https: the browser will prevent you from accessing any http: wiki sites. If this is your wiki, logging in will enable the server to aid prevent this problem."
+    },
+    {
+      "type": "image",
+      "id": "3f1e99efec2d559a",
+      "text": "Navigation Bar with unreachable wiki.",
+      "size": "thumbnail",
+      "width": 183,
+      "height": 38,
+      "url": "/images/7f29e6f3f62f7e9c74beddf1dc29a568.jpg"
+    },
+    {
+      "type": "markdown",
+      "id": "bf10cc7a7d708ca5",
+      "text": "* A wiki might have been unreachable. This is indicated by the flag for unreachable wiki being tilted in the navigation bar. Clicking on a tilted flag will prompt the client to refresh its memory on how to reach that remote wiki.\nThe flag will spin during this process. If a route is found the flag will change to the site's flag and stop untilted. If still unreachable it will be tilted when it stops spinning."
+    },
+    {
+      "type": "paragraph",
+      "id": "5abec2762a9bcf61",
+      "text": "Depending on the problems the client encounters while looking some extra information will be shown on the ghost page."
+    },
+    {
+      "type": "image",
+      "id": "30daf83dcd01bc30",
+      "text": "Page not found",
+      "size": "thumbnail",
+      "width": 183,
+      "height": 85,
+      "url": "/images/1c541a286fe5e90f8232f3e8d219bde7.jpg"
+    },
+    {
+      "type": "markdown",
+      "id": "fbeac72605a4b154",
+      "text": "The client is able to get to all the expected places to look, also the page does not exist in the current neighborhood.\nIf there was a page with the same name in the current neighborhood, a link to that would be offered."
+    },
+    {
+      "type": "image",
+      "id": "1c24518209965c9a",
+      "text": "Page not found, with unreachable wiki.",
+      "size": "thumbnail",
+      "width": 183,
+      "height": 127,
+      "url": "/images/833e4ed99b0bfd9a2c72f74d75447c70.jpg"
+    },
+    {
+      "type": "markdown",
+      "id": "53049e33014a557d",
+      "text": "When expected places to look are unreachable, links to open the page in those remote places are offered. If you are browsing using https: a link to open the lineup using http: is offered. These will open in a new browser tab. \n*If the wiki you are on is https: only, opening the lineup in http: will either not work, or just redirect back to https:.*"
+    },
+    {
+      "type": "image",
+      "id": "545a58b773aab9e2",
+      "text": "Page not found, but found in neighborhood.",
+      "size": "thumbnail",
+      "width": 183,
+      "height": 80,
+      "url": "/images/891435f587b5d1c48567d139802d8888.jpg"
+    },
+    {
+      "type": "paragraph",
+      "id": "03e1d71891dcccd1",
+      "text": "If the page can be found in the current neighborhood, reference link(s) are provided to those pages."
+    },
+    {
+      "type": "paragraph",
+      "id": "4f1259b7a1b36a64",
+      "text": "It is of course probable that the page has not yet been written. But, if this is your wiki and you expected to link to a page, and you can find it elsewhere, you might want to fork it into this wiki."
+    }
+  ],
+  "journal": [
+    {
+      "type": "create",
+      "item": {
+        "title": "At The Edge",
+        "story": []
+      },
+      "date": 1687862285077
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "ec9486fedd1cc4a4"
+      },
+      "id": "ec9486fedd1cc4a4",
+      "type": "add",
+      "date": 1687862338966
+    },
+    {
+      "type": "edit",
+      "id": "ec9486fedd1cc4a4",
+      "item": {
+        "type": "paragraph",
+        "id": "ec9486fedd1cc4a4",
+        "text": "We all know that feeling, we are reading somebodies wiki pages and we click and get..."
+      },
+      "date": 1687862343844
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "a8135fa1c384a10c"
+      },
+      "id": "a8135fa1c384a10c",
+      "type": "add",
+      "after": "ec9486fedd1cc4a4",
+      "date": 1687862393060
+    },
+    {
+      "type": "edit",
+      "id": "a8135fa1c384a10c",
+      "item": {
+        "type": "image",
+        "id": "a8135fa1c384a10c",
+        "text": "Page not found",
+        "size": "wide",
+        "width": 419,
+        "height": 62,
+        "url": "/images/e54822b4a3a2f81ac85273f9ddcbe4c2.jpg"
+      },
+      "date": 1687862445179
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "d8068ae4ab5cde68"
+      },
+      "id": "d8068ae4ab5cde68",
+      "type": "add",
+      "after": "a8135fa1c384a10c",
+      "date": 1687862455402
+    },
+    {
+      "type": "edit",
+      "id": "d8068ae4ab5cde68",
+      "item": {
+        "type": "paragraph",
+        "id": "d8068ae4ab5cde68",
+        "text": "While this likely means that the page being looked for does not yet exist. There are some situations that might prevent reaching the places we expect the page to be. "
+      },
+      "date": 1687862464568
+    },
+    {
+      "type": "edit",
+      "id": "d8068ae4ab5cde68",
+      "item": {
+        "type": "paragraph",
+        "id": "d8068ae4ab5cde68",
+        "text": "While this likely means that the page being looked for does not yet exist. There are some situations that might prevent reaching the places we expect the page to be."
+      },
+      "date": 1687862474671
+    },
+    {
+      "type": "add",
+      "id": "ed937d9ecd137834",
+      "item": {
+        "type": "paragraph",
+        "id": "ed937d9ecd137834",
+        "text": "Some things that might be preventing pages being found:"
+      },
+      "after": "d8068ae4ab5cde68",
+      "date": 1687862477281
+    },
+    {
+      "type": "add",
+      "id": "2a50b488dd0ca886",
+      "item": {
+        "type": "factory",
+        "id": "2a50b488dd0ca886",
+        "text": " "
+      },
+      "after": "ed937d9ecd137834",
+      "date": 1687862545808
+    },
+    {
+      "type": "edit",
+      "id": "2a50b488dd0ca886",
+      "item": {
+        "type": "markdown",
+        "id": "2a50b488dd0ca886",
+        "text": "* If you are browsing using https: the browser will prevent you from accessing any http: wiki sites. If this is your wiki, logging in will enable the server to aid prevent this problem. "
+      },
+      "date": 1687862554715
+    },
+    {
+      "type": "edit",
+      "id": "2a50b488dd0ca886",
+      "item": {
+        "type": "markdown",
+        "id": "2a50b488dd0ca886",
+        "text": "* If you are browsing using https: the browser will prevent you from accessing any http: wiki sites. If this is your wiki, logging in will enable the server to aid prevent this problem."
+      },
+      "date": 1687862563964
+    },
+    {
+      "type": "add",
+      "id": "bf10cc7a7d708ca5",
+      "item": {
+        "type": "markdown",
+        "id": "bf10cc7a7d708ca5",
+        "text": "* A wiki might have been unreachable. This is indicated by the flag for unreachable wiki being tilted in the navigation bar. Clicking on a tilted flag will prompt the client to refresh its memory on how to reach that remote wiki.\nThe flag will spin during this process. If a route is found the flag will change to the site's flag and stop untilted. If still unreachable it will be tilted when it stops spinning."
+      },
+      "after": "2a50b488dd0ca886",
+      "date": 1687862567541
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "3f1e99efec2d559a"
+      },
+      "id": "3f1e99efec2d559a",
+      "type": "add",
+      "after": "bf10cc7a7d708ca5",
+      "date": 1687862582468
+    },
+    {
+      "id": "3f1e99efec2d559a",
+      "type": "move",
+      "order": [
+        "ec9486fedd1cc4a4",
+        "a8135fa1c384a10c",
+        "d8068ae4ab5cde68",
+        "ed937d9ecd137834",
+        "2a50b488dd0ca886",
+        "3f1e99efec2d559a",
+        "bf10cc7a7d708ca5"
+      ],
+      "date": 1687862590989
+    },
+    {
+      "type": "edit",
+      "id": "3f1e99efec2d559a",
+      "item": {
+        "type": "image",
+        "id": "3f1e99efec2d559a",
+        "text": "Navigation Bar with unreachable wiki.",
+        "size": "thumbnail",
+        "width": 183,
+        "height": 38,
+        "url": "/images/7f29e6f3f62f7e9c74beddf1dc29a568.jpg"
+      },
+      "date": 1687862607050
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "5abec2762a9bcf61"
+      },
+      "id": "5abec2762a9bcf61",
+      "type": "add",
+      "after": "bf10cc7a7d708ca5",
+      "date": 1687862683825
+    },
+    {
+      "type": "edit",
+      "id": "5abec2762a9bcf61",
+      "item": {
+        "type": "paragraph",
+        "id": "5abec2762a9bcf61",
+        "text": "Depending on the problems the client encounters while looking some extra information will be shown on the ghost page."
+      },
+      "date": 1687862689065
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "30daf83dcd01bc30"
+      },
+      "id": "30daf83dcd01bc30",
+      "type": "add",
+      "after": "5abec2762a9bcf61",
+      "date": 1687862692384
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "fbeac72605a4b154"
+      },
+      "id": "fbeac72605a4b154",
+      "type": "add",
+      "after": "30daf83dcd01bc30",
+      "date": 1687862694752
+    },
+    {
+      "type": "edit",
+      "id": "30daf83dcd01bc30",
+      "item": {
+        "type": "image",
+        "id": "30daf83dcd01bc30",
+        "text": "Page not found",
+        "size": "thumbnail",
+        "width": 183,
+        "height": 85,
+        "url": "/images/1c541a286fe5e90f8232f3e8d219bde7.jpg"
+      },
+      "date": 1687862729799
+    },
+    {
+      "type": "edit",
+      "id": "fbeac72605a4b154",
+      "item": {
+        "type": "markdown",
+        "id": "fbeac72605a4b154",
+        "text": "The client is able to get to all the expected places to look, also the page does not exist in the current neighborhood.\nIf there was a page with the same name in the current neighborhood, a link to that would be offered."
+      },
+      "date": 1687862740096
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "1c24518209965c9a"
+      },
+      "id": "1c24518209965c9a",
+      "type": "add",
+      "after": "fbeac72605a4b154",
+      "date": 1687862743103
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "53049e33014a557d"
+      },
+      "id": "53049e33014a557d",
+      "type": "add",
+      "after": "1c24518209965c9a",
+      "date": 1687862744263
+    },
+    {
+      "type": "edit",
+      "id": "1c24518209965c9a",
+      "item": {
+        "type": "image",
+        "id": "1c24518209965c9a",
+        "text": "Page not found, with unreachable wiki.",
+        "size": "wide",
+        "width": 419,
+        "height": 291,
+        "url": "/images/833e4ed99b0bfd9a2c72f74d75447c70.jpg"
+      },
+      "date": 1687862780719
+    },
+    {
+      "type": "edit",
+      "id": "1c24518209965c9a",
+      "item": {
+        "type": "image",
+        "id": "1c24518209965c9a",
+        "text": "Page not found, with unreachable wiki.",
+        "size": "thumbnail",
+        "width": 183,
+        "height": 127,
+        "url": "/images/833e4ed99b0bfd9a2c72f74d75447c70.jpg"
+      },
+      "date": 1687862785762
+    },
+    {
+      "type": "edit",
+      "id": "53049e33014a557d",
+      "item": {
+        "type": "markdown",
+        "id": "53049e33014a557d",
+        "text": "When expected places to look are unreachable, links to open the page in those remote places are offered. If you are browsing using https: a link to open the lineup using http: is offered. These will open in a new browser tab. \n*If the wiki you are on is https: only, opening the lineup in http: will either not work, or just redirect back to https:.*"
+      },
+      "date": 1687862798089
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "545a58b773aab9e2"
+      },
+      "id": "545a58b773aab9e2",
+      "type": "add",
+      "after": "53049e33014a557d",
+      "date": 1687862802669
+    },
+    {
+      "item": {
+        "type": "factory",
+        "id": "03e1d71891dcccd1"
+      },
+      "id": "03e1d71891dcccd1",
+      "type": "add",
+      "after": "545a58b773aab9e2",
+      "date": 1687862803820
+    },
+    {
+      "type": "edit",
+      "id": "545a58b773aab9e2",
+      "item": {
+        "type": "image",
+        "id": "545a58b773aab9e2",
+        "text": "Page not found, but found in neighborhood.",
+        "size": "thumbnail",
+        "width": 183,
+        "height": 80,
+        "url": "/images/891435f587b5d1c48567d139802d8888.jpg"
+      },
+      "date": 1687862830608
+    },
+    {
+      "type": "edit",
+      "id": "03e1d71891dcccd1",
+      "item": {
+        "type": "paragraph",
+        "id": "03e1d71891dcccd1",
+        "text": "If the page can be found in the current neighborhood, reference link(s) are provided to those pages."
+      },
+      "date": 1687862847003
+    },
+    {
+      "type": "add",
+      "id": "4f1259b7a1b36a64",
+      "item": {
+        "type": "paragraph",
+        "id": "4f1259b7a1b36a64",
+        "text": "It is of course probable that the page has not yet been written. But, if this is your wiki and you expected to link to a page, and you can find it elsewhere, you might want to fork it into this wiki."
+      },
+      "after": "03e1d71891dcccd1",
+      "date": 1687862855870
+    }
+  ]
+}
