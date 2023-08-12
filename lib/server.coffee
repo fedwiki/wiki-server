@@ -588,12 +588,11 @@ module.exports = exports = (argv) ->
       fetch(requestURL, {timeout: 2000})
       .then (fetchRes) ->
         if fetchRes.ok
-          return fetchRes
-        throw new Error(fetchRes.statusText)
-      .then (fetchRes) ->
-        res.set('content-type', fetchRes.headers.get('content-type'))
-        res.set('last-modified', fetchRes.headers.get('last-modified'))
-        await pipeline(fetchRes.body, res)
+          res.set('content-type', fetchRes.headers.get('content-type'))
+          res.set('last-modified', fetchRes.headers.get('last-modified'))
+          await pipeline(fetchRes.body, res)
+        else
+          res.status(fetchRes.status).end()
       .catch (err) ->
         console.log("ERROR: Proxy Request ", requestURL, err)
         res.status(500).end()  
