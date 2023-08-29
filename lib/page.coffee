@@ -84,8 +84,6 @@ module.exports = exports = (argv) ->
       )
     )
 
-  # Reads and writes are async, but serially queued to avoid race conditions.
-  queue = []
 
   # Main file io function, when called without page it reads,
   # when called with page it writes.
@@ -229,56 +227,22 @@ module.exports = exports = (argv) ->
       else
         console.log "pagehandler: unrecognized action #{action}"
 
-  # Control variable that tells if the serial queue is currently working.
-  # Set back to false when all jobs are complete.
-  working = false
-
-  # Keep file io working on queued jobs, but don't block the main thread.
-  serial = (item) ->
-    if item
-      itself.start()
-      fileio(item.action, item.file, item.page, (err, data, status) ->
-        process.nextTick( ->
-          serial(queue.shift())
-        )
-        item.cb(err, data, status)
-      )
-    else
-      itself.stop()
-
   #### Public stuff ####
-  # Make the exported object an instance of EventEmitter
-  # so other modules can tell if it is working or not.
   itself = new events.EventEmitter
-  itself.start = ->
-    working = true
-    @emit 'working'
-  itself.stop = ->
-    working = false
-    @emit 'finished'
-
-  itself.isWorking = ->
-    working
 
   # get method takes a slug and a callback, adding them to the queue,
-  # starting serial if it isn't already working.
   itself.get = (file, cb) ->
-    queue.push({action: 'get', file, page: null, cb})
-    serial(queue.shift()) unless working
+    fileio('get', file, null, cb)
 
   # put takes a slugged name, the page as a json object, and a callback.
-  # adds them to the queue, and starts it unless it is working.
   itself.put =  (file, page, cb) ->
-    queue.push({action: 'put', file, page, cb})
-    serial(queue.shift()) unless working
+    fileio('put', file, page, cb)
 
   itself.delete = (file, cb) ->
-    queue.push({action: 'delete', file, page: null, cb})
-    serial(queue.shift()) unless working
+    fileio('delete', file, null, cb)
 
   itself.saveToRecycler = (file, cb) ->
-    queue.push({action: 'recycle', file, page: null, cb})
-    serial(queue.shift()) unless working
+    fileio('recycle', file, null, cb)
 
   editDate = (journal) ->
     for action in (journal || []) by -1

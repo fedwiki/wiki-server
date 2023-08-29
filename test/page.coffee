@@ -56,6 +56,4 @@ describe 'page', ->
             done()
           )
         )
-      if page.isWorking()
-        page.on('finished', -> test())
-      else test()
+      test()
