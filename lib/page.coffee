@@ -338,11 +338,18 @@ module.exports = exports = (argv) ->
         cb null, sitemap.filter (item) -> if item? then true
 
   itself.slugs = (cb) ->
-    fs.readdir argv.db, (e, files) ->
+    fs.readdir argv.db, {withFileTypes: true}, (e, files) ->
       if e
         console.log 'Problem reading pages directory', e
         cb(e)
       else
-        cb(null, files)
+        onlyFiles = files.map((i) ->
+          if i.isFile() 
+            return i.name 
+          else
+            return null
+          ).filter((i) -> 
+            i != null && !i?.startsWith('.'))
+        cb(null, onlyFiles)
 
   itself
