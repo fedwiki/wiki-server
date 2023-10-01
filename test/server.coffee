@@ -4,7 +4,7 @@ server = require '..'
 path = require 'path'
 random = require '../lib/random_id'
 testid = random()
-argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), packageDir: path.join(__dirname, '..', 'node_modules'), port: 55555, security_legacy: true})
+argv = require('../lib/defaultargs.coffee')({data: path.join('/tmp', 'sfwtests', testid), packageDir: path.join(__dirname, '..', 'node_modules'), port: 55557, security_legacy: true})
 
 describe 'server', ->
   app = {}
@@ -21,7 +21,7 @@ describe 'server', ->
     ))
 
 
-  request = request('http://localhost:55555')
+  request = request('http://localhost:55557')
 
   # location of the test page
   loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
