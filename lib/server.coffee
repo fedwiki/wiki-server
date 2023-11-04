@@ -675,7 +675,9 @@ module.exports = exports = (argv) ->
         if err and err isnt 'page does not exist' 
           console.log "Error saving #{req.params[0]} before fork: #{err}"
         if action.forkPage
-          actionCB(null, JSON.parse(JSON.stringify(action.forkPage)))
+          forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
+          delete action.forkPage
+          actionCB(null, forkPageCopy)
         else
           # Legacy path, new clients will provide forkPage on implicit forks.
           remoteGet(action.fork, req.params[0], actionCB)
@@ -692,10 +694,10 @@ module.exports = exports = (argv) ->
     else if action.type == 'fork'
       pagehandler.saveToRecycler req.params[0], (err) ->
         if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
-        if action.item # push
-          itemCopy = JSON.parse(JSON.stringify(action.item))
-          delete action.item
-          actionCB(null, itemCopy)
+        if action.forkPage # push
+          forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
+          delete action.forkPage
+          actionCB(null, forkPageCopy)
         else # pull
           remoteGet(action.site, req.params[0], actionCB)
     else
