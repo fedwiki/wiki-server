@@ -652,7 +652,7 @@ module.exports = exports = (argv) ->
       if not page.journal
         page.journal = []
       if action.fork
-        page.journal.push({type: "fork", site: action.fork})
+        page.journal.push({type: "fork", site: action.fork, date: action.date - 1})
         delete action.fork
       page.journal.push(action)
       pagehandler.put req.params[0], page, (e) ->
@@ -674,7 +674,13 @@ module.exports = exports = (argv) ->
       pagehandler.saveToRecycler req.params[0], (err) ->
         if err and err isnt 'page does not exist' 
           console.log "Error saving #{req.params[0]} before fork: #{err}"
-        remoteGet(action.fork, req.params[0], actionCB)
+        if action.forkPage
+          forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
+          delete action.forkPage
+          actionCB(null, forkPageCopy)
+        else
+          # Legacy path, new clients will provide forkPage on implicit forks.
+          remoteGet(action.fork, req.params[0], actionCB)
     else if action.type is 'create'
       # Prevent attempt to write circular structure
       itemCopy = JSON.parse(JSON.stringify(action.item))
@@ -688,10 +694,10 @@ module.exports = exports = (argv) ->
     else if action.type == 'fork'
       pagehandler.saveToRecycler req.params[0], (err) ->
         if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
-        if action.item # push
-          itemCopy = JSON.parse(JSON.stringify(action.item))
-          delete action.item
-          actionCB(null, itemCopy)
+        if action.forkPage # push
+          forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
+          delete action.forkPage
+          actionCB(null, forkPageCopy)
         else # pull
           remoteGet(action.site, req.params[0], actionCB)
     else
