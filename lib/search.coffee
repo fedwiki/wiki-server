@@ -136,19 +136,16 @@ module.exports = exports = (argv) ->
     try
       if currentItem.text?
         switch currentItem.type
-          when 'paragraph'
-            pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
-          when 'markdown'
-            # really need to extract text from the markdown, but for now just remove link brackets, urls...
-            pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}|\\n/g, ' '
-          when 'html'
-            pageText += ' ' + currentItem.text.replace /<[^\>]*>?/g, ''
+          when 'paragraph', 'markdown', 'html', 'reference'
+            noLinks = currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
+            # strip out all tags.
+            pageText = noLinks.replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' '), ' ')
           else
             if currentItem.text?
               for line in currentItem.text.split /\r\n?|\n/
                 pageText += ' ' + line.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
     catch err
-      throw new Error("Error extracting text from #{currentIndex}, #{err}")
+      throw new Error("Error extracting text from #{currentIndex}, #{err}, #{err.stack}")
     pageText
 
 
