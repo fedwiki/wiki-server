@@ -19,6 +19,7 @@ describe 'sitemap', ->
 
 
   request = request('http://localhost:55556')
+  fs.mkdirSync path.join('/tmp', 'sfwtests', testid, 'pages'), {recursive: true}
 
   # location of the sitemap
   sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
