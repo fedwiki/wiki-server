@@ -89,7 +89,7 @@ module.exports = exports = (argv) ->
         else
           cb(null)
     if argv.defaults
-      defloc = path.join(argv.defaults, 'pages', file)
+      defloc = path.join(argv.data, '..', argv.defaults, 'pages', file)
       console.log 'firstDefault', defloc
       fs.exists defloc, (exists) ->
         if exists
