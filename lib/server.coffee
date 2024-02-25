@@ -33,7 +33,9 @@ glob = require 'glob'
 async = require 'async'
 f = require('flates')
 sanitize = require '@mapbox/sanitize-caja'
-fetch = require 'node-fetch'
+
+# node-fetch is now ESM only
+fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 # Express 4 middleware
 logger = require 'morgan'
@@ -145,7 +147,7 @@ module.exports = exports = (argv) ->
     # assume http, as we know no better at this point and we need to specify a protocol.
     remoteURL = new URL("http://#{remote}/#{slug}.json").toString()
     # set a two second timeout
-    fetch(remoteURL, {timeout: 2000})
+    fetch(remoteURL, {signal: AbortSignal.timeout(2000)})
     .then (res) ->
       if res.ok
         return res
