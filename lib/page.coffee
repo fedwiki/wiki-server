@@ -87,6 +87,25 @@ module.exports = exports = (argv) ->
   # Reads and writes are async, but serially queued to avoid race conditions.
   queue = []
 
+  tryDefaults = (file, cb) ->
+    lastDefault = (cb) ->
+      defloc = path.join(argv.root, 'default-data', 'pages', file)
+      fs.exists defloc, (exists) ->
+        if exists
+          cb(defloc)
+        else
+          cb(null)
+    if argv.defaults
+      defloc = path.join(argv.data, '..', argv.defaults, 'pages', file)
+      console.log 'firstDefault', defloc
+      fs.exists defloc, (exists) ->
+        if exists
+          cb(defloc)
+        else
+          lastDefault(cb)
+    else
+      lastDefault(cb)
+
   # Main file io function, when called without page it reads,
   # when called with page it writes.
   fileio = (action, file, page, cb) ->
@@ -175,12 +194,10 @@ module.exports = exports = (argv) ->
           if exists
             load_parse(loc, cb, {plugin: undefined})
           else
-            defloc = path.join(argv.root, 'default-data', 'pages', file)
-            fs.exists(defloc, (exists) ->
-              if exists
+            tryDefaults(file, (defloc) ->
+              if defloc
                 load_parse(defloc, cb)
               else
-
                 glob "wiki-plugin-*/pages", {cwd: argv.packageDir}, (e, plugins) ->
                   if e then return cb(e)
 
