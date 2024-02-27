@@ -15,3 +15,7 @@ Marcin Cieslak <saper@saper.info>
 enyst <engel.nyst@gmail.com>
 Peter deHaan <pdehaan@users.noreply.github.com>
 winckell benjamin <winckell.benjamin.isart@gmail.com>
+Eric Dobbs <eric@dobbse.net>
+Joshua Benuck <joshua_benuck@yahoo.com>
+Tom Lieber <tom@alltom.com>
+Andrew Shell <andrew@andrewshell.org>

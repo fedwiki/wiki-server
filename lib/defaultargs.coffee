@@ -28,7 +28,8 @@ module.exports = (argv) ->
   argv.status or= path.join(argv.data, 'status')
   argv.assets or= path.join(argv.data, 'assets')
   argv.recycler or= path.join(argv.data, 'recycle')
-  argv.url or= 'http://localhost' + (':' + argv.port) unless argv.port is 80
+  argv.commons or= path.join(argv.data, 'commons')
+  argv.url or= 'http://localhost' + (if argv.port is 80 then '' else ':' + argv.port)
   argv.id or= path.join(argv.status, 'owner.json')
   argv.uploadLimit or= '5mb'
   argv.cookieSecret or= require('crypto').randomBytes(64).toString('hex')
@@ -50,7 +51,7 @@ module.exports = (argv) ->
 
   argv.security_type or= './security'
   if argv.security_type is './security'
-    console.log "\n\nWARNING: Using default security module."
+    console.log "\n\nINFORMATION: Using default security module."
   else
     argv.security_type = 'wiki-security-' + argv.security_type
   argv.security_legacy or= false
@@ -64,6 +65,7 @@ module.exports = (argv) ->
   argv.status = path.resolve(argv.status)
   argv.assets = path.resolve(argv.assets)
   argv.recycler = path.resolve(argv.recycler)
+  argv.commons = path.resolve(argv.commons)
   argv.id = path.resolve(argv.id)
 
   if /node_modules/.test(argv.data)

@@ -19,7 +19,13 @@ mkdirp = require 'mkdirp'
 
 synopsis = require 'wiki-client/lib/synopsis'
 
+asSlug = (name) ->
+  name.replace(/\s/g, '-').replace(/[^A-Za-z0-9-]/g, '').toLowerCase()
+
+
 module.exports = exports = (argv) ->
+
+  wikiName = new URL(argv.url).hostname
 
   sitemap = []
 
@@ -28,7 +34,7 @@ module.exports = exports = (argv) ->
   sitemapPageHandler = null
 
   # ms since last update we will remove sitemap from memory
-  sitemapTimeoutMs = 1200000
+  sitemapTimeoutMs = 120000
   sitemapTimeoutHandler = null
 
   sitemapLoc = path.join(argv.status, 'sitemap.json')
@@ -43,11 +49,39 @@ module.exports = exports = (argv) ->
 
   sitemapUpdate = (file, page, cb) ->
 
+    extractPageLinks = (collaborativeLinks, currentItem, currentIndex, array) ->
+      # extract collaborative links 
+      # - this will need extending if we also extract the id of the item containing the link
+      try
+        linkRe = /\[\[([^\]]+)\]\]/g
+        match = undefined
+        while (match = linkRe.exec(currentItem.text)) != null
+          if not collaborativeLinks.has(asSlug(match[1]))
+            collaborativeLinks.set(asSlug(match[1]), currentItem.id)
+        if 'reference' == currentItem.type
+          if not collaborativeLinks.has(currentItem.slug)
+            collaborativeLinks.set(currentItem.slug, currentItem.id)
+      catch err
+        console.log "METADATA *** #{wikiName} Error extracting links from #{currentIndex} of #{JSON.stringify(array)}", err.message
+      collaborativeLinks
+
+    try
+      pageLinksMap = page.story.reduce( extractPageLinks, new Map())
+    catch err
+      console.log "METADATA *** #{wikiName} reduce to extract links on #{file} failed", err.message
+      pageLinksMap = []
+    #
+    if pageLinksMap.size > 0
+      pageLinks = Object.fromEntries(pageLinksMap)
+    else
+      pageLinks = undefined
+
     entry = {
       'slug': file
       'title': page.title
       'date': lastEdit(page.journal)
       'synopsis': synopsis(page)
+      'links': pageLinks
     }
 
     slugs = sitemap.map (page) -> page.slug
@@ -140,16 +174,15 @@ module.exports = exports = (argv) ->
             )
           )
         else
-          console.log "Sitemap unexpected action #{item.action} for #{item.page}"
+          console.log "Sitemap unexpected action #{item.action} for #{item.page} in #{wikiName}"
           process.nextTick( ->
             serial(queue.shift))
     else
       sitemapSave sitemap, (e) ->
-        console.log "Problems saving sitemap: "+ e if e
+        console.log "Problems saving sitemap #{wikiName}: "+ e if e
         itself.stop()
       xmlSitemapSave sitemap, (e) ->
-        console.log "Problems saving sitemap(xml)"+ e if e
-        itself.stop()
+        console.log "Problems saving sitemap(xml) #{wikiName}"+ e if e
 
 
   #### Public stuff ####
@@ -161,7 +194,7 @@ module.exports = exports = (argv) ->
     @emit 'working'
   itself.stop = ->
     clearsitemap = ->
-      console.log "removing sitemap from memory"
+      console.log "removing sitemap #{wikiName} from memory"
       sitemap = []
       clearTimeout(sitemapTimeoutHandler)
     sitemapTimeoutHandler = setTimeout clearsitemap, sitemapTimeoutMs
@@ -180,7 +213,7 @@ module.exports = exports = (argv) ->
 
     pagehandler.pages (e, newsitemap) ->
       if e
-        console.log "createSitemap: error " + e
+        console.log "createSitemap #{wikiName} : error " + e
         itself.stop()
         return e
       sitemap = newsitemap
@@ -191,10 +224,10 @@ module.exports = exports = (argv) ->
   itself.removePage = (file) ->
     action = "remove"
     queue.push({action, file, ""})
-    if sitemap = [] and !working
+    if sitemap.length is 0 and !working
       itself.start()
       sitemapRestore (e) ->
-        console.log "Problems restoring sitemap: " + e if e
+        console.log "Problems restoring sitemap #{wikiName} : " + e if e
         itself.createSitemap(sitemapPageHandler)
     else
       serial(queue.shift()) unless working
@@ -203,10 +236,10 @@ module.exports = exports = (argv) ->
   itself.update = (file, page) ->
     action = "update"
     queue.push({action, file, page})
-    if sitemap = [] and !working
+    if sitemap.length is 0 and !working
       itself.start()
       sitemapRestore (e) ->
-        console.log "Problems restoring sitemap: " + e if e
+        console.log "Problems restoring sitemap #{wikiName} : " + e if e
         itself.createSitemap(sitemapPageHandler)
     else
       serial(queue.shift()) unless working

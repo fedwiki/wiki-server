@@ -5,8 +5,6 @@ module.exports = function( grunt ) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-git-authors');
-  grunt.loadNpmTasks('grunt-retire');
-  grunt.loadNpmTasks('grunt-nsp');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -16,7 +14,7 @@ module.exports = function( grunt ) {
         options: {
           reporter: 'spec',
           require: [
-            'coffee-script/register',
+            'coffeescript/register',
             'should'
           ]
         },
@@ -43,15 +41,6 @@ module.exports = function( grunt ) {
       ]
     },
 
-    retire: {
-      node: ['.'],
-      options: {packageOnly: true}
-    },
-
-    nsp: {
-      package: grunt.file.readJSON('package.json')
-    },
-
     watch: {
       all: {
         files: ['lib/*.coffee', 'test/*.coffee'],
@@ -61,6 +50,6 @@ module.exports = function( grunt ) {
   });
 
   grunt.registerTask('default', ['mochaTest']);
-  grunt.registerTask('check', ['nsp', 'retire']);
-  
+  grunt.registerTask('check', ['retire']);
+
 }

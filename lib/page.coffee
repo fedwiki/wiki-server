@@ -21,9 +21,16 @@ async = require 'async'
 random_id = require './random_id'
 synopsis = require 'wiki-client/lib/synopsis'
 
+asSlug = (name) ->
+  name.replace(/\s/g, '-').replace(/[^A-Za-z0-9-]/g, '').toLowerCase()
+
+
 # Export a function that generates a page handler
 # when called with options object.
 module.exports = exports = (argv) ->
+
+  wikiName = new URL(argv.url).hostname
+
   mkdirp argv.db, (e) ->
     if e then throw e
 
@@ -296,6 +303,23 @@ module.exports = exports = (argv) ->
     undefined
 
   itself.pages = (cb) ->
+
+    extractPageLinks = (collaborativeLinks, currentItem, currentIndex, array) ->
+      # extract collaborative links 
+      # - this will need extending if we also extract the id of the item containing the link
+      try
+        linkRe = /\[\[([^\]]+)\]\]/g
+        match = undefined
+        while (match = linkRe.exec(currentItem.text)) != null
+          if not collaborativeLinks.has(asSlug(match[1]))
+            collaborativeLinks.set(asSlug(match[1]), currentItem.id)
+        if 'reference' == currentItem.type
+          if not collaborativeLinks.has(currentItem.slug)
+            collaborativeLinks.set(currentItem.slug, currentItem.id)
+      catch err
+        console.log "METADATA *** #{wikiName} Error extracting links from #{currentIndex} of #{JSON.stringify(array)}", err.message
+      collaborativeLinks
+
     fs.readdir argv.db, (e, files) ->
       return cb(e) if e
       # used to make sure all of the files are read
@@ -306,15 +330,43 @@ module.exports = exports = (argv) ->
           if e or status is 404
             console.log 'Problem building sitemap:', file, 'e: ', e, 'status:', status
             return cb() # Ignore errors in the pagehandler get.
+
+          try
+            pageLinksMap = page.story.reduce( extractPageLinks, new Map())
+          catch err
+            console.log "METADATA *** #{wikiName} reduce to extract links on #{file} failed", err.message
+            pageLinksMap = []
+          #
+          if pageLinksMap.size > 0
+            pageLinks = Object.fromEntries(pageLinksMap)
+          else
+            pageLinks = undefined
+        
           cb null, {
             slug     : file
             title    : page.title
             date     : editDate(page.journal)
             synopsis : synopsis(page)
+            links    : pageLinks
           }
 
       async.map files, doSitemap, (e, sitemap) ->
         return cb(e) if e
         cb null, sitemap.filter (item) -> if item? then true
+
+  itself.slugs = (cb) ->
+    fs.readdir argv.db, {withFileTypes: true}, (e, files) ->
+      if e
+        console.log 'Problem reading pages directory', e
+        cb(e)
+      else
+        onlyFiles = files.map((i) ->
+          if i.isFile() 
+            return i.name 
+          else
+            return null
+          ).filter((i) -> 
+            i != null && !i?.startsWith('.'))
+        cb(null, onlyFiles)
 
   itself

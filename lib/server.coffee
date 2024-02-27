@@ -18,23 +18,22 @@
 # can be installed with an:
 #     npm install
 
-require('coffee-trace')
-
 # Standard lib
 fs = require 'fs'
 path = require 'path'
 http = require 'http'
+url = require 'url'
+{ pipeline } = require 'node:stream/promises'
 
 # From npm
 mkdirp = require 'mkdirp'
 express = require 'express'
 hbs = require 'express-hbs'
 glob = require 'glob'
-es = require 'event-stream'
-JSONStream = require 'JSONStream'
 async = require 'async'
 f = require('flates')
 sanitize = require '@mapbox/sanitize-caja'
+fetch = require 'node-fetch'
 
 # Express 4 middleware
 logger = require 'morgan'
@@ -44,7 +43,7 @@ methodOverride = require 'method-override'
 sessions = require 'client-sessions'
 bodyParser = require 'body-parser'
 errorHandler = require 'errorhandler'
-request = require 'request'
+
 
 
 # Local files
@@ -53,6 +52,7 @@ defargs = require './defaultargs'
 resolveClient = require 'wiki-client/lib/resolve'
 pluginsFactory = require './plugins'
 sitemapFactory = require './sitemap'
+searchFactory = require './search'
 
 render = (page) ->
   return f.div({class: "twins"}, f.p('')) + '\n' +
@@ -62,6 +62,7 @@ render = (page) ->
       ' ' + (page.title))) + '\n' +
     f.div {class: "story"},
       page.story.map((story) ->
+        return '' unless story
         if story.type is 'paragraph'
           f.div {class: "item paragraph"}, f.p(resolveClient.resolveLinks(story.text))
         else if story.type is 'image'
@@ -114,6 +115,9 @@ module.exports = exports = (argv) ->
   # Require the sitemap adapter and initialize it with options.
   app.sitemaphandler = sitemaphandler = sitemapFactory(argv)
 
+  # Require the site indexer and initialize it with options
+  app.searchhandler = searchhandler = searchFactory(argv)
+
   # Require the security adapter and initialize it with options.
   app.securityhandler = securityhandler = require(argv.security_type)(log, loga, argv)
 
@@ -138,39 +142,40 @@ module.exports = exports = (argv) ->
 
 
   remoteGet = (remote, slug, cb) ->
-    [host, port] = remote.split(':')
-    getopts = {
-      host: host
-      port: port or 80
-      path: "/#{slug}.json"
-    }
-    # TODO: This needs more robust error handling, just trying to
-    # keep it from taking down the server.
-    http.get(getopts, (resp) ->
-      responsedata = ''
-      resp.on 'data', (chunk) ->
-        responsedata += chunk
+    # assume http, as we know no better at this point and we need to specify a protocol.
+    remoteURL = new URL("http://#{remote}/#{slug}.json").toString()
+    # set a two second timeout
+    fetch(remoteURL, {timeout: 2000})
+    .then (res) ->
+      if res.ok
+        return res
+      throw new Error(res.statusText)
+    .then (res) ->
+      return res.json()
+    .then (json) ->
+      cb(null, json, 200)
+    .catch (err) ->
+      console.error('Unable to fetch remote resource', remote, slug, err)
+      cb(err, 'Page not found', 404)
+    
 
-      resp.on 'error', (e) ->
-        cb(e, 'Page not found', 404)
-
-      resp.on 'end', ->
-        if resp.statusCode == 404
-          cb(null, 'Page not found', 404)
-        else if responsedata
-          cb(null, JSON.parse(responsedata), resp.statusCode)
-        else
-          cb(null, 'Page not found', 404)
-
-    ).on 'error', (e) ->
-      cb(e, 'Page not found', 404)
-
+      
   #### Express configuration ####
   # Set up all the standard express server options,
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
 
-  app.set('views', path.join(__dirname, '..', '..', 'wiki-client', '/views'))
+  # 
+  staticPathOptions = {
+    dotfiles: 'ignore'
+    etag: true
+    immutable: false
+    lastModified: false
+    maxAge: '1h'
+  }
+
+  app.set('views',
+    path.join(require.resolve('wiki-client/package.json'), '..', 'views'))
   app.set('view engine', 'html')
   app.engine('html', hbs.express4())
   app.set('view options', layout: false)
@@ -184,12 +189,19 @@ module.exports = exports = (argv) ->
   app.use(methodOverride())
   cookieValue = {
     httpOnly: true
+    sameSite: 'lax'
   }
-  cookieValue['domain'] = argv.wiki_domain if argv.wiki_domain
+  if argv.wiki_domain
+    if !argv.wiki_domain.endsWith('localhost')
+      cookieValue['domain'] = argv.wiki_domain
   # use secureProxy as TLS is terminated in outside the node process
-  cookieValue['secureProxy'] = true if argv.secure_cookie
+  if argv.secure_cookie
+    cookieName = 'wikiTlsSession'
+    cookieValue['secureProxy'] = true
+  else
+    cookieName = "wikiSession"
   app.use(sessions({
-    cookieName: 'wikiSession',
+    cookieName: cookieName,
     requestKey: 'session',
     secret: argv.cookieSecret,
     # make the session session_duration days long
@@ -202,7 +214,7 @@ module.exports = exports = (argv) ->
   app.use(ourErrorHandler)
 
   # Add static route to the client
-  app.use(express.static(argv.client))
+  app.use(express.static(argv.client, staticPathOptions))
 
   ##### Define security routes #####
   securityhandler.defineRoutes app, cors, updateOwner
@@ -215,11 +227,11 @@ module.exports = exports = (argv) ->
     plugins.map (plugin) ->
       pluginName = plugin.slice(12, -7)
       pluginPath = '/plugins/' + pluginName
-      app.use(pluginPath, express.static(path.join(argv.packageDir, plugin)))
+      app.use(pluginPath, cors, express.static(path.join(argv.packageDir, plugin), staticPathOptions))
 
   # Add static routes to the security client.
   if argv.security != './security'
-    app.use('/security', express.static(path.join(argv.packageDir, argv.security_type, 'client')))
+    app.use('/security', express.static(path.join(argv.packageDir, argv.security_type, 'client'), staticPathOptions))
 
 
   ##### Set up standard environments. #####
@@ -288,7 +300,7 @@ module.exports = exports = (argv) ->
       info.pages.push(pageDiv)
     res.render('static.html', info)
 
-  app.get ///([a-z0-9-]+)\.html$///, (req, res, next) ->
+  app.get ///^\/([a-z0-9-]+)\.html$///, (req, res, next) ->
     slug = req.params[0]
     log(slug)
     if slug is 'runtests'
@@ -335,13 +347,19 @@ module.exports = exports = (argv) ->
 # Plugins are located in packages in argv.packageDir, with package names of the form wiki-plugin-*
     glob path.join(argv.packageDir, 'wiki-plugin-*', 'factory.json'), (e, files) ->
       if e then return res.e(e)
-      files = files.map (file) ->
-        return fs.createReadStream(file).on('error', res.e).pipe(JSONStream.parse())
 
-      es.concat.apply(null, files)
-        .on('error', res.e)
-        .pipe(JSONStream.stringify())
-        .pipe(res)
+      doFactories = (file, cb) ->
+        fs.readFile file, (err, data) ->
+          return cb() if err
+          try
+            factory = JSON.parse data
+            cb null, factory
+          catch err
+            return cb()
+
+      async.map files, doFactories, (e, factories) ->
+        res.e(e) if e
+        res.end(JSON.stringify factories)
 
 
   ###### Json Routes ######
@@ -378,11 +396,15 @@ module.exports = exports = (argv) ->
       )
 
   ###### Favicon Routes ######
-  # If favLoc doesn't exist send 404 and let the client
-  # deal with it.
+  # If favLoc doesn't exist send the default favicon.
   favLoc = path.join(argv.status, 'favicon.png')
+  defaultFavLoc = path.join(argv.root, 'default-data', 'status', 'favicon.png')
   app.get '/favicon.png', cors, (req,res) ->
-    res.sendFile(favLoc)
+    fs.exists favLoc, (exists) ->
+      if exists
+        res.sendFile(favLoc)
+      else
+        res.sendFile(defaultFavLoc)
 
   authorized = (req, res, next) ->
     if securityhandler.isAuthorized(req)
@@ -425,20 +447,24 @@ module.exports = exports = (argv) ->
   # Send an array of pages currently in the recycler via json
   app.get '/recycler/system/slugs.json', authorized, (req, res) ->
     fs.readdir argv.recycler, (e, files) ->
-      if e then return res.e e
+
       doRecyclermap = (file, cb) ->
-        pagehandler.get file, (e, page, status) ->
-          return cb() if file.match /^\./
-          if e
+        recycleFile = 'recycler/' + file
+        pagehandler.get recycleFile, (e, page, status) ->
+          if e or status is 404
             console.log 'Problem building recycler map:', file, 'e: ',e
+            # this will leave an undefined/empty item in the array, which we will filter out later
             return cb()
           cb null, {
             slug:  file
             title: page.title
           }
 
+      if e then return res.e e
       async.map files, doRecyclermap, (e, recyclermap) ->
         return cb(e) if e
+        # remove any empty items
+        recyclermap = recyclermap.filter( (el) -> return !!el )
         res.send(recyclermap)
 
   # Fetching page from the recycler
@@ -460,8 +486,8 @@ module.exports = exports = (argv) ->
   ###### Meta Routes ######
   # Send an array of pages in the database via json
   app.get '/system/slugs.json', cors, (req, res) ->
-    fs.readdir argv.db, (e, files) ->
-      if e then return res.e e
+    pagehandler.slugs (err, files) ->
+      if err then res.status(500).send(err)
       res.send(files)
 
 # Returns a list of installed plugins. (does this get called anymore!)
@@ -495,6 +521,16 @@ module.exports = exports = (argv) ->
         sitemaphandler.once 'finished', ->
           res.sendFile(xmlSitemapLoc)
 
+  searchIndexLoc = path.join(argv.status, 'site-index.json')
+  app.get '/system/site-index.json', cors, (req, res) ->
+    fs.exists searchIndexLoc, (exists) ->
+      if exists
+        res.sendFile(searchIndexLoc)
+      else
+        # only create index if we are not already creating one
+        searchhandler.createIndex(pagehandler) if !searchhandler.isWorking()
+        searchhandler.once 'indexed', ->
+          res.sendFile(searchIndexLoc)
 
   app.get '/system/export.json', cors, (req, res) ->
     pagehandler.pages (e, sitemap) ->
@@ -514,7 +550,30 @@ module.exports = exports = (argv) ->
             dict
           , {}))
       )
+  
+  admin = (req, res, next) ->
+    if securityhandler.isAdmin(req)
+      next()
+    else
+      console.log 'rejecting', req.path
+      res.sendStatus(403)
 
+  app.get '/system/version.json', admin, (req, res) ->
+    versions = {}
+    wikiModule = module.parent.parent.parent
+    versions[wikiModule.require('./package').name] = wikiModule.require('./package').version
+    versions[wikiModule.require('wiki-server/package').name] = wikiModule.require('wiki-server/package').version
+    versions[wikiModule.require('wiki-client/package').name] = wikiModule.require('wiki-client/package').version
+    versions['security'] = {}
+    versions['plugins'] = {}
+
+    glob '+(wiki-security-*|wiki-plugin-*)', {cwd: argv.packageDir}, (e, plugins) ->
+      plugins.map (plugin) ->
+        if plugin.includes 'wiki-security'
+          versions.security[wikiModule.require(plugin + "/package").name] = wikiModule.require(plugin + "/package").version
+        else
+          versions.plugins[wikiModule.require(plugin + "/package").name] = wikiModule.require(plugin + "/package").version
+      res.json(versions)
 
   ##### Proxy routes #####
 
@@ -525,21 +584,18 @@ module.exports = exports = (argv) ->
     remoteResource = pathParts.join('/')
     requestURL = 'http://' + remoteHost + '/' + remoteResource
     console.log("PROXY Request: ", requestURL)
-    if requestURL.endsWith('.json') or requestURL.endsWith('.png') or pathParts[0] is "plugin"
-      requestOptions = {
-        host: remoteHost
-        port: 80
-        path: remoteResource
-      }
-      try
-        request
-          .get(requestURL, requestOptions)
-          .on('error', (err) ->
-            console.log("ERROR: Request ", requestURL, err))
-          .pipe(res)
-      catch error
-        console.log "PROXY Error", error
-        res.status(500).end()
+    if requestURL.endsWith('.json') or requestURL.endsWith('.png') or requestURL.endsWith('.jpg') or pathParts[0] is "plugin"
+      fetch(requestURL, {timeout: 2000})
+      .then (fetchRes) ->
+        if fetchRes.ok
+          res.set('content-type', fetchRes.headers.get('content-type'))
+          res.set('last-modified', fetchRes.headers.get('last-modified'))
+          await pipeline(fetchRes.body, res)
+        else
+          res.status(fetchRes.status).end()
+      .catch (err) ->
+        console.log("ERROR: Proxy Request ", requestURL, err)
+        res.status(500).end()  
     else
       res.status(400).end()
 
@@ -552,7 +608,8 @@ module.exports = exports = (argv) ->
     actionCB = (e, page, status) ->
       #if e then return res.e e
       if status is 404
-        res.status(status).send(page)
+        # res.status(status).send(page)
+        return res.e page,status
       # Using Coffee-Scripts implicit returns we assign page.story to the
       # result of a list comprehension by way of a switch expression.
       try
@@ -595,7 +652,7 @@ module.exports = exports = (argv) ->
       if not page.journal
         page.journal = []
       if action.fork
-        page.journal.push({type: "fork", site: action.fork})
+        page.journal.push({type: "fork", site: action.fork, date: action.date - 1})
         delete action.fork
       page.journal.push(action)
       pagehandler.put req.params[0], page, (e) ->
@@ -606,14 +663,24 @@ module.exports = exports = (argv) ->
       # update sitemap
       sitemaphandler.update(req.params[0], page)
 
+      # update site index
+      searchhandler.update(req.params[0], page)
+
     # log action
 
     # If the action is a fork, get the page from the remote server,
     # otherwise ask pagehandler for it.
     if action.fork
       pagehandler.saveToRecycler req.params[0], (err) ->
-        if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
-        remoteGet(action.fork, req.params[0], actionCB)
+        if err and err isnt 'page does not exist' 
+          console.log "Error saving #{req.params[0]} before fork: #{err}"
+        if action.forkPage
+          forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
+          delete action.forkPage
+          actionCB(null, forkPageCopy)
+        else
+          # Legacy path, new clients will provide forkPage on implicit forks.
+          remoteGet(action.fork, req.params[0], actionCB)
     else if action.type is 'create'
       # Prevent attempt to write circular structure
       itemCopy = JSON.parse(JSON.stringify(action.item))
@@ -627,10 +694,10 @@ module.exports = exports = (argv) ->
     else if action.type == 'fork'
       pagehandler.saveToRecycler req.params[0], (err) ->
         if err then console.log "Error saving #{req.params[0]} before fork: #{err}"
-        if action.item # push
-          itemCopy = JSON.parse(JSON.stringify(action.item))
-          delete action.item
-          actionCB(null, itemCopy)
+        if action.forkPage # push
+          forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
+          delete action.forkPage
+          actionCB(null, forkPageCopy)
         else # pull
           remoteGet(action.site, req.params[0], actionCB)
     else
@@ -654,12 +721,17 @@ module.exports = exports = (argv) ->
 
   app.delete ///^/([a-z0-9-]+)\.json$///, authorized, (req, res) ->
     pageFile = req.params[0]
-    pagehandler.delete pageFile, (err) ->
-      if err
-        res.status(500).send(err)
-      else
-        sitemaphandler.removePage pageFile
-        res.status(200).send('')
+    # we need the original page text to remove it from the index, so get the original text before deleting it
+    pagehandler.get pageFile, (e, page, status) ->
+      title = page.title
+      pagehandler.delete pageFile, (err) ->
+        if err
+          res.status(500).send(err)
+        else
+          sitemaphandler.removePage pageFile
+          res.status(200).send('')
+          # update site index
+          searchhandler.removePage(req.params[0])
 
 
 
@@ -680,6 +752,8 @@ module.exports = exports = (argv) ->
     ### Sitemap ###
     # create sitemap at start-up
     sitemaphandler.createSitemap(pagehandler)
+    # create site index at start-up
+    searchhandler.startUp(pagehandler)
 
 
   # Return app when called, so that it can be watched for events and shutdown with .close() externally.
