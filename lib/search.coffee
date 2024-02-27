@@ -46,9 +46,6 @@ module.exports = exports = (argv) ->
 
   searchPageUpdate = (slug, page, cb) ->
     # to update we have to remove the page first, and then readd it
-    timeLabel = "SITE INDEX update #{slug} - #{wikiName}"
-    console.time timeLabel
-    
     try
       pageText = page.story.reduce( extractPageText, '')
     catch err
@@ -66,37 +63,29 @@ module.exports = exports = (argv) ->
         'title': page.title
         'content': pageText
       }
-    console.timeEnd timeLabel
     cb()
 
   searchPageRemove = (slug, cb) ->
     # remove page from index
     timeLabel = "SITE INDEX page remove #{slug} - #{wikiName}"
-    console.time timeLabel
     try
       siteIndex.discard slug 
     catch err
       # swallow error, if the page was not in index
       console.log "removing #{slug} from index #{wikiName} failed", err unless err.message.includes('not in the index')
-    console.timeEnd timeLabel
     cb()
 
   searchSave = (siteIndex, cb) ->
     # save index to file
-    timeLabel = "SITE INDEX #{wikiName} : Saved"
-    console.time timeLabel
-
     fs.exists argv.status, (exists) ->
       if exists
         writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
-          console.timeEnd timeLabel
           return cb(e) if e
           touch indexUpdateFlag, (err) ->
             cb()
       else
         mkdirp argv.status, ->
           writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
-            console.timeEnd timeLabel
             return cb(e) if e
             touch indexUpdateFlag, (err) ->
               cb()
@@ -104,8 +93,6 @@ module.exports = exports = (argv) ->
 
   searchRestore = (cb) ->
     # restore index, or create if it doesn't already exist
-    timeLabel = "SITE INDEX #{wikiName} : Restored"
-    console.time timeLabel
     fs.exists siteIndexLoc, (exists) ->
       if exists
         fs.readFile(siteIndexLoc, (err, data) ->
@@ -115,7 +102,6 @@ module.exports = exports = (argv) ->
               fields: ['title', 'content']
           catch e
             return cb(e)
-          console.timeEnd timeLabel
           process.nextTick( ->
             serial(queue.shift())))
 
@@ -150,19 +136,16 @@ module.exports = exports = (argv) ->
     try
       if currentItem.text?
         switch currentItem.type
-          when 'paragraph'
-            pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
-          when 'markdown'
-            # really need to extract text from the markdown, but for now just remove link brackets, urls...
-            pageText += ' ' + currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}|\\n/g, ' '
-          when 'html'
-            pageText += ' ' + currentItem.text.replace /<[^\>]*>?/g, ''
+          when 'paragraph', 'markdown', 'html', 'reference'
+            noLinks = currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
+            # strip out all tags.
+            pageText = noLinks.replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' ')
           else
             if currentItem.text?
               for line in currentItem.text.split /\r\n?|\n/
                 pageText += ' ' + line.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
     catch err
-      throw new Error("Error extracting text from #{currentIndex}, #{err}")
+      throw new Error("Error extracting text from #{currentIndex}, #{err}, #{err.stack}")
     pageText
 
 
@@ -192,8 +175,8 @@ module.exports = exports = (argv) ->
     # we save the pagehandler, so we can recreate the site index if it is removed
     searchPageHandler = pagehandler if !searchPageHandler?
 
-    timeLabel = "SITE INDEX #{wikiName} : Created"
-    console.time timeLabel
+    #timeLabel = "SITE INDEX #{wikiName} : Created"
+    #console.time timeLabel
 
     pagehandler.slugs (e, slugs) ->
       if e
@@ -227,7 +210,7 @@ module.exports = exports = (argv) ->
   
       Promise.all(indexPromises)
       .then () ->
-        console.timeEnd timeLabel
+        # console.timeEnd timeLabel
         process.nextTick ( ->
           serial(queue.shift()))
       
