@@ -139,7 +139,7 @@ module.exports = exports = (argv) ->
           when 'paragraph', 'markdown', 'html', 'reference'
             noLinks = currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
             # strip out all tags.
-            pageText = noLinks.replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' ')
+            pageText += noLinks.replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' ')
           else
             if currentItem.text?
               for line in currentItem.text.split /\r\n?|\n/
