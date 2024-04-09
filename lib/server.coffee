@@ -32,7 +32,12 @@ hbs = require 'express-hbs'
 glob = require 'glob'
 async = require 'async'
 f = require('flates')
-sanitize = require '@mapbox/sanitize-caja'
+
+createDOMPurify = require('dompurify')
+{ JSDOM } = require('jsdom')
+
+window = new JSDOM('').window
+DOMPurify = createDOMPurify(window)
 
 # node-fetch is now ESM only
 fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
@@ -73,7 +78,7 @@ render = (page) ->
             f.p(resolveClient.resolveLinks(story.text or story.caption or 'uploaded image'))
         else if story.type is 'html'
           f.div {class: "item html"},
-          f.p(resolveClient.resolveLinks(story.text or '', sanitize))
+          f.p(resolveClient.resolveLinks(story.text or '', DOMPurify.sanitize))
         else f.div {class: "item"}, f.p(resolveClient.resolveLinks(story.text or ''))
       ).join('\n')
 
