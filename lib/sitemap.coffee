@@ -12,7 +12,6 @@ fs = require 'fs'
 path = require 'path'
 events = require 'events'
 writeFileAtomic = require 'write-file-atomic'
-_ = require 'lodash'
 xml2js = require 'xml2js'
 
 mkdirp = require 'mkdirp'
@@ -100,7 +99,7 @@ module.exports = exports = (argv) ->
     idx = slugs.indexOf(file)
 
     if ~idx
-      _.pullAt(sitemap, idx)
+      sitemap.splice(idx,1)
 
     cb()
 
@@ -134,7 +133,7 @@ module.exports = exports = (argv) ->
 
   xmlSitemapSave = (sitemap, cb) ->
     xmlmap = []
-    _.each sitemap, (page) ->
+    sitemap.forEach (page) ->
       result = {}
       result["loc"] = argv.url + "/" + page.slug + ".html"
       if page.date?
