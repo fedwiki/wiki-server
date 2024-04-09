@@ -45,15 +45,15 @@
   },
   "devDependencies": {
     "grunt": "^1.6.1",
-    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-git-authors": "^3.2.0",
-    "grunt-mocha-test": "^0.13.2",
-    "mocha": "^10.2.0",
+    "grunt-mocha-test": "^0.13.3",
+    "mocha": "^10.4.0",
     "should": "^13.2.3",
-    "supertest": "^6.3.3",
-    "wiki-client": "^0.29.0",
+    "supertest": "^6.3.4",
+    "wiki-client": "^0.29.1",
     "wiki-plugin-activity": "^0.5.0",
-    "wiki-plugin-video": "^0.3.0"
+    "wiki-plugin-video": "^0.3.1"
   },
   "engines": {
     "node": ">=18.x"
