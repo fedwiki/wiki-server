@@ -26,7 +26,6 @@ url = require 'url'
 { pipeline } = require 'node:stream/promises'
 
 # From npm
-mkdirp = require 'mkdirp'
 express = require 'express'
 hbs = require 'express-hbs'
 glob = require 'glob'
@@ -432,7 +431,7 @@ module.exports = exports = (argv) ->
           res.send('Favicon Saved')
 
       else
-        mkdirp argv.status, ->
+        fs.mkdir argv.status, { recursive: true }, ->
           fs.writeFile favLoc, buf, (e) ->
             if e then return res.e e
             res.send('Favicon Saved')
