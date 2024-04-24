@@ -132,13 +132,15 @@ module.exports = exports = (argv) ->
         itself.stop()
 
   extractItemText = (text) ->
-    return text.replace(/\[{2}|\[(?:[\S]+)|\]{1,2}/g, ' ')
+    return text.replace(/\[([^\]]*?)\][\[\(].*?[\]\)]/g, " $1 ")
+      .replace(/\[{2}|\[(?:[\S]+)|\]{1,2}/g, ' ')
       .replace(/\n/g, ' ')
       .replace(/<style.*?<\/style>/g, ' ')
       .replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' ')
       .replace(/<(?:[^>])+>/g, ' ')
-      .replace(/\[([^\]]*?)\][\[\(].*?[\]\)]/g, " #{2} ")
-      .replace(/https?.*?(?=\p{White_Space}|$)/gu, ' ')
+      .replace(/(https?.*?)(?=\p{White_Space}|\p{Quotation_Mark}|$)/gu, (match) ->
+        myUrl = url.parse(match)
+        return myUrl.hostname + myUrl.pathname)
       .replace(/[\p{P}\p{Emoji}\p{Symbol}}]+/gu, ' ')
       .replace /[\p{White_Space}\n\t]+/gu, ' '
 
@@ -148,10 +150,10 @@ module.exports = exports = (argv) ->
     try
       if currentItem.text?
         switch currentItem.type
-          when 'paragraph', 'markdown', 'html', 'reference', 'image', 'pagefold', 'math', 'mathjax'
+          when 'paragraph', 'markdown', 'html', 'reference', 'image', 'pagefold', 'math', 'mathjax', 'code'
             pageText += extractItemText currentItem.text
           when 'audio', 'video', 'frame'
-            pageText += extractItemText(item.text.split(/\r\n?|\n/)
+            pageText += extractItemText(currentItem.text.split(/\r\n?|\n/)
               .map((line) ->
                 firstWord = line.split(/\p{White_Space}/u)[0]
                 if firstWord.startsWith('http') or firstWord.toUpperCase() is firstWord or firstWord.startsWith('//')
