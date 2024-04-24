@@ -11,6 +11,7 @@
 fs = require 'fs'
 path = require 'path'
 events = require 'events'
+url = require 'node:url'
 writeFileAtomic = require 'write-file-atomic'
 
 miniSearch = require 'minisearch'
