@@ -131,21 +131,39 @@ module.exports = exports = (argv) ->
         console.log "SITE INDEX *** save failed: " + e if e
         itself.stop()
 
+  extractItemText = (text) ->
+    return text.replace(/\[([^\]]*?)\][\[\(].*?[\]\)]/g, " $1 ")
+      .replace(/\[{2}|\[(?:[\S]+)|\]{1,2}/g, ' ')
+      .replace(/\n/g, ' ')
+      .replace(/<style.*?<\/style>/g, ' ')
+      .replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' ')
+      .replace(/<(?:[^>])+>/g, ' ')
+      .replace(/(https?.*?)(?=\p{White_Space}|\p{Quotation_Mark}|$)/gu, (match) ->
+        myUrl = url.parse(match)
+        return myUrl.hostname + myUrl.pathname)
+      .replace(/[\p{P}\p{Emoji}\p{Symbol}}]+/gu, ' ')
+      .replace /[\p{White_Space}\n\t]+/gu, ' '
+
+
   extractPageText = (pageText, currentItem, currentIndex, array) ->
     # console.log('extractPageText', pageText, currentItem, currentIndex, array)
     try
       if currentItem.text?
         switch currentItem.type
-          when 'paragraph', 'markdown', 'html', 'reference'
-            noLinks = currentItem.text.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, ''
-            # strip out all tags.
-            pageText += noLinks.replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' ')
-          else
-            if currentItem.text?
-              for line in currentItem.text.split /\r\n?|\n/
-                pageText += ' ' + line.replace /\[{2}|\[(?:[\S]+)|\]{1,2}/g, '' unless line.match /^[A-Z]+[ ].*/
+          when 'paragraph', 'markdown', 'html', 'reference', 'image', 'pagefold', 'math', 'mathjax', 'code'
+            pageText += extractItemText currentItem.text
+          when 'audio', 'video', 'frame'
+            pageText += extractItemText(currentItem.text.split(/\r\n?|\n/)
+              .map((line) ->
+                firstWord = line.split(/\p{White_Space}/u)[0]
+                if firstWord.startsWith('http') or firstWord.toUpperCase() is firstWord or firstWord.startsWith('//')
+                  # line is markup
+                  return ''
+                else
+                  return line
+              ).join(' '))
     catch err
-      throw new Error("Error extracting text from #{currentIndex}, #{err}, #{err.stack}")
+      throw new Error("Error extracting text from #{currentIndex}, #{JSON.stringify(currentItem)} #{err}, #{err.stack}")
     pageText
 
 
