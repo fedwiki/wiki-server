@@ -11,8 +11,8 @@
 fs = require 'fs'
 path = require 'path'
 events = require 'events'
+url = require 'node:url'
 writeFileAtomic = require 'write-file-atomic'
-mkdirp = require 'mkdirp'
 
 miniSearch = require 'minisearch'
 
@@ -84,7 +84,7 @@ module.exports = exports = (argv) ->
           touch indexUpdateFlag, (err) ->
             cb()
       else
-        mkdirp argv.status, ->
+        fs.mkdir argv.status, { recursive: true }, ->
           writeFileAtomic siteIndexLoc, JSON.stringify(siteIndex), (e) ->
             return cb(e) if e
             touch indexUpdateFlag, (err) ->

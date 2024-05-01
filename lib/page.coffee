@@ -15,7 +15,6 @@ path = require 'path'
 events = require 'events'
 glob = require 'glob'
 
-mkdirp = require 'mkdirp'
 async = require 'async'
 
 random_id = require './random_id'
@@ -31,7 +30,7 @@ module.exports = exports = (argv) ->
 
   wikiName = new URL(argv.url).hostname
 
-  mkdirp argv.db, (e) ->
+  fs.mkdir argv.db, { recursive: true }, (e) ->
     if e then throw e
 
   #### Private utility methods. ####
@@ -53,7 +52,7 @@ module.exports = exports = (argv) ->
                 console.log "ERROR: problem page #{loc} moved to recycler"
               )
           else
-            mkdirp(path.dirname(recyclePage), (err) ->
+            fs.mkdir(path.dirname(recyclePage), { recursive: true }, (err) ->
               if err
                 console.log "ERROR: creating recycler", err
               else
@@ -134,7 +133,7 @@ module.exports = exports = (argv) ->
                     cb(err)
                   )
                 else
-                  mkdirp(path.dirname(recycleLoc), (err) ->
+                  fs.mkdir(path.dirname(recycleLoc), { recursive: true }, (err) ->
                     if err then cb(err)
                     fs.rename(loc, recycleLoc, (err) ->
                       cb(err)
@@ -179,7 +178,7 @@ module.exports = exports = (argv) ->
                   cb(err)
                 )
               else
-                mkdirp(path.dirname(recycleLoc), (err) ->
+                fs.mkdir(path.dirname(recycleLoc), { recursive: true }, (err) ->
                   if err then cb(err)
                   copyFile(loc, recycleLoc, (err) ->
                     cb(err)
@@ -234,7 +233,7 @@ module.exports = exports = (argv) ->
               cb(err)
             )
           else
-            mkdirp(path.dirname(loc), (err) ->
+            fs.mkdir(path.dirname(loc), { recursive: true }, (err) ->
               if err then cb(err)
               fs.writeFile(loc, page, (err) ->
                 if err

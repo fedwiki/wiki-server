@@ -20,40 +20,39 @@
     }
   ],
   "dependencies": {
-    "@mapbox/sanitize-caja": "^0.1.4",
     "async": "^3.2.4",
     "body-parser": "^1.20.2",
     "client-sessions": "^0.8.0",
     "coffeescript": "^2.5.0",
     "cookie-parser": "^1.4.4",
+    "dompurify": "^3.1.0",
     "errorhandler": "^1.5.1",
     "express": "^4.17.1",
     "express-hbs": "^2.5.0",
     "flates": "0.0.5",
     "glob": "^7.2.3",
-    "lodash": "^4.17.19",
+    "jsdom": "^24.0.0",
     "method-override": "^3.0.0",
-    "minisearch": "^6.0.1",
-    "mkdirp": "^0.5.6",
+    "minisearch": "^6.3.0",
     "morgan": "^1.9.1",
     "node-fetch": "^3.3.2",
     "write-file-atomic": "^5.0.0",
-    "xml2js": "^0.5.0"
+    "xml2js": "^0.6.2"
   },
   "scripts": {
     "test": "grunt mochaTest"
   },
   "devDependencies": {
     "grunt": "^1.6.1",
-    "grunt-contrib-watch": "^1.0.0",
+    "grunt-contrib-watch": "^1.1.0",
     "grunt-git-authors": "^3.2.0",
-    "grunt-mocha-test": "^0.13.2",
-    "mocha": "^10.2.0",
+    "grunt-mocha-test": "^0.13.3",
+    "mocha": "^10.4.0",
     "should": "^13.2.3",
-    "supertest": "^6.3.3",
-    "wiki-client": "^0.29.0",
+    "supertest": "^6.3.4",
+    "wiki-client": "^0.29.1",
     "wiki-plugin-activity": "^0.5.0",
-    "wiki-plugin-video": "^0.3.0"
+    "wiki-plugin-video": "^0.3.1"
   },
   "engines": {
     "node": ">=18.x"

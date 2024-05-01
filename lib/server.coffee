@@ -26,13 +26,17 @@ url = require 'url'
 { pipeline } = require 'node:stream/promises'
 
 # From npm
-mkdirp = require 'mkdirp'
 express = require 'express'
 hbs = require 'express-hbs'
 glob = require 'glob'
 async = require 'async'
 f = require('flates')
-sanitize = require '@mapbox/sanitize-caja'
+
+createDOMPurify = require('dompurify')
+{ JSDOM } = require('jsdom')
+
+window = new JSDOM('').window
+DOMPurify = createDOMPurify(window)
 
 # node-fetch is now ESM only
 fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
@@ -73,7 +77,7 @@ render = (page) ->
             f.p(resolveClient.resolveLinks(story.text or story.caption or 'uploaded image'))
         else if story.type is 'html'
           f.div {class: "item html"},
-          f.p(resolveClient.resolveLinks(story.text or '', sanitize))
+          f.p(resolveClient.resolveLinks(story.text or '', DOMPurify.sanitize))
         else f.div {class: "item"}, f.p(resolveClient.resolveLinks(story.text or ''))
       ).join('\n')
 
@@ -427,7 +431,7 @@ module.exports = exports = (argv) ->
           res.send('Favicon Saved')
 
       else
-        mkdirp argv.status, ->
+        fs.mkdir argv.status, { recursive: true }, ->
           fs.writeFile favLoc, buf, (e) ->
             if e then return res.e e
             res.send('Favicon Saved')
