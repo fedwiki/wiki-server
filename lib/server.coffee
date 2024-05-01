@@ -188,9 +188,8 @@ module.exports = exports = (argv) ->
 
     # use logger, at least in development, probably needs a param to configure (or turn off).
     # use stream to direct to somewhere other than stdout.
-  wikiName = new URL(argv.url).hostname
-  logger.token('vhost', () ->
-    return wikiName)
+  logger.token('vhost', (req, res) ->
+    return req.hostname)
   app.use(logger(':vhost :method :url :status :res[content-length] - :response-time ms'))
   app.use(cookieParser())
   app.use(bodyParser.json({ limit: argv.uploadLimit}))
