@@ -163,15 +163,15 @@ module.exports = exports = (argv) ->
     .catch (err) ->
       console.error('Unable to fetch remote resource', remote, slug, err)
       cb(err, 'Page not found', 404)
-    
 
-      
+
+
   #### Express configuration ####
   # Set up all the standard express server options,
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
 
-  # 
+  #
   staticPathOptions = {
     dotfiles: 'ignore'
     etag: true
@@ -558,7 +558,7 @@ module.exports = exports = (argv) ->
             dict
           , {}))
       )
-  
+
   admin = (req, res, next) ->
     if securityhandler.isAdmin(req)
       next()
@@ -603,7 +603,7 @@ module.exports = exports = (argv) ->
           res.status(fetchRes.status).end()
       .catch (err) ->
         console.log("ERROR: Proxy Request ", requestURL, err)
-        res.status(500).end()  
+        res.status(500).end()
     else
       res.status(400).end()
 
@@ -680,7 +680,7 @@ module.exports = exports = (argv) ->
     # otherwise ask pagehandler for it.
     if action.fork
       pagehandler.saveToRecycler req.params[0], (err) ->
-        if err and err isnt 'page does not exist' 
+        if err and err isnt 'page does not exist'
           console.log "Error saving #{req.params[0]} before fork: #{err}"
         if action.forkPage
           forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
