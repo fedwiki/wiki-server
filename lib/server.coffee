@@ -186,10 +186,24 @@ module.exports = exports = (argv) ->
   app.engine('html', hbs.express4())
   app.set('view options', layout: false)
 
-    # use logger, at least in development, probably needs a param to configure (or turn off).
-    # use stream to direct to somewhere other than stdout.
+  # return deterministically colored strings
+  colorString = (str) ->
+    colorReset = '\x1b[0m'
+    hash = 0;
+    str.split('').forEach (char) ->
+      hash = char.charCodeAt(0) + ((hash << 5) - hash)
+    color = '\x1b[38;2'
+    for i in [0..2]
+      do (i) ->
+        value = (hash >> (i * 8)) & 0xff
+        color += ';' + value.toString()
+    color += 'm'
+    return color + str + colorReset
+
+  # use logger, at least in development, probably needs a param to configure (or turn off).
+  # use stream to direct to somewhere other than stdout.
   logger.token('vhost', (req, res) ->
-    return req.hostname)
+    return colorString(req.hostname))
   app.use(logger(':vhost :method :url :status :res[content-length] - :response-time ms'))
   app.use(cookieParser())
   app.use(bodyParser.json({ limit: argv.uploadLimit}))
