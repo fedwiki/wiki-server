@@ -29,11 +29,12 @@ module.exports = exports = (argv) ->
 		fs.exists server, (exists) ->
 			if exists
 				console.log 'starting plugin', plugin
-				try
-					plugins[plugin] = require server
+				import(server).then((exported) ->
+					plugins[plugin] = exported
 					plugins[plugin].startServer?(params)
-				catch e
+				).catch((e) ->
 					console.log 'failed to start plugin', plugin, e?.stack or e
+				)
 
 	startServers = (params) ->
 		# emitter = new events.EventEmitter()
