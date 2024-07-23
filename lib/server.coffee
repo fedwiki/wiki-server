@@ -163,15 +163,15 @@ module.exports = exports = (argv) ->
     .catch (err) ->
       console.error('Unable to fetch remote resource', remote, slug, err)
       cb(err, 'Page not found', 404)
-    
 
-      
+
+
   #### Express configuration ####
   # Set up all the standard express server options,
   # including hbs to use handlebars/mustache templates
   # saved with a .html extension, and no layout.
 
-  # 
+  #
   staticPathOptions = {
     dotfiles: 'ignore'
     etag: true
@@ -186,10 +186,24 @@ module.exports = exports = (argv) ->
   app.engine('html', hbs.express4())
   app.set('view options', layout: false)
 
-    # use logger, at least in development, probably needs a param to configure (or turn off).
-    # use stream to direct to somewhere other than stdout.
+  # return deterministically colored strings
+  colorString = (str) ->
+    colorReset = '\x1b[0m'
+    hash = 0;
+    str.split('').forEach (char) ->
+      hash = char.charCodeAt(0) + ((hash << 5) - hash)
+    color = '\x1b[38;2'
+    for i in [0..2]
+      do (i) ->
+        value = (hash >> (i * 8)) & 0xff
+        color += ';' + value.toString()
+    color += 'm'
+    return color + str + colorReset
+
+  # use logger, at least in development, probably needs a param to configure (or turn off).
+  # use stream to direct to somewhere other than stdout.
   logger.token('vhost', (req, res) ->
-    return req.hostname)
+    return colorString(req.hostname))
   app.use(logger(':vhost :method :url :status :res[content-length] - :response-time ms'))
   app.use(cookieParser())
   app.use(bodyParser.json({ limit: argv.uploadLimit}))
@@ -558,7 +572,7 @@ module.exports = exports = (argv) ->
             dict
           , {}))
       )
-  
+
   admin = (req, res, next) ->
     if securityhandler.isAdmin(req)
       next()
@@ -603,7 +617,7 @@ module.exports = exports = (argv) ->
           res.status(fetchRes.status).end()
       .catch (err) ->
         console.log("ERROR: Proxy Request ", requestURL, err)
-        res.status(500).end()  
+        res.status(500).end()
     else
       res.status(400).end()
 
@@ -680,7 +694,7 @@ module.exports = exports = (argv) ->
     # otherwise ask pagehandler for it.
     if action.fork
       pagehandler.saveToRecycler req.params[0], (err) ->
-        if err and err isnt 'page does not exist' 
+        if err and err isnt 'page does not exist'
           console.log "Error saving #{req.params[0]} before fork: #{err}"
         if action.forkPage
           forkPageCopy = JSON.parse(JSON.stringify(action.forkPage))
