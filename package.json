@@ -33,7 +33,7 @@
     "glob": "^7.2.3",
     "jsdom": "^24.0.0",
     "method-override": "^3.0.0",
-    "minisearch": "^6.3.0",
+    "minisearch": "^7.1.0",
     "morgan": "^1.9.1",
     "node-fetch": "^3.3.2",
     "write-file-atomic": "^5.0.0",
@@ -49,9 +49,9 @@
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^10.4.0",
     "should": "^13.2.3",
-    "supertest": "^6.3.4",
+    "supertest": "^7.0.0",
     "wiki-client": "^0.29.1",
-    "wiki-plugin-activity": "^0.5.0",
+    "wiki-plugin-activity": "^0.6.0",
     "wiki-plugin-video": "^0.3.1"
   },
   "engines": {
