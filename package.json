@@ -31,7 +31,7 @@
     "express-hbs": "^2.5.0",
     "flates": "0.0.5",
     "glob": "^7.2.3",
-    "jsdom": "^24.0.0",
+    "jsdom": "^25.0.0",
     "method-override": "^3.0.0",
     "minisearch": "^7.1.0",
     "morgan": "^1.9.1",
