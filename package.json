@@ -50,8 +50,8 @@
     "mocha": "^10.4.0",
     "should": "^13.2.3",
     "supertest": "^7.0.0",
-    "wiki-client": "^0.29.1",
-    "wiki-plugin-activity": "^0.6.0",
+    "wiki-client": "file:wiki-client-0.31.0-decaffeinate.5.tgz",
+    "wiki-plugin-activity": "file:wiki-plugin-activity-0.7.0-rc.1.tgz",
     "wiki-plugin-video": "^0.3.1"
   },
   "engines": {
