@@ -14,7 +14,7 @@
     {
       "type": "factory",
       "id": "63ad2e58eecdd9e5",
-      "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press Command/ALT-S to save.\n\nMake all pages here yours alone with the login below."
+      "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press ⌘/Ctrl+S to save.\n\nMake all pages here yours alone with the login below."
     },
     {
       "type": "paragraph",
@@ -67,7 +67,7 @@
       "item": {
         "type": "factory",
         "id": "63ad2e58eecdd9e5",
-        "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press Command/ALT-S to save.\n\nMake all pages here yours alone with the login below."
+        "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press ⌘/Ctrl+S to save.\n\nMake all pages here yours alone with the login below."
       },
       "after": "821827c99b90cfd1",
       "id": "63ad2e58eecdd9e5",
