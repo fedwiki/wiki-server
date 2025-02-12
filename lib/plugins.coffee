@@ -29,7 +29,7 @@ module.exports = exports = (argv) ->
 		fs.exists server, (exists) ->
 			if exists
 				console.log 'starting plugin', plugin
-				import(server).then((exported) ->
+				import("file:" + server).then((exported) ->
 					plugins[plugin] = exported
 					plugins[plugin].startServer?(params)
 				).catch((e) ->
