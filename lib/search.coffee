@@ -151,9 +151,9 @@ module.exports = exports = (argv) ->
       if currentItem.text?
         switch currentItem.type
           when 'paragraph', 'markdown', 'html', 'reference', 'image', 'pagefold', 'math', 'mathjax', 'code'
-            pageText += extractItemText currentItem.text
+            pageText += ' ' + extractItemText currentItem.text
           when 'audio', 'video', 'frame'
-            pageText += extractItemText(currentItem.text.split(/\r\n?|\n/)
+            pageText += ' ' + extractItemText(currentItem.text.split(/\r\n?|\n/)
               .map((line) ->
                 firstWord = line.split(/\p{White_Space}/u)[0]
                 if firstWord.startsWith('http') or firstWord.toUpperCase() is firstWord or firstWord.startsWith('//')
