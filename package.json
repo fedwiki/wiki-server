@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "async": "^3.2.4",
-    "body-parser": "^1.20.2",
+    "body-parser": "^2.2.0",
     "client-sessions": "^0.8.0",
     "coffeescript": "^2.5.0",
     "cookie-parser": "^1.4.4",
@@ -31,12 +31,12 @@
     "express-hbs": "^2.5.0",
     "flates": "0.0.5",
     "glob": "^7.2.3",
-    "jsdom": "^25.0.0",
+    "jsdom": "^26.0.0",
     "method-override": "^3.0.0",
     "minisearch": "^7.1.0",
     "morgan": "^1.9.1",
     "node-fetch": "^3.3.2",
-    "write-file-atomic": "^5.0.0",
+    "write-file-atomic": "^6.0.0",
     "xml2js": "^0.6.2"
   },
   "scripts": {
@@ -47,10 +47,10 @@
     "grunt-contrib-watch": "^1.1.0",
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "^0.13.3",
-    "mocha": "^10.4.0",
+    "mocha": "^11.1.0",
     "should": "^13.2.3",
     "supertest": "^7.0.0",
-    "wiki-client": "0.31.0-decaffeinate.5",
+    "wiki-client": "^0.31.0-rc.9",
     "wiki-plugin-activity": "0.7.0-rc.1",
     "wiki-plugin-video": "^0.3.1"
   },
