@@ -285,7 +285,7 @@ module.exports = exports = (argv) ->
   # Can also be handled by the client, but it also sets up
   # the login status, and related footer html, which the client
   # relies on to know if it is logged in or not.
-  app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, (req, res, next) ->
+  app.get ///^((/[a-zA-Z0-9:.-]+/[a-z0-9-]+(_rev\d+)?)+)/?$///, cors, (req, res, next) ->
     urlPages = (i for i in req.params[0].split('/') by 2)[1..]
     urlLocs = (j for j in req.params[0].split('/')[1..] by 2)
     if ['plugin', 'auth'].indexOf(urlLocs[0]) > -1
@@ -322,7 +322,7 @@ module.exports = exports = (argv) ->
       info.pages.push(pageDiv)
     res.render('static.html', info)
 
-  app.get ///^\/([a-z0-9-]+)\.html$///, (req, res, next) ->
+  app.get ///^\/([a-z0-9-]+)\.html$///, cors, (req, res, next) ->
     slug = req.params[0]
     log(slug)
     if slug is 'runtests'
@@ -534,7 +534,7 @@ module.exports = exports = (argv) ->
           res.sendFile(sitemapLoc)
 
   xmlSitemapLoc = path.join(argv.status, 'sitemap.xml')
-  app.get '/sitemap.xml', (req, res) ->
+  app.get '/sitemap.xml', cors, (req, res) ->
     fs.exists sitemapLoc, (exists) ->
       if exists
         res.sendFile(xmlSitemapLoc)
@@ -731,7 +731,7 @@ module.exports = exports = (argv) ->
     res.render('oops.html', {msg:'This is not your wiki!'})
 
   # Traditional request to / redirects to index :)
-  app.get '/', (req, res) ->
+  app.get '/', cors, (req, res) ->
     home = path.join argv.assets, 'home', 'index.html'
     fs.stat home, (err, stats) ->
       if err || !stats.isFile()
