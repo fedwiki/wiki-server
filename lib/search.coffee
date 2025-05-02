@@ -140,7 +140,7 @@ module.exports = exports = (argv) ->
       .replace(/<(?:[^>])+>/g, ' ')
       .replace(/(https?.*?)(?=\p{White_Space}|\p{Quotation_Mark}|$)/gu, (match) ->
         myUrl = url.parse(match)
-        return myUrl.hostname + myUrl.pathname)
+        return myUrl.hostname + ' ' + myUrl.pathname)
       .replace(/[\p{P}\p{Emoji}\p{Symbol}}]+/gu, ' ')
       .replace /[\p{White_Space}\n\t]+/gu, ' '
 
