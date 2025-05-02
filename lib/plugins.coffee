@@ -12,6 +12,7 @@ fs = require 'fs'
 path = require 'path'
 glob = require 'glob'
 events = require 'events'
+{ pathToFileURL } = require 'node:url'
 # forward = require './forward'
 
 module.exports = exports = (argv) ->
@@ -29,7 +30,7 @@ module.exports = exports = (argv) ->
 		fs.exists server, (exists) ->
 			if exists
 				console.log 'starting plugin', plugin
-				import(server).then((exported) ->
+				import(pathToFileURL(server)).then((exported) ->
 					plugins[plugin] = exported
 					plugins[plugin].startServer?(params)
 				).catch((e) ->
