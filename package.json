@@ -50,9 +50,9 @@
     "mocha": "^11.1.0",
     "should": "^13.2.3",
     "supertest": "^7.0.0",
-    "wiki-client": "^0.31.0-rc.9",
-    "wiki-plugin-activity": "0.7.0-rc.1",
-    "wiki-plugin-video": "^0.3.1"
+    "wiki-client": "^0.31",
+    "wiki-plugin-activity": "0.7",
+    "wiki-plugin-video": "^0.4"
   },
   "engines": {
     "node": ">=18.x"
