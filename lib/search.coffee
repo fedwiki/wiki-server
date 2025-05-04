@@ -138,7 +138,7 @@ module.exports = exports = (argv) ->
       .replace(/<style.*?<\/style>/g, ' ')
       .replace(/<(?:"[^"]*"['"]*|'[^']*'['"]*|[^'">])+>/g, ' ')
       .replace(/<(?:[^>])+>/g, ' ')
-      .replace(/(https?.*?)(?=\p{White_Space}|\p{Quotation_Mark}|$)/gu, (match) ->
+      .replace(/(https?:.*?)(?=\p{White_Space}|\p{Quotation_Mark}|$)/gu, (match) ->
         myUrl = url.parse(match)
         return myUrl.hostname + ' ' + myUrl.pathname)
       .replace(/[\p{P}\p{Emoji}\p{Symbol}}]+/gu, ' ')
