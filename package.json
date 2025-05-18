@@ -40,6 +40,8 @@
     "xml2js": "^0.6.2"
   },
   "scripts": {
+    "prettier:format": "prettier --write './**/*.js'",
+    "prettier:check": "prettier --check ./**/*.js",
     "test": "grunt mochaTest"
   },
   "devDependencies": {
@@ -55,7 +57,7 @@
     "wiki-plugin-video": "^0.4"
   },
   "engines": {
-    "node": ">=18.x"
+    "node": ">=20.x"
   },
   "testling": {
     "harness": "mocha"
