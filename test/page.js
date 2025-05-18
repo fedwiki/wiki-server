@@ -10,7 +10,7 @@ const argv = require('../lib/defaultargs.coffee')({
 const page = require('../lib/page.coffee')(argv)
 const fs = require('node:fs')
 
-testpage = { title: 'Asdf' }
+const testpage = { title: 'Asdf' }
 
 console.log('testid', testid)
 
@@ -61,11 +61,11 @@ describe('page', () => {
       })
     })
     it('should eventually write the page to disk', done => {
-      test = () => {
+      const test = () => {
         console.log('should write', argv)
         fs.readFile(path.join(argv.db, 'asdf'), (err, data) => {
           if (err) throw err
-          readPage = JSON.parse(data)
+          const readPage = JSON.parse(data)
           page.get('asdf', (e, got) => {
             readPage.title.should.equal(got.title)
             done()

@@ -11,8 +11,8 @@ const argv = require('../lib/defaultargs.coffee')({
 })
 
 describe('sitemap', () => {
-  app = {}
-  runningServer = null
+  let app = {}
+  let runningServer = null
   beforeEach(done => {
     app = server(argv)
     app.once('owner-set', () => {
@@ -23,11 +23,11 @@ describe('sitemap', () => {
     runningServer.close()
   })
 
-  request = supertest('http://localhost:55556')
+  const request = supertest('http://localhost:55556')
   fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'pages'), { recursive: true })
 
   // location of the sitemap
-  sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
+  const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
 
   it('new site should have an empty sitemap', () => {
     request
@@ -45,7 +45,7 @@ describe('sitemap', () => {
   })
 
   it('creating a page should add it to the sitemap', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'create',
       item: {
         title: 'Asdf Test Page',
@@ -64,14 +64,10 @@ describe('sitemap', () => {
       .send('action=' + body)
       .expect(200)
       .then(
-        res => {
+        () => {
           // sitemap update does not happen until after the put has returned, so wait for it to finish
           app.sitemaphandler.once('finished', () => {
-            try {
-              sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-            } catch (err) {
-              throw err
-            }
+            const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
             sitemap[0].slug.should.equal['adsf-test-page']
             sitemap[0].synopsis.should.equal['this is the first paragraph']
           })
@@ -83,7 +79,7 @@ describe('sitemap', () => {
   })
 
   it('synopsis should reflect edit to first paragraph', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'edit',
       item: { id: 'a1', type: 'paragraph', text: 'edited' },
       id: 'a1',
@@ -93,13 +89,9 @@ describe('sitemap', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
-      .then(res => {
+      .then(() => {
         app.sitemaphandler.once('finished', () => {
-          try {
-            sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-          } catch (err) {
-            throw err
-          }
+          const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
           sitemap[0].slug.should.equal['adsf-test-page']
           sitemap[0].synopsis.should.equal['edited']
         }),
@@ -114,13 +106,9 @@ describe('sitemap', () => {
       .delete('/adsf-test-page.json')
       .send()
       .expect(200)
-      .then(res => {
+      .then(() => {
         app.sitemaphandler.once('finished', () => {
-          try {
-            sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-          } catch (error) {
-            throw err
-          }
+          const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
           sitemap.should.be.empty
         }),
           err => {

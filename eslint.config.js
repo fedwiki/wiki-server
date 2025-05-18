@@ -12,10 +12,11 @@ export default [
   { ignores: ['client/*'] },
   {
     languageOptions: {
+      sourceType: 'commonjs',
       globals: {
         wiki: 'readonly',
-        ...globals.browser,
-        ...globals.jquery,
+        ...globals.node,
+        ...globals.nodeBuiltin,
         ...globals.mocha,
       },
     },

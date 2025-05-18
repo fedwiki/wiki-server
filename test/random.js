@@ -1,4 +1,4 @@
-random = require('../lib/random_id')
+const random = require('../lib/random_id')
 
 describe('random', () => {
   describe('#random_id', () => {

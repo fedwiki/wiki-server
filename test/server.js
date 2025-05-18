@@ -12,10 +12,10 @@ const argv = require('../lib/defaultargs.coffee')({
 })
 
 describe('server', () => {
-  app = {}
+  var app = {}
   before(done => {
     // as starting the server this was does not create a sitemap file, create an empty one
-    sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
+    const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
     fs.mkdirSync(path.join('/tmp', 'sfwtests', testid))
     fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'status'))
     fs.writeFileSync(sitemapLoc, JSON.stringify([]))
@@ -26,10 +26,10 @@ describe('server', () => {
     })
   })
 
-  request = supertest('http://localhost:55557')
+  const request = supertest('http://localhost:55557')
 
   // location of the test page
-  loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
+  const loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
 
   it('factories should return a list of plugin', () => {
     request
@@ -59,7 +59,7 @@ describe('server', () => {
   })
 
   it('should create a page', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'create',
       item: {
         title: 'Asdf Test Page',
@@ -83,22 +83,15 @@ describe('server', () => {
   })
 
   it('should move the paragraphs to the order given ', () => {
-    body = '{ "type": "move", "order": [ "a1", "a3", "a2", "a4"] }'
+    const body = '{ "type": "move", "order": [ "a1", "a3", "a2", "a4"] }'
 
     request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
       .then(
-        res => {
-          if (err) {
-            throw err
-          }
-          try {
-            page = JSON.parse(fs.readFileSync(loc))
-          } catch (err) {
-            throw err
-          }
+        () => {
+          const page = JSON.parse(fs.readFileSync(loc))
           page.story[1].id.should.equal('a3')
           page.story[2].id.should.equal('a2')
           page.journal[1].type.should.equal('move')
@@ -113,7 +106,7 @@ describe('server', () => {
   })
 
   it('should add a paragraph', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'add',
       after: 'a2',
       item: { id: 'a5', type: 'paragraph', text: 'this is the NEW paragrpah' },
@@ -124,12 +117,8 @@ describe('server', () => {
       .send('action=' + body)
       .expect(200)
       .then(
-        res => {
-          try {
-            page = JSON.parse(fs.readFileSync(loc))
-          } catch (err) {
-            throw err
-          }
+        () => {
+          const page = JSON.parse(fs.readFileSync(loc))
           page.story.length.should.equal(5)
           page.story[3].id.should.equal('a5')
           page.journal[2].type.should.equal('add')
@@ -144,7 +133,7 @@ describe('server', () => {
   })
 
   it('should remove a paragraph with given id', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'remove',
       id: 'a2',
     })
@@ -154,12 +143,8 @@ describe('server', () => {
       .send('action=' + body)
       .expect(200)
       .then(
-        res => {
-          try {
-            page = JSON.parse(fs.readFileSync(loc))
-          } catch (err) {
-            throw err
-          }
+        () => {
+          const page = JSON.parse(fs.readFileSync(loc))
           page.story.length.should.equal(4)
           page.story[1].id.should.equal('a3')
           page.story[2].id.should.not.equal('a2')
@@ -176,7 +161,7 @@ describe('server', () => {
   })
 
   it('should edit a paragraph in place', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'edit',
       item: { id: 'a3', type: 'paragraph', text: 'edited' },
       id: 'a3',
@@ -187,12 +172,8 @@ describe('server', () => {
       .send('action=' + body)
       .expect(200)
       .then(
-        res => {
-          try {
-            page = JSON.parse(fs.readFileSync(loc))
-          } catch (err) {
-            throw err
-          }
+        () => {
+          const page = JSON.parse(fs.readFileSync(loc))
           page.story[1].text.should.equal('edited')
           page.journal[4].type.should.equal('edit')
         },
@@ -206,7 +187,7 @@ describe('server', () => {
   })
 
   it('should default to no change', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'asdf',
     })
 
@@ -215,12 +196,8 @@ describe('server', () => {
       .send('action=' + body)
       .expect(500)
       .then(
-        res => {
-          try {
-            page = JSON.parse(fs.readFileSync(loc))
-          } catch (err) {
-            throw err
-          }
+        () => {
+          const page = JSON.parse(fs.readFileSync(loc))
           page.story.length.should.equal(4)
           page.journal.length.should.equal(5)
           page.story[0].id.should.equal('a1')
@@ -237,7 +214,7 @@ describe('server', () => {
   })
 
   it('should refuse to create over a page', () => {
-    body = JSON.stringify({
+    const body = JSON.stringify({
       type: 'create',
       item: { title: 'Doh' },
       id: 'c1',
@@ -248,12 +225,8 @@ describe('server', () => {
       .send('action=' + body)
       .expect(409)
       .then(
-        res => {
-          try {
-            page = JSON.parse(fs.readFileSync(loc))
-          } catch (err) {
-            throw err
-          }
+        () => {
+          const page = JSON.parse(fs.readFileSync(loc))
           page.title.should.not.equal('Doh')
         },
         err => {
