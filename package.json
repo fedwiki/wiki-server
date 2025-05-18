@@ -45,11 +45,15 @@
     "test": "grunt mochaTest"
   },
   "devDependencies": {
+    "@eslint/js": "^9.27.0",
+    "eslint": "^9.27.0",
+    "globals": "^16.1.0",
     "grunt": "^1.6.1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^11.1.0",
+    "prettier": "^3.5.3",
     "should": "^13.2.3",
     "supertest": "^7.0.0",
     "wiki-client": "^0.31",
