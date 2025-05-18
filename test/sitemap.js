@@ -4,7 +4,7 @@ const server = require('..')
 const path = require('node:path')
 const random = require('../lib/random_id')
 const testid = random()
-const argv = require('../lib/defaultargs.coffee')({
+const argv = require('../lib/defaultargs')({
   data: path.join('/tmp', 'sfwtests', testid),
   port: 55556,
   security_legacy: true,

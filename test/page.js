@@ -1,7 +1,7 @@
 const path = require('node:path')
 const random = require('../lib/random_id')
 const testid = random()
-const argv = require('../lib/defaultargs.coffee')({
+const argv = require('../lib/defaultargs')({
   data: path.join('/tmp', 'sfwtests', testid),
   root: path.join(__dirname, '..'),
   packageDir: path.join(__dirname, '..', 'node_modules'),
