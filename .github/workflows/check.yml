@@ -21,14 +21,14 @@ jobs:
       - name: Run Prettier check
         run: npm run prettier:check
 
-      - name: Annotate Pull Request with Results
-        if: failure()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: '⚠️ Prettier found formatting issues. Please fix them.'
-            })
+      # - name: Annotate Pull Request with Results
+      #   if: failure()
+      #   uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       github.rest.issues.createComment({
+      #         issue_number: context.issue.number,
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         body: '⚠️ Prettier found formatting issues. Please fix them.'
+      #       })
