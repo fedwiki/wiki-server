@@ -40,6 +40,8 @@
     "xml2js": "^0.6.2"
   },
   "scripts": {
+    "prettier:format": "prettier --write './**/*.js'",
+    "prettier:check": "prettier --check ./**/*.js",
     "test": "grunt mochaTest"
   },
   "devDependencies": {
