@@ -17,3 +17,4 @@ config.json
 /default-data/status/sitemap.json
 node_modules
 npm-debug.log
+temp
