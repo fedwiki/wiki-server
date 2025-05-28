@@ -9,6 +9,7 @@ const argv = require('../lib/defaultargs')({
   data: path.join('/tmp', 'sfwtests', testid),
   port: 55556,
   security_legacy: true,
+  test: true,
 })
 
 describe('sitemap', () => {
@@ -48,7 +49,7 @@ describe('sitemap', () => {
       )
   })
 
-  it('creating a page should add it to the sitemap', () => {
+  it('creating a page should add it to the sitemap', async () => {
     const body = JSON.stringify({
       type: 'create',
       item: {
@@ -63,7 +64,7 @@ describe('sitemap', () => {
       date: 1234567890123,
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)

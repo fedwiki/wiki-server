@@ -10,6 +10,7 @@ const argv = require('../lib/defaultargs')({
   packageDir: path.join(__dirname, '..', 'node_modules'),
   port: 55557,
   security_legacy: true,
+  test: true,
 })
 
 describe('server', () => {
