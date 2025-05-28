@@ -7,14 +7,8 @@
 config.json
 /data
 /spec/data
-/client/client.js
-/client/test/testclient.js
-/client/plugins/*.js
-/client/plugins/**/*.js
-/client/plugins/pushpin/**/*.js
-/client/chart/
-/client/garden/
 /default-data/status/sitemap.json
 node_modules
 npm-debug.log
 temp
+coverage
