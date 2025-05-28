@@ -1,4 +1,5 @@
 const supertest = require('supertest')
+const should = require('should')
 const fs = require('node:fs')
 const server = require('..')
 const path = require('node:path')
@@ -22,6 +23,9 @@ describe('sitemap', () => {
   afterEach(() => {
     runningServer.close()
   })
+  after(() => {
+    if (app.close) app.close()
+  })
 
   const request = supertest('http://localhost:55556')
   fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'pages'), { recursive: true })
@@ -29,8 +33,8 @@ describe('sitemap', () => {
   // location of the sitemap
   const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
 
-  it('new site should have an empty sitemap', () => {
-    request
+  it('new site should have an empty sitemap', async () => {
+    await request
       .get('/system/sitemap.json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -78,14 +82,14 @@ describe('sitemap', () => {
       )
   })
 
-  it('synopsis should reflect edit to first paragraph', () => {
+  it('synopsis should reflect edit to first paragraph', async () => {
     const body = JSON.stringify({
       type: 'edit',
       item: { id: 'a1', type: 'paragraph', text: 'edited' },
       id: 'a1',
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
@@ -101,8 +105,8 @@ describe('sitemap', () => {
       })
   })
 
-  it('deleting a page should remove it from the sitemap', () => {
-    request
+  it('deleting a page should remove it from the sitemap', async () => {
+    await request
       .delete('/adsf-test-page.json')
       .send()
       .expect(200)
@@ -115,9 +119,5 @@ describe('sitemap', () => {
             throw err
           }
       })
-  })
-
-  after(() => {
-    if (app.close) app.close()
   })
 })

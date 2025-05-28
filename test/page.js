@@ -1,3 +1,4 @@
+const should = require('should')
 const path = require('node:path')
 const random = require('../lib/random_id')
 const testid = random()

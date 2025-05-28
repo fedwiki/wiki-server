@@ -8,16 +8,26 @@
     "url": "http://ward.fed.wiki.org"
   },
   "contributors": [
-    {
-      "name": "Nick Niemeir",
-      "email": "nick.niemeir@gmail.com",
-      "url": "http://nrn.io"
-    },
-    {
-      "name": "Paul Rodwell",
-      "email": "paul.rodwell@btinternet.com",
-      "url": "http://wiki-paul90.rhcloud.com"
-    }
+    "Austin King <shout@ozten.com>",
+    "Paul Rodwell <paul.rodwell@btinternet.com>",
+    "Nicholas Hallahan <nick@theoutpost.io>",
+    "Tom Lee <github@tomlee.co>",
+    "Erkan Yilmaz <erkan77@gmail.com>",
+    "Patrick Mueller <pmuellr@apache.org>",
+    "Nick Niemeir <nick.niemeir@gmail.com>",
+    "Ward Cunningham <ward@c2.com>",
+    "Christian Smith <smith@anvil.io>",
+    "Gui13 <guitreize@gmail.com>",
+    "Merlyn Albery-Speyer <merlyn@newrelic.com>",
+    "Marcin Cieslak <saper@saper.info>",
+    "enyst <engel.nyst@gmail.com>",
+    "Peter deHaan <pdehaan@users.noreply.github.com>",
+    "winckell benjamin <winckell.benjamin.isart@gmail.com>",
+    "Eric Dobbs <eric@dobbse.net>",
+    "Joshua Benuck <joshua_benuck@yahoo.com>",
+    "Tom Lieber <tom@alltom.com>",
+    "Andrew Shell <andrew@andrewshell.org>",
+    "jon r <jon@allmende.io>"
   ],
   "dependencies": {
     "async": "^3.2.4",
@@ -42,14 +52,13 @@
   "scripts": {
     "prettier:format": "prettier --write './**/*.js'",
     "prettier:check": "prettier --check ./**/*.js",
-    "test": "grunt mochaTest"
+    "test": "mocha",
+    "update-authors": "node scripts/update-authors.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
     "eslint": "^9.27.0",
     "globals": "^16.1.0",
-    "grunt": "^1.6.1",
-    "grunt-contrib-watch": "^1.1.0",
     "grunt-git-authors": "^3.2.0",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^11.1.0",

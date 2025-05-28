@@ -1,4 +1,5 @@
 const random = require('../lib/random_id')
+const should = require('should')
 
 describe('random', () => {
   describe('#random_id', () => {

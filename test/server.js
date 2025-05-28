@@ -1,4 +1,5 @@
 const supertest = require('supertest')
+const should = require('should')
 const fs = require('node:fs')
 const server = require('..')
 const path = require('node:path')
@@ -13,6 +14,7 @@ const argv = require('../lib/defaultargs')({
 
 describe('server', () => {
   var app = {}
+  let runningServer = null
   before(done => {
     // as starting the server this was does not create a sitemap file, create an empty one
     const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
@@ -22,8 +24,12 @@ describe('server', () => {
 
     app = server(argv)
     app.once('owner-set', () => {
-      app.listen(app.startOpts.port, app.startOpts.host, done)
+      runningServer = app.listen(app.startOpts.port, app.startOpts.host, done)
     })
+  })
+
+  after(() => {
+    runningServer.close()
   })
 
   const request = supertest('http://localhost:55557')
@@ -31,8 +37,8 @@ describe('server', () => {
   // location of the test page
   const loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
 
-  it('factories should return a list of plugin', () => {
-    request
+  it('factories should return a list of plugin', async () => {
+    await request
       .get('/system/factories.json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -42,8 +48,8 @@ describe('server', () => {
       })
   })
 
-  it('new site should have an empty list of pages', () => {
-    request
+  it('new site should have an empty list of pages', async () => {
+    await request
       .get('/system/slugs.json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -58,7 +64,7 @@ describe('server', () => {
       })
   })
 
-  it('should create a page', () => {
+  it('should create a page', async () => {
     const body = JSON.stringify({
       type: 'create',
       item: {
@@ -73,7 +79,7 @@ describe('server', () => {
       date: 1234567890123,
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
@@ -82,10 +88,10 @@ describe('server', () => {
       })
   })
 
-  it('should move the paragraphs to the order given ', () => {
+  it('should move the paragraphs to the order given ', async () => {
     const body = '{ "type": "move", "order": [ "a1", "a3", "a2", "a4"] }'
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
@@ -105,14 +111,14 @@ describe('server', () => {
       })
   })
 
-  it('should add a paragraph', () => {
+  it('should add a paragraph', async () => {
     const body = JSON.stringify({
       type: 'add',
       after: 'a2',
       item: { id: 'a5', type: 'paragraph', text: 'this is the NEW paragrpah' },
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
@@ -132,13 +138,13 @@ describe('server', () => {
       })
   })
 
-  it('should remove a paragraph with given id', () => {
+  it('should remove a paragraph with given id', async () => {
     const body = JSON.stringify({
       type: 'remove',
       id: 'a2',
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
@@ -160,14 +166,14 @@ describe('server', () => {
       })
   })
 
-  it('should edit a paragraph in place', () => {
+  it('should edit a paragraph in place', async () => {
     const body = JSON.stringify({
       type: 'edit',
       item: { id: 'a3', type: 'paragraph', text: 'edited' },
       id: 'a3',
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
@@ -186,12 +192,12 @@ describe('server', () => {
       })
   })
 
-  it('should default to no change', () => {
+  it('should default to no change', async () => {
     const body = JSON.stringify({
       type: 'asdf',
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(500)
@@ -213,14 +219,14 @@ describe('server', () => {
       })
   })
 
-  it('should refuse to create over a page', () => {
+  it('should refuse to create over a page', async () => {
     const body = JSON.stringify({
       type: 'create',
       item: { title: 'Doh' },
       id: 'c1',
     })
 
-    request
+    await request
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(409)
@@ -238,8 +244,8 @@ describe('server', () => {
       })
   })
 
-  it('site should now have one page', () => {
-    request
+  it('site should now have one page', async () => {
+    await request
       .get('/system/slugs.json')
       .expect(200)
       .expect('Content-Type', /json/)
@@ -255,9 +261,5 @@ describe('server', () => {
       .catch(err => {
         throw err
       })
-  })
-
-  after(() => {
-    if (app.close) app.close()
   })
 })

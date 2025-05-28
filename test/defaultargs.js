@@ -1,5 +1,5 @@
 const defaultargs = require('../lib/defaultargs')
-
+const should = require('should')
 describe('defaultargs', () => {
   describe('#defaultargs()', () => {
     it('should not write over give args', () => {
