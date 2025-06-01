@@ -1,5 +1,7 @@
+const { describe, it, before, after } = require('node:test')
+const assert = require('node:assert/strict')
+
 const supertest = require('supertest')
-const should = require('should')
 const fs = require('node:fs')
 const server = require('..')
 const path = require('node:path')
@@ -15,17 +17,16 @@ const argv = require('../lib/defaultargs')({
 describe('sitemap', () => {
   let app = {}
   let runningServer = null
-  beforeEach(done => {
+
+  before(done => {
     app = server(argv)
     app.once('owner-set', () => {
       runningServer = app.listen(app.startOpts.port, app.startOpts.host, done)
     })
   })
-  afterEach(() => {
-    runningServer.close()
-  })
+
   after(() => {
-    if (app.close) app.close()
+    runningServer.close()
   })
 
   const request = supertest('http://localhost:55556')
@@ -39,14 +40,9 @@ describe('sitemap', () => {
       .get('/system/sitemap.json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(
-        res => {
-          res.body.should.be.empty
-        },
-        err => {
-          throw err
-        },
-      )
+      .then(res => {
+        assert.equal(res.body.length, 0)
+      })
   })
 
   it('creating a page should add it to the sitemap', async () => {
@@ -57,7 +53,7 @@ describe('sitemap', () => {
         story: [
           { id: 'a1', type: 'paragraph', text: 'this is the first paragraph' },
           { id: 'a2', type: 'paragraph', text: 'this is the second paragraph' },
-          { id: 'a3', type: 'paragraph', text: 'this is the third paragraph' },
+          { id: 'a3', type: 'paragraph', text: 'this is the [[third]] paragraph' },
           { id: 'a4', type: 'paragraph', text: 'this is the fourth paragraph' },
         ],
       },
@@ -68,14 +64,14 @@ describe('sitemap', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
+      // sitemap update does not happen until after the put has returned, so wait for it to finish
+      .then(() => new Promise(resolve => app.sitemaphandler.once('finished', () => resolve())))
       .then(
         () => {
-          // sitemap update does not happen until after the put has returned, so wait for it to finish
-          app.sitemaphandler.once('finished', () => {
-            const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-            sitemap[0].slug.should.equal['adsf-test-page']
-            sitemap[0].synopsis.should.equal['this is the first paragraph']
-          })
+          const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
+          assert.equal(sitemap[0].slug, 'adsf-test-page')
+          assert.equal(sitemap[0].synopsis, 'this is the first paragraph')
+          assert.deepEqual(sitemap[0].links, { third: 'a3' })
         },
         err => {
           throw err
@@ -94,15 +90,11 @@ describe('sitemap', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
+      .then(() => new Promise(resolve => app.sitemaphandler.once('finished', () => resolve())))
       .then(() => {
-        app.sitemaphandler.once('finished', () => {
-          const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-          sitemap[0].slug.should.equal['adsf-test-page']
-          sitemap[0].synopsis.should.equal['edited']
-        }),
-          err => {
-            throw err
-          }
+        const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
+        assert.equal(sitemap[0].slug, 'adsf-test-page')
+        assert.equal(sitemap[0].synopsis, 'edited')
       })
   })
 
@@ -111,14 +103,10 @@ describe('sitemap', () => {
       .delete('/adsf-test-page.json')
       .send()
       .expect(200)
+      .then(() => new Promise(resolve => app.sitemaphandler.once('finished', () => resolve())))
       .then(() => {
-        app.sitemaphandler.once('finished', () => {
-          const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-          sitemap.should.be.empty
-        }),
-          err => {
-            throw err
-          }
+        const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
+        assert.deepEqual(sitemap, [])
       })
   })
 })

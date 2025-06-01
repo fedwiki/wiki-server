@@ -1,5 +1,7 @@
+const { describe, it, before, after } = require('node:test')
+const assert = require('node:assert/strict')
+
 const supertest = require('supertest')
-const should = require('should')
 const fs = require('node:fs')
 const server = require('..')
 const path = require('node:path')
@@ -13,7 +15,7 @@ const argv = require('../lib/defaultargs')({
   test: true,
 })
 
-describe('server', () => {
+describe('server', d => {
   var app = {}
   let runningServer = null
   before(done => {
@@ -29,7 +31,7 @@ describe('server', () => {
     })
   })
 
-  after(() => {
+  after(async () => {
     runningServer.close()
   })
 
@@ -44,8 +46,8 @@ describe('server', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .then(res => {
-        res.body[1].name.should.equal('Video')
-        res.body[1].category.should.equal('format')
+        assert.equal(res.body[1].name, 'Video')
+        assert.equal(res.body[1].category, 'format')
       })
   })
 
@@ -54,15 +56,7 @@ describe('server', () => {
       .get('/system/slugs.json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(
-        res => res.body.should.be.empty,
-        error => {
-          throw error
-        },
-      )
-      .catch(error => {
-        throw error
-      })
+      .then(res => assert.deepEqual(res.body, []))
   })
 
   it('should create a page', async () => {
@@ -84,9 +78,6 @@ describe('server', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
-      .catch(err => {
-        throw err
-      })
   })
 
   it('should move the paragraphs to the order given ', async () => {
@@ -99,9 +90,9 @@ describe('server', () => {
       .then(
         () => {
           const page = JSON.parse(fs.readFileSync(loc))
-          page.story[1].id.should.equal('a3')
-          page.story[2].id.should.equal('a2')
-          page.journal[1].type.should.equal('move')
+          assert(page.story[1].id, 'a3')
+          assert(page.story[2].id, 'a2')
+          assert(page.journal[1].type, 'move')
         },
         err => {
           throw err
@@ -123,17 +114,12 @@ describe('server', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
-      .then(
-        () => {
-          const page = JSON.parse(fs.readFileSync(loc))
-          page.story.length.should.equal(5)
-          page.story[3].id.should.equal('a5')
-          page.journal[2].type.should.equal('add')
-        },
-        err => {
-          throw err
-        },
-      )
+      .then(() => {
+        const page = JSON.parse(fs.readFileSync(loc))
+        assert.equal(page.story.length, 5)
+        assert.equal(page.story[3].id, 'a5')
+        assert.equal(page.journal[2].type, 'add')
+      })
       .catch(err => {
         throw err
       })
@@ -149,19 +135,14 @@ describe('server', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
-      .then(
-        () => {
-          const page = JSON.parse(fs.readFileSync(loc))
-          page.story.length.should.equal(4)
-          page.story[1].id.should.equal('a3')
-          page.story[2].id.should.not.equal('a2')
-          page.story[2].id.should.equal('a5')
-          page.journal[3].type.should.equal('remove')
-        },
-        err => {
-          throw err
-        },
-      )
+      .then(() => {
+        const page = JSON.parse(fs.readFileSync(loc))
+        assert(page.story.length == 4)
+        assert.equal(page.story[1].id, 'a3')
+        assert.notEqual(page.story[2].id, 'a2')
+        assert.equal(page.story[2].id, 'a5')
+        assert.equal(page.journal[3].type, 'remove')
+      })
       .catch(err => {
         throw err
       })
@@ -178,16 +159,11 @@ describe('server', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
-      .then(
-        () => {
-          const page = JSON.parse(fs.readFileSync(loc))
-          page.story[1].text.should.equal('edited')
-          page.journal[4].type.should.equal('edit')
-        },
-        err => {
-          throw err
-        },
-      )
+      .then(() => {
+        const page = JSON.parse(fs.readFileSync(loc))
+        assert.equal(page.story[1].text, 'edited')
+        assert.equal(page.journal[4].type, 'edit')
+      })
       .catch(err => {
         throw err
       })
@@ -202,19 +178,14 @@ describe('server', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(500)
-      .then(
-        () => {
-          const page = JSON.parse(fs.readFileSync(loc))
-          page.story.length.should.equal(4)
-          page.journal.length.should.equal(5)
-          page.story[0].id.should.equal('a1')
-          page.story[3].text.should.equal('this is the fourth paragraph')
-          page.journal[4].type.should.equal('edit')
-        },
-        err => {
-          throw err
-        },
-      )
+      .then(() => {
+        const page = JSON.parse(fs.readFileSync(loc))
+        assert(page.story.length == 4)
+        assert(page.journal.length == 5)
+        assert.equal(page.story[0].id, 'a1')
+        assert.equal(page.story[3].text, 'this is the fourth paragraph')
+        assert.equal(page.journal[4].type, 'edit')
+      })
       .catch(err => {
         throw err
       })
@@ -231,15 +202,10 @@ describe('server', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(409)
-      .then(
-        () => {
-          const page = JSON.parse(fs.readFileSync(loc))
-          page.title.should.not.equal('Doh')
-        },
-        err => {
-          throw err
-        },
-      )
+      .then(() => {
+        const page = JSON.parse(fs.readFileSync(loc))
+        assert.notEqual(page.title, 'Doh')
+      })
       .catch(err => {
         throw err
       })
@@ -250,15 +216,10 @@ describe('server', () => {
       .get('/system/slugs.json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(
-        res => {
-          res.body.length.should.equal[1]
-          res.body[0].should.equal['adsf-test-page']
-        },
-        err => {
-          throw err
-        },
-      )
+      .then(res => {
+        assert(res.body.length == 1)
+        assert.equal(res.body[0], 'adsf-test-page')
+      })
       .catch(err => {
         throw err
       })
