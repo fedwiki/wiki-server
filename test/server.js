@@ -31,7 +31,7 @@ describe('server', d => {
     })
   })
 
-  after(async () => {
+  after(() => {
     runningServer.close()
   })
 
