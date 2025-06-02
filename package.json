@@ -52,7 +52,7 @@
   "scripts": {
     "prettier:format": "prettier --write './**/*.js'",
     "prettier:check": "prettier --check ./**/*.js",
-    "test": "mocha",
+    "test": "node --test",
     "update-authors": "node scripts/update-authors.js"
   },
   "devDependencies": {
@@ -60,8 +60,6 @@
     "eslint": "^9.27.0",
     "globals": "^16.1.0",
     "grunt-git-authors": "^3.2.0",
-    "grunt-mocha-test": "^0.13.3",
-    "mocha": "^11.5.0",
     "prettier": "^3.5.3",
     "supertest": "^7.0.0",
     "wiki-client": "^0.31",
@@ -69,10 +67,7 @@
     "wiki-plugin-video": "^0.4"
   },
   "engines": {
-    "node": ">=18.x"
-  },
-  "testling": {
-    "harness": "mocha"
+    "node": ">=20.x"
   },
   "license": "MIT",
   "repository": {
