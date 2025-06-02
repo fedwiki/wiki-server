@@ -15,7 +15,7 @@ const argv = require('../lib/defaultargs')({
   test: true,
 })
 
-describe('server', d => {
+describe('server', () => {
   var app = {}
   let runningServer = null
   before(done => {
@@ -90,9 +90,9 @@ describe('server', d => {
       .then(
         () => {
           const page = JSON.parse(fs.readFileSync(loc))
-          assert(page.story[1].id, 'a3')
-          assert(page.story[2].id, 'a2')
-          assert(page.journal[1].type, 'move')
+          assert.equal(page.story[1].id, 'a3')
+          assert.equal(page.story[2].id, 'a2')
+          assert.equal(page.journal[1].type, 'move')
         },
         err => {
           throw err
@@ -137,7 +137,7 @@ describe('server', d => {
       .expect(200)
       .then(() => {
         const page = JSON.parse(fs.readFileSync(loc))
-        assert(page.story.length == 4)
+        assert.equal(page.story.length, 4)
         assert.equal(page.story[1].id, 'a3')
         assert.notEqual(page.story[2].id, 'a2')
         assert.equal(page.story[2].id, 'a5')
@@ -180,8 +180,8 @@ describe('server', d => {
       .expect(500)
       .then(() => {
         const page = JSON.parse(fs.readFileSync(loc))
-        assert(page.story.length == 4)
-        assert(page.journal.length == 5)
+        assert.equal(page.story.length, 4)
+        assert.equal(page.journal.length, 5)
         assert.equal(page.story[0].id, 'a1')
         assert.equal(page.story[3].text, 'this is the fourth paragraph')
         assert.equal(page.journal[4].type, 'edit')
@@ -217,7 +217,7 @@ describe('server', d => {
       .expect(200)
       .expect('Content-Type', /json/)
       .then(res => {
-        assert(res.body.length == 1)
+        assert.equal(res.body.length, 1)
         assert.equal(res.body[0], 'adsf-test-page')
       })
       .catch(err => {

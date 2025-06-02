@@ -19,61 +19,72 @@ console.log('testid', testid)
 
 describe('page', () => {
   describe('#page.put()', () => {
-    it('should save a page', () => {
-      page.put('asdf', testpage, e => {
-        if (e) throw e
+    it('should save a page', async () => {
+      return new Promise(resolve => {
+        page.put('asdf', testpage, e => {
+          if (e) throw e
+          resolve()
+        })
       })
     })
   })
   describe('#page.get()', () => {
-    it('should get a page if it exists', () => {
-      page.get('asdf', (e, got) => {
-        if (e) throw e
-        assert.equal(got.title, 'Asdf')
-      })
-    })
-    it('should copy a page from default if nonexistant in db', () => {
-      page.get('welcome-visitors', (e, got) => {
-        if (e) throw e
-        assert.equal(got.title, 'Welcome Visitors')
-      })
-    })
-    // note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
-    it('should copy a page from plugins if nonexistant in db', () => {
-      page.get('recent-changes', (e, got) => {
-        if (e) throw e
-        assert.equal(got.title, 'Recent Changes')
-      })
-    })
-    // note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
-    it('should mark a page from plugins with the plugin name', () => {
-      page.get('recent-changes', (e, got) => {
-        if (e) throw e
-        assert.equal(got.plugin, 'activity')
-      })
-    })
-    it('should create a page if it exists nowhere', () => {
-      page.get(random(), (e, got) => {
-        if (e) throw e
-        assert.equal(got, 'Page not found')
-      })
-    })
-    it.skip('should eventually write the page to disk', async () => {
-      const test = () => {
-        console.log('should write', argv)
-        fs.readFile(path.join(argv.db, 'asdf'), (err, data) => {
-          if (err) throw err
-          const readPage = JSON.parse(data)
-          page.get('asdf', (e, got) => {
-            assert.equal(readPage.title, got.title)
-          })
+    it('should get a page if it exists', async () => {
+      return new Promise(resolve => {
+        page.get('asdf', (e, got) => {
+          if (e) throw e
+          assert.equal(got.title, 'Asdf')
+          resolve()
         })
-      }
-      if (page.isWorking()) {
-        page.on('finished', () => test())
-      } else {
-        test()
-      }
+      })
+    })
+    it('should copy a page from default if nonexistant in db', async () => {
+      return new Promise(resolve => {
+        page.get('welcome-visitors', (e, got) => {
+          if (e) throw e
+          assert.equal(got.title, 'Welcome Visitors')
+          resolve()
+        })
+      })
+    })
+    // note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
+    it('should copy a page from plugins if nonexistant in db', async () => {
+      return new Promise(resolve => {
+        page.get('recent-changes', (e, got) => {
+          if (e) throw e
+          assert.equal(got.title, 'Recent Changes')
+          resolve()
+        })
+      })
+    })
+    // note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
+    it('should mark a page from plugins with the plugin name', async () => {
+      return new Promise(resolve => {
+        page.get('recent-changes', (e, got) => {
+          if (e) throw e
+          assert.equal(got.plugin, 'activity')
+          resolve()
+        })
+      })
+    })
+    it('should create a page if it exists nowhere', async () => {
+      return new Promise(resolve => {
+        page.get(random(), (e, got) => {
+          if (e) throw e
+          assert.equal(got, 'Page not found')
+          resolve()
+        })
+      })
+    })
+    it('should eventually write the page to disk', async () => {
+      return new Promise(resolve => {
+        page.get('asdf', (e, got) => {
+          if (e) throw e
+          const page = JSON.parse(fs.readFileSync(path.join(path.sep, 'tmp', 'sfwtests', testid, 'pages', 'asdf')))
+          assert.equal(got.title, page.title)
+          resolve()
+        })
+      })
     })
   })
 })
