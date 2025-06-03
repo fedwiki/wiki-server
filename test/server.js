@@ -1,13 +1,23 @@
-const { describe, it, before, after } = require('node:test')
-const assert = require('node:assert/strict')
+import { describe, it, before, after } from 'node:test'
+import assert from 'node:assert/strict'
 
-const supertest = require('supertest')
-const fs = require('node:fs')
-const server = require('..')
-const path = require('node:path')
-const random = require('../lib/random_id')
+import supertest from 'supertest'
+import fs from 'node:fs'
+import path from 'node:path'
+
+import { fileURLToPath } from 'node:url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// CommonJS server module (.cjs)
+const { default: server } = await import('../index.js')
+
+// ESM modules
+import random from '../lib/random_id.js'
+import defaultargs from '../lib/defaultargs.js'
+
 const testid = random()
-const argv = require('../lib/defaultargs')({
+const argv = defaultargs({
   data: path.join('/tmp', 'sfwtests', testid),
   packageDir: path.join(__dirname, '..', 'node_modules'),
   port: 55557,
@@ -25,7 +35,7 @@ describe('server', () => {
     fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'status'))
     fs.writeFileSync(sitemapLoc, JSON.stringify([]))
 
-    app = server(argv)
+    app = server.default(argv)
     app.once('owner-set', () => {
       runningServer = app.listen(app.startOpts.port, app.startOpts.host, done)
     })
