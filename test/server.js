@@ -236,4 +236,20 @@ describe('server', () => {
         throw err
       })
   })
+
+// Should be a version test, but doesn't seem it's supported in test mode yet.
+//  it('server should return a version', async () => {
+//    await request
+//      .get('/system/version.json')
+//      .expect(200)
+//      .expect('Content-Type', /json/)
+//      .then(res => {
+//        assert.equal(res.body.length, 1)
+//
+//        assert.equal(res.body[0], 'adsf-test-page')
+//      })
+//      .catch(err => {
+//        throw err
+//      })
+//  })
 })
