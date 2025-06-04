@@ -37,7 +37,7 @@ describe('server', () => {
 
     let x = await server.default(argv)
     app = x
-//    app = server(argv)
+    //    app = server(argv)
     app.once('owner-set', async () => {
       runningServer = await app.listen(app.startOpts.port, app.startOpts.host, done)
     })
