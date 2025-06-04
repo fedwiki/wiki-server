@@ -5,5 +5,5 @@
 import('coffeescript')
 import('coffeescript/register.js')
 
-import * as server from './lib/server.cjs'
+const { default: server } = await import ('./lib/server.js')
 export default server

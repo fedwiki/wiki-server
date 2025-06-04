@@ -10,7 +10,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // CommonJS server module (.cjs)
-const { default: server } = await import('../index.js')
+const server = await import('../index.js')
 
 // ESM modules
 import random from '../lib/random_id.js'
@@ -28,16 +28,18 @@ const argv = defaultargs({
 describe('server', () => {
   var app = {}
   let runningServer = null
-  before(done => {
+  before(async done => {
     // as starting the server this was does not create a sitemap file, create an empty one
     const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
     fs.mkdirSync(path.join('/tmp', 'sfwtests', testid))
     fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'status'))
     fs.writeFileSync(sitemapLoc, JSON.stringify([]))
 
-    app = server.default(argv)
-    app.once('owner-set', () => {
-      runningServer = app.listen(app.startOpts.port, app.startOpts.host, done)
+    let x = await server.default(argv)
+    app = x
+//    app = server(argv)
+    app.once('owner-set', async () => {
+      runningServer = await app.listen(app.startOpts.port, app.startOpts.host, done)
     })
   })
 

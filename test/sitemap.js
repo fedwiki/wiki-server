@@ -11,7 +11,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 // Dynamic import of CommonJS module
-const { default: server } = await import('../index.js')
+const server = await import('../index.js')
 
 // ESM imports
 import random from '../lib/random_id.js'
@@ -29,8 +29,11 @@ describe('sitemap', () => {
   let app = {}
   let runningServer = null
 
-  before(done => {
-    app = server.default(argv)
+  before(async done => {
+    let x = await server.default(argv)
+    app = x
+
+    // app = server(argv)
     app.once('owner-set', () => {
       runningServer = app.listen(app.startOpts.port, app.startOpts.host, done)
     })
