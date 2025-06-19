@@ -37,7 +37,7 @@
     "cookie-parser": "^1.4.4",
     "dompurify": "^3.1.0",
     "errorhandler": "^1.5.1",
-    "express": "^4.17.1",
+    "express": "^5.1.0",
     "express-hbs": "^2.5.0",
     "flates": "0.0.5",
     "glob": "^7.2.3",
@@ -62,7 +62,7 @@
     "grunt-git-authors": "^3.2.0",
     "prettier": "^3.5.3",
     "supertest": "^7.0.0",
-    "wiki-client": "^0.31",
+    "wiki-client": "^0.31.1",
     "wiki-plugin-activity": "0.7",
     "wiki-plugin-video": "^0.4"
   },
