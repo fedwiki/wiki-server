@@ -1,0 +1,8 @@
+{
+  "comment": "This exists so that the tests have a package to read",
+  "name": "wiki-server",
+  "dependencies": {
+    "wiki-plugin-activity": "0.1",
+    "wiki-plugin-video": "0.1"
+  }
+}
