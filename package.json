@@ -30,7 +30,6 @@
     "jon r <jon@allmende.io>"
   ],
   "dependencies": {
-    "async": "^3.2.4",
     "body-parser": "^2.2.0",
     "client-sessions": "^0.8.0",
     "coffeescript": "^2.5.0",
