@@ -2,7 +2,8 @@
 // Simple file so that if you require this directory
 // in node it instead requires ./lib/server.coffee
 // with coffee-script already loaded.
-require('coffeescript')
-require('coffeescript/register')
+import('coffeescript')
+import('coffeescript/register.js')
 
-module.exports = require('./lib/server')
+const { default: server } = await import('./lib/server.js')
+export default server
