@@ -1,3 +1,11 @@
 /data
 config.json
-
+.github/
+.mailmap
+.prettier*
+.vscode/
+.zed/
+eslint.config.js
+scripts/
+test/
+coverage
