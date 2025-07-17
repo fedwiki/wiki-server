@@ -12,7 +12,7 @@ export default [
   { ignores: ['client/*'] },
   {
     languageOptions: {
-      sourceType: 'commonjs',
+      sourceType: 'module',
       globals: {
         wiki: 'readonly',
         ...globals.node,
