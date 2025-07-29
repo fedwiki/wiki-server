@@ -50,7 +50,7 @@
   "scripts": {
     "prettier:format": "prettier --write './**/*.js'",
     "prettier:check": "prettier --check ./**/*.js",
-    "test": "node --test",
+    "test": "cd test; node --test",
     "update-authors": "node scripts/update-authors.js"
   },
   "devDependencies": {
