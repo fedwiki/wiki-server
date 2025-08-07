@@ -237,19 +237,22 @@ describe('server', () => {
       })
   })
 
-// Should be a version test, but doesn't seem it's supported in test mode yet.
-//  it('server should return a version', async () => {
-//    await request
-//      .get('/system/version.json')
-//      .expect(200)
-//      .expect('Content-Type', /json/)
-//      .then(res => {
-//        assert.equal(res.body.length, 1)
-//
-//        assert.equal(res.body[0], 'adsf-test-page')
-//      })
-//      .catch(err => {
-//        throw err
-//      })
-//  })
+  // Should be a version test, but doesn't seem it's supported in test mode yet.
+  it('server should return a version', async () => {
+    await request
+      .get('/system/version.json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then(res => {
+        console.log('*+*', res.body)
+        assert.equal(res.body.wiki, '0.1')
+        assert.equal(res.body['wiki-server'], '0.2')
+        assert.equal(res.body['wiki-client'], '0.3')
+        assert.equal(res.body.plugins['wiki-plugin-activity'], '0.4')
+        assert.equal(res.body.plugins['wiki-plugin-video'], '0.5')
+      })
+      .catch(err => {
+        throw err
+      })
+  })
 })
