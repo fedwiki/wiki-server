@@ -244,7 +244,6 @@ describe('server', () => {
       .expect(200)
       .expect('Content-Type', /json/)
       .then(res => {
-        console.log('*+*', res.body)
         assert.equal(res.body.wiki, '0.1')
         assert.equal(res.body['wiki-server'], '0.2')
         assert.equal(res.body['wiki-client'], '0.3')
