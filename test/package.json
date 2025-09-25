@@ -1,8 +1,12 @@
 {
   "comment": "This exists so that the tests have a package to read",
-  "name": "wiki-server",
+  "name": "wiki",
+  "type": "module",
+  "version": "0.1",
   "dependencies": {
-    "wiki-plugin-activity": "0.1",
-    "wiki-plugin-video": "0.1"
+    "wiki-server": "0.2",
+    "wiki-client": "0.3",
+    "wiki-plugin-activity": "0.4",
+    "wiki-plugin-video": "0.5"
   }
 }

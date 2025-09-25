@@ -1,7 +1,7 @@
-const { describe, it } = require('node:test')
-const assert = require('node:assert/strict')
+import { describe, it } from 'node:test'
+import assert from 'node:assert/strict'
 
-const defaultargs = require('../lib/defaultargs')
+import defaultargs from '../lib/defaultargs.js'
 
 describe('defaultargs', () => {
   describe('#defaultargs()', () => {
