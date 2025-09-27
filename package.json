@@ -30,6 +30,7 @@
     "Andrew Shell <andrew@andrewshell.org>",
     "jon r <jon@allmende.io>"
   ],
+  "main": "index.js",
   "dependencies": {
     "body-parser": "^2.2.0",
     "client-sessions": "^0.8.0",
