@@ -36,16 +36,16 @@
     "client-sessions": "^0.8.0",
     "coffeescript": "^2.5.0",
     "cookie-parser": "^1.4.4",
-    "dompurify": "^3.1.0",
+    "dompurify": "^3.3.0",
     "errorhandler": "^1.5.1",
     "express": "^5.1.0",
     "express-hbs": "^2.5.0",
     "flates": "0.0.5",
-    "jsdom": "^26.0.0",
+    "jsdom": "^27.2.0",
     "method-override": "^3.0.0",
-    "minisearch": "^7.1.0",
+    "minisearch": "^7.2.0",
     "morgan": "^1.10.1",
-    "write-file-atomic": "^6.0.0",
+    "write-file-atomic": "^7.0.0",
     "xml2js": "^0.6.2"
   },
   "scripts": {
@@ -56,13 +56,13 @@
     "update-authors": "node scripts/update-authors.js"
   },
   "devDependencies": {
-    "@eslint/js": "^9.32.0",
-    "eslint": "^9.32.0",
-    "globals": "^16.1.0",
+    "@eslint/js": "^9.39.1",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
     "grunt-git-authors": "^3.2.0",
     "prettier": "^3.5.3",
     "supertest": "^7.1.4",
-    "wiki-client": "^0.31.3",
+    "wiki-client": "^0.31.6",
     "wiki-plugin-activity": "0.7",
     "wiki-plugin-video": "^0.4"
   },
