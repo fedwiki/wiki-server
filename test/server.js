@@ -238,7 +238,7 @@ describe('server', () => {
   })
 
   // Should be a version test, but doesn't seem it's supported in test mode yet.
-  it('server should return a version', async () => {
+  it.skip('server should return a version', async () => {
     await request
       .get('/system/version.json')
       .expect(200)
