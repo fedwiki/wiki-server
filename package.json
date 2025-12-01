@@ -32,7 +32,7 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "body-parser": "^2.2.0",
+    "body-parser": "^2.2.1",
     "client-sessions": "^0.8.0",
     "coffeescript": "^2.5.0",
     "cookie-parser": "^1.4.4",
@@ -60,7 +60,7 @@
     "eslint": "^9.39.1",
     "globals": "^16.5.0",
     "grunt-git-authors": "^3.2.0",
-    "prettier": "^3.5.3",
+    "prettier": "^3.7.3",
     "supertest": "^7.1.4",
     "wiki-client": "^0.31.6",
     "wiki-plugin-activity": "0.7",
