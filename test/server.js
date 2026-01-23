@@ -1,13 +1,23 @@
-const { describe, it, before, after } = require('node:test')
-const assert = require('node:assert/strict')
+import { describe, it, before, after } from 'node:test'
+import assert from 'node:assert/strict'
 
-const supertest = require('supertest')
-const fs = require('node:fs')
-const server = require('..')
-const path = require('node:path')
-const random = require('../lib/random_id')
+import supertest from 'supertest'
+import fs from 'node:fs'
+import path from 'node:path'
+
+import { fileURLToPath } from 'node:url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// CommonJS server module (.cjs)
+const server = await import('../index.js')
+
+// ESM modules
+import random from '../lib/random_id.js'
+import defaultargs from '../lib/defaultargs.js'
+
 const testid = random()
-const argv = require('../lib/defaultargs')({
+const argv = defaultargs({
   data: path.join('/tmp', 'sfwtests', testid),
   packageDir: path.join(__dirname, '..', 'node_modules'),
   port: 55557,
@@ -18,16 +28,18 @@ const argv = require('../lib/defaultargs')({
 describe('server', () => {
   var app = {}
   let runningServer = null
-  before(done => {
+  before(async done => {
     // as starting the server this was does not create a sitemap file, create an empty one
     const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
     fs.mkdirSync(path.join('/tmp', 'sfwtests', testid))
     fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'status'))
     fs.writeFileSync(sitemapLoc, JSON.stringify([]))
 
-    app = server(argv)
-    app.once('owner-set', () => {
-      runningServer = app.listen(app.startOpts.port, app.startOpts.host, done)
+    let x = await server.default(argv)
+    app = x
+    //    app = server(argv)
+    app.once('owner-set', async () => {
+      runningServer = await app.listen(app.startOpts.port, app.startOpts.host, done)
     })
   })
 
@@ -219,6 +231,24 @@ describe('server', () => {
       .then(res => {
         assert.equal(res.body.length, 1)
         assert.equal(res.body[0], 'adsf-test-page')
+      })
+      .catch(err => {
+        throw err
+      })
+  })
+
+  // Should be a version test, but doesn't seem it's supported in test mode yet.
+  it.skip('server should return a version', async () => {
+    await request
+      .get('/system/version.json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then(res => {
+        assert.equal(res.body.wiki, '0.1')
+        assert.equal(res.body['wiki-server'], '0.2')
+        assert.equal(res.body['wiki-client'], '0.3')
+        assert.equal(res.body.plugins['wiki-plugin-activity'], '0.4')
+        assert.equal(res.body.plugins['wiki-plugin-video'], '0.5')
       })
       .catch(err => {
         throw err

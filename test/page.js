@@ -1,17 +1,27 @@
-const { describe, it } = require('node:test')
-const assert = require('node:assert/strict')
+import { describe, it } from 'node:test'
+import assert from 'node:assert/strict'
 
-const path = require('node:path')
-const random = require('../lib/random_id')
+import path from 'node:path'
+import fs from 'node:fs'
+
+import { fileURLToPath } from 'node:url'
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+// ESM module imports (assuming default exports)
+import random from '../lib/random_id.js'
+import defaultargs from '../lib/defaultargs.js'
+import pageFactory from '../lib/page.js'
+
 const testid = random()
-const argv = require('../lib/defaultargs')({
+const argv = defaultargs({
   data: path.join('/tmp', 'sfwtests', testid),
   root: path.join(__dirname, '..'),
   packageDir: path.join(__dirname, '..', 'node_modules'),
   security_legacy: true,
 })
-const page = require('../lib/page')(argv)
-const fs = require('node:fs')
+
+const page = pageFactory(argv)
 
 const testpage = { title: 'Asdf' }
 

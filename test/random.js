@@ -1,7 +1,7 @@
-const { describe, it } = require('node:test')
-const assert = require('node:assert/strict')
+import { describe, it } from 'node:test'
+import assert from 'node:assert/strict'
 
-const random = require('../lib/random_id')
+import random from '../lib/random_id.js'
 
 describe('random', () => {
   describe('#random_id', () => {
