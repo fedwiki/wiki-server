@@ -58,7 +58,7 @@
   "devDependencies": {
     "@eslint/js": "^9.39.1",
     "eslint": "^9.39.1",
-    "globals": "^16.5.0",
+    "globals": "^17.2.0",
     "grunt-git-authors": "^3.2.0",
     "prettier": "^3.7.3",
     "supertest": "^7.1.4",
