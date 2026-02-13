@@ -34,7 +34,6 @@
   "dependencies": {
     "body-parser": "^2.2.1",
     "client-sessions": "^0.8.0",
-    "coffeescript": "^2.5.0",
     "cookie-parser": "^1.4.4",
     "dompurify": "^3.3.0",
     "errorhandler": "^1.5.1",
