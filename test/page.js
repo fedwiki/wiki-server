@@ -18,6 +18,7 @@ const argv = defaultargs({
   data: path.join('/tmp', 'sfwtests', testid),
   root: path.join(__dirname, '..'),
   packageDir: path.join(__dirname, '..', 'node_modules'),
+  packageFile: path.join(__dirname, 'package.json'),
   security_legacy: true,
 })
 

@@ -20,6 +20,8 @@ import defaultargs from '../lib/defaultargs.js'
 const testid = random()
 const argv = defaultargs({
   data: path.join('/tmp', 'sfwtests', testid),
+  packageDir: path.join(__dirname, '..', 'node_modules'),
+  packageFile: path.join(__dirname, 'package.json'),
   port: 55556,
   security_legacy: true,
   test: true,
