@@ -49,19 +49,13 @@ describe('server', () => {
   const loc = path.join('/tmp', 'sfwtests', testid, 'pages', 'adsf-test-page')
 
   it('factories should return a list of plugin', async () => {
-    const res = await request
-      .get('/system/factories.json')
-      .expect(200)
-      .expect('Content-Type', /json/)
+    const res = await request.get('/system/factories.json').expect(200).expect('Content-Type', /json/)
     assert.equal(res.body[1].name, 'Video')
     assert.equal(res.body[1].category, 'format')
   })
 
   it('new site should have an empty list of pages', async () => {
-    const res = await request
-      .get('/system/slugs.json')
-      .expect(200)
-      .expect('Content-Type', /json/)
+    const res = await request.get('/system/slugs.json').expect(200).expect('Content-Type', /json/)
     assert.deepEqual(res.body, [])
   })
 
@@ -189,19 +183,13 @@ describe('server', () => {
   })
 
   it('site should now have one page', async () => {
-    const res = await request
-      .get('/system/slugs.json')
-      .expect(200)
-      .expect('Content-Type', /json/)
+    const res = await request.get('/system/slugs.json').expect(200).expect('Content-Type', /json/)
     assert.equal(res.body.length, 1)
     assert.equal(res.body[0], 'adsf-test-page')
   })
 
   it.skip('server should return a version', async () => {
-    const res = await request
-      .get('/system/version.json')
-      .expect(200)
-      .expect('Content-Type', /json/)
+    const res = await request.get('/system/version.json').expect(200).expect('Content-Type', /json/)
     assert.equal(res.body.wiki, '0.1')
     assert.equal(res.body['wiki-server'], '0.2')
     assert.equal(res.body['wiki-client'], '0.3')

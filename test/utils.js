@@ -55,10 +55,7 @@ describe('utils', () => {
       assert.equal(lastEdit(journal), undefined)
     })
     it('should skip entries without a date', () => {
-      const journal = [
-        { type: 'edit', date: 100 },
-        { type: 'edit' },
-      ]
+      const journal = [{ type: 'edit', date: 100 }, { type: 'edit' }]
       assert.equal(lastEdit(journal), 100)
     })
   })
@@ -107,7 +104,12 @@ describe('utils', () => {
       assert.equal(synopsis(page), 'first para')
     })
     it('should fall back to second paragraph if first is not a paragraph', () => {
-      const page = { story: [{ type: 'image', text: 'img' }, { type: 'paragraph', text: 'second para' }] }
+      const page = {
+        story: [
+          { type: 'image', text: 'img' },
+          { type: 'paragraph', text: 'second para' },
+        ],
+      }
       assert.equal(synopsis(page), 'second para')
     })
     it('should use first item text of any type if no paragraphs', () => {

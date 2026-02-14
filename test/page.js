@@ -65,9 +65,7 @@ describe('page', () => {
 
     it('should eventually write the page to disk', async () => {
       const got = await page.get('asdf')
-      const ondisk = JSON.parse(
-        fs.readFileSync(path.join('/tmp', 'sfwtests', testid, 'pages', 'asdf'), 'utf8'),
-      )
+      const ondisk = JSON.parse(fs.readFileSync(path.join('/tmp', 'sfwtests', testid, 'pages', 'asdf'), 'utf8'))
       assert.equal(got.title, ondisk.title)
     })
   })

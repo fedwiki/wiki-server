@@ -44,14 +44,10 @@ describe('sitemap', () => {
   const request = supertest('http://localhost:55556')
   const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
 
-  const waitForSitemap = () =>
-    new Promise(resolve => app.sitemaphandler.once('finished', resolve))
+  const waitForSitemap = () => new Promise(resolve => app.sitemaphandler.once('finished', resolve))
 
   it('new site should have an empty sitemap', async () => {
-    const res = await request
-      .get('/system/sitemap.json')
-      .expect(200)
-      .expect('Content-Type', /json/)
+    const res = await request.get('/system/sitemap.json').expect(200).expect('Content-Type', /json/)
     assert.equal(res.body.length, 0)
   })
 
@@ -103,10 +99,7 @@ describe('sitemap', () => {
   })
 
   it('deleting a page should remove it from the sitemap', async () => {
-    await request
-      .delete('/adsf-test-page.json')
-      .send()
-      .expect(200)
+    await request.delete('/adsf-test-page.json').send().expect(200)
 
     await waitForSitemap()
 
