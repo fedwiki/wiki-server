@@ -37,9 +37,7 @@ describe('server', () => {
     app = await server.default(argv)
 
     await new Promise(resolve => {
-      app.once('owner-set', () => {
-        runningServer = app.listen(app.startOpts.port, app.startOpts.host, resolve)
-      })
+      runningServer = app.listen(app.startOpts.port, app.startOpts.host, resolve)
     })
   })
 

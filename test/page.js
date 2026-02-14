@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename)
 import random from '../lib/random_id.js'
 import defaultargs from '../lib/defaultargs.js'
 import pageFactory from '../lib/page.js'
+import { PageNotFoundError } from '../lib/errors.js'
 
 const testid = random()
 const argv = defaultargs({
@@ -36,33 +37,34 @@ describe('page', () => {
 
   describe('#page.get()', () => {
     it('should get a page if it exists', async () => {
-      const { page: got } = await page.get('asdf')
+      const got = await page.get('asdf')
       assert.equal(got.title, 'Asdf')
     })
 
     it('should copy a page from default if nonexistant in db', async () => {
-      const { page: got } = await page.get('welcome-visitors')
+      const got = await page.get('welcome-visitors')
       assert.equal(got.title, 'Welcome Visitors')
     })
 
     it('should copy a page from plugins if nonexistant in db', async () => {
-      const { page: got } = await page.get('recent-changes')
+      const got = await page.get('recent-changes')
       assert.equal(got.title, 'Recent Changes')
     })
 
     it('should mark a page from plugins with the plugin name', async () => {
-      const { page: got } = await page.get('recent-changes')
+      const got = await page.get('recent-changes')
       assert.equal(got.plugin, 'activity')
     })
 
-    it('should create a page if it exists nowhere', async () => {
-      const { page: got, status } = await page.get(random())
-      assert.equal(got, 'Page not found')
-      assert.equal(status, 404)
+    it('should throw PageNotFoundError if it exists nowhere', async () => {
+      await assert.rejects(
+        () => page.get(random()),
+        err => err instanceof PageNotFoundError,
+      )
     })
 
     it('should eventually write the page to disk', async () => {
-      const { page: got } = await page.get('asdf')
+      const got = await page.get('asdf')
       const ondisk = JSON.parse(
         fs.readFileSync(path.join('/tmp', 'sfwtests', testid, 'pages', 'asdf'), 'utf8'),
       )
