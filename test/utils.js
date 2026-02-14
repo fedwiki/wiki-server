@@ -1,7 +1,8 @@
 import { describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { asSlug, lastEdit, extractPageLinks } from '../lib/utils.js'
+import { asSlug, lastEdit, extractPageLinks, synopsis } from '../lib/utils.js'
+import { resolveLinks, escape } from '../lib/render.js'
 
 describe('utils', () => {
   describe('asSlug', () => {
@@ -93,6 +94,93 @@ describe('utils', () => {
       const item = { id: 'i1', type: 'paragraph', text: 'no links here' }
       const links = [item].reduce(extractPageLinks, new Map())
       assert.equal(links.size, 0)
+    })
+  })
+
+  describe('synopsis', () => {
+    it('should use explicit synopsis field if present', () => {
+      const page = { synopsis: 'explicit', story: [{ type: 'paragraph', text: 'from story' }] }
+      assert.equal(synopsis(page), 'explicit')
+    })
+    it('should use first paragraph text', () => {
+      const page = { story: [{ type: 'paragraph', text: 'first para' }] }
+      assert.equal(synopsis(page), 'first para')
+    })
+    it('should fall back to second paragraph if first is not a paragraph', () => {
+      const page = { story: [{ type: 'image', text: 'img' }, { type: 'paragraph', text: 'second para' }] }
+      assert.equal(synopsis(page), 'second para')
+    })
+    it('should use first item text of any type if no paragraphs', () => {
+      const page = { story: [{ type: 'markdown', text: 'md text' }] }
+      assert.equal(synopsis(page), 'md text')
+    })
+    it('should report item count when no text available', () => {
+      const page = { story: [{ type: 'factory' }, { type: 'factory' }] }
+      assert.equal(synopsis(page), 'A page with 2 items.')
+    })
+    it('should handle page with no story', () => {
+      assert.equal(synopsis({}), 'A page with no story.')
+    })
+    it('should truncate at first line break', () => {
+      const page = { story: [{ type: 'paragraph', text: 'line one\nline two' }] }
+      assert.equal(synopsis(page), 'line one')
+    })
+    it('should cap output at 560 characters', () => {
+      const long = 'x'.repeat(600)
+      const page = { story: [{ type: 'paragraph', text: long }] }
+      assert.equal(synopsis(page).length, 560)
+    })
+  })
+
+  describe('escape', () => {
+    it('should escape ampersands', () => {
+      assert.equal(escape('a & b'), 'a &amp; b')
+    })
+    it('should escape angle brackets', () => {
+      assert.equal(escape('<div>'), '&lt;div&gt;')
+    })
+    it('should handle empty string', () => {
+      assert.equal(escape(''), '')
+    })
+    it('should handle undefined', () => {
+      assert.equal(escape(undefined), '')
+    })
+  })
+
+  describe('resolveLinks', () => {
+    it('should convert internal wiki links to anchor tags', () => {
+      const result = resolveLinks('see [[Hello World]] here')
+      assert.match(result, /class="internal"/)
+      assert.match(result, /href="\/hello-world\.html"/)
+      assert.match(result, /data-page-name="hello-world"/)
+    })
+    it('should convert external links to anchor tags', () => {
+      const result = resolveLinks('see [http://example.com Example] here')
+      assert.match(result, /class="external"/)
+      assert.match(result, /href="http:\/\/example\.com"/)
+      assert.match(result, /Example/)
+    })
+    it('should escape plain text', () => {
+      const result = resolveLinks('a < b & c > d')
+      assert.match(result, /&lt;/)
+      assert.match(result, /&amp;/)
+      assert.match(result, /&gt;/)
+    })
+    it('should pass resolution context into link titles', () => {
+      const result = resolveLinks('[[Test]]', undefined, ['page-a', 'page-b'])
+      assert.match(result, /title="page-a => page-b"/)
+    })
+    it('should handle empty string', () => {
+      assert.equal(resolveLinks(''), '')
+    })
+    it('should mark spaced internal links', () => {
+      const result = resolveLinks('[[ Hello ]]')
+      assert.match(result, /class="internal spaced"/)
+    })
+    it('should accept a custom sanitizer', () => {
+      const upper = s => s.toUpperCase()
+      const result = resolveLinks('plain text', upper)
+      assert.equal(result, 'PLAIN TEXT')
     })
   })
 })
