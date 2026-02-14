@@ -6,14 +6,11 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-// Emulate __dirname in ESM
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Dynamic import of CommonJS module
 const server = await import('../index.js')
 
-// ESM imports
 import random from '../lib/random_id.js'
 import defaultargs from '../lib/defaultargs.js'
 
@@ -31,13 +28,14 @@ describe('sitemap', () => {
   let app = {}
   let runningServer = null
 
-  before(async done => {
-    let x = await server.default(argv)
-    app = x
+  before(async () => {
+    fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'pages'), { recursive: true })
+    app = await server.default(argv)
 
-    // app = server(argv)
-    app.once('owner-set', () => {
-      runningServer = app.listen(app.startOpts.port, app.startOpts.host, done)
+    await new Promise(resolve => {
+      app.once('owner-set', () => {
+        runningServer = app.listen(app.startOpts.port, app.startOpts.host, resolve)
+      })
     })
   })
 
@@ -46,19 +44,17 @@ describe('sitemap', () => {
   })
 
   const request = supertest('http://localhost:55556')
-  fs.mkdirSync(path.join('/tmp', 'sfwtests', testid, 'pages'), { recursive: true })
-
-  // location of the sitemap
   const sitemapLoc = path.join('/tmp', 'sfwtests', testid, 'status', 'sitemap.json')
 
+  const waitForSitemap = () =>
+    new Promise(resolve => app.sitemaphandler.once('finished', resolve))
+
   it('new site should have an empty sitemap', async () => {
-    await request
+    const res = await request
       .get('/system/sitemap.json')
       .expect(200)
       .expect('Content-Type', /json/)
-      .then(res => {
-        assert.equal(res.body.length, 0)
-      })
+    assert.equal(res.body.length, 0)
   })
 
   it('creating a page should add it to the sitemap', async () => {
@@ -80,19 +76,13 @@ describe('sitemap', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
-      // sitemap update does not happen until after the put has returned, so wait for it to finish
-      .then(() => new Promise(resolve => app.sitemaphandler.once('finished', () => resolve())))
-      .then(
-        () => {
-          const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-          assert.equal(sitemap[0].slug, 'adsf-test-page')
-          assert.equal(sitemap[0].synopsis, 'this is the first paragraph')
-          assert.deepEqual(sitemap[0].links, { third: 'a3' })
-        },
-        err => {
-          throw err
-        },
-      )
+
+    await waitForSitemap()
+
+    const sitemap = JSON.parse(fs.readFileSync(sitemapLoc, 'utf8'))
+    assert.equal(sitemap[0].slug, 'adsf-test-page')
+    assert.equal(sitemap[0].synopsis, 'this is the first paragraph')
+    assert.deepEqual(sitemap[0].links, { third: 'a3' })
   })
 
   it('synopsis should reflect edit to first paragraph', async () => {
@@ -106,12 +96,12 @@ describe('sitemap', () => {
       .put('/page/adsf-test-page/action')
       .send('action=' + body)
       .expect(200)
-      .then(() => new Promise(resolve => app.sitemaphandler.once('finished', () => resolve())))
-      .then(() => {
-        const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-        assert.equal(sitemap[0].slug, 'adsf-test-page')
-        assert.equal(sitemap[0].synopsis, 'edited')
-      })
+
+    await waitForSitemap()
+
+    const sitemap = JSON.parse(fs.readFileSync(sitemapLoc, 'utf8'))
+    assert.equal(sitemap[0].slug, 'adsf-test-page')
+    assert.equal(sitemap[0].synopsis, 'edited')
   })
 
   it('deleting a page should remove it from the sitemap', async () => {
@@ -119,10 +109,10 @@ describe('sitemap', () => {
       .delete('/adsf-test-page.json')
       .send()
       .expect(200)
-      .then(() => new Promise(resolve => app.sitemaphandler.once('finished', () => resolve())))
-      .then(() => {
-        const sitemap = JSON.parse(fs.readFileSync(sitemapLoc))
-        assert.deepEqual(sitemap, [])
-      })
+
+    await waitForSitemap()
+
+    const sitemap = JSON.parse(fs.readFileSync(sitemapLoc, 'utf8'))
+    assert.deepEqual(sitemap, [])
   })
 })

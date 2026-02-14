@@ -8,7 +8,6 @@ import { fileURLToPath } from 'node:url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// ESM module imports (assuming default exports)
 import random from '../lib/random_id.js'
 import defaultargs from '../lib/defaultargs.js'
 import pageFactory from '../lib/page.js'
@@ -31,71 +30,43 @@ console.log('testid', testid)
 describe('page', () => {
   describe('#page.put()', () => {
     it('should save a page', async () => {
-      return new Promise(resolve => {
-        page.put('asdf', testpage, e => {
-          if (e) throw e
-          resolve()
-        })
-      })
+      await page.put('asdf', testpage)
     })
   })
+
   describe('#page.get()', () => {
     it('should get a page if it exists', async () => {
-      return new Promise(resolve => {
-        page.get('asdf', (e, got) => {
-          if (e) throw e
-          assert.equal(got.title, 'Asdf')
-          resolve()
-        })
-      })
+      const { page: got } = await page.get('asdf')
+      assert.equal(got.title, 'Asdf')
     })
+
     it('should copy a page from default if nonexistant in db', async () => {
-      return new Promise(resolve => {
-        page.get('welcome-visitors', (e, got) => {
-          if (e) throw e
-          assert.equal(got.title, 'Welcome Visitors')
-          resolve()
-        })
-      })
+      const { page: got } = await page.get('welcome-visitors')
+      assert.equal(got.title, 'Welcome Visitors')
     })
-    // note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
+
     it('should copy a page from plugins if nonexistant in db', async () => {
-      return new Promise(resolve => {
-        page.get('recent-changes', (e, got) => {
-          if (e) throw e
-          assert.equal(got.title, 'Recent Changes')
-          resolve()
-        })
-      })
+      const { page: got } = await page.get('recent-changes')
+      assert.equal(got.title, 'Recent Changes')
     })
-    // note: here we assume the wiki-plugin-activity repo has been cloned into an adjacent directory
+
     it('should mark a page from plugins with the plugin name', async () => {
-      return new Promise(resolve => {
-        page.get('recent-changes', (e, got) => {
-          if (e) throw e
-          assert.equal(got.plugin, 'activity')
-          resolve()
-        })
-      })
+      const { page: got } = await page.get('recent-changes')
+      assert.equal(got.plugin, 'activity')
     })
+
     it('should create a page if it exists nowhere', async () => {
-      return new Promise(resolve => {
-        page.get(random(), (e, got) => {
-          if (e) throw e
-          assert.equal(got, 'Page not found')
-          resolve()
-        })
-      })
+      const { page: got, status } = await page.get(random())
+      assert.equal(got, 'Page not found')
+      assert.equal(status, 404)
     })
+
     it('should eventually write the page to disk', async () => {
-      return new Promise(resolve => {
-        page.get('asdf', (e, got) => {
-          if (e) throw e
-          const page = JSON.parse(fs.readFileSync(path.join(path.sep, 'tmp', 'sfwtests', testid, 'pages', 'asdf')))
-          assert.equal(got.title, page.title)
-          resolve()
-        })
-      })
+      const { page: got } = await page.get('asdf')
+      const ondisk = JSON.parse(
+        fs.readFileSync(path.join('/tmp', 'sfwtests', testid, 'pages', 'asdf'), 'utf8'),
+      )
+      assert.equal(got.title, ondisk.title)
     })
   })
 })
