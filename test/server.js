@@ -237,6 +237,18 @@ describe('server', () => {
       })
   })
 
+  it('should return a list of plugins', async () => {
+    await request
+      .get('/system/plugins.json')
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then(res => {
+        assert.equal(res.body.length, 2)
+        assert(res.body.includes('activity'))
+        assert(res.body.includes('video'))
+      })
+  })
+
   // Should be a version test, but doesn't seem it's supported in test mode yet.
   it.skip('server should return a version', async () => {
     await request
