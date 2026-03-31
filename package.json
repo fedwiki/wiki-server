@@ -1,7 +1,7 @@
 {
   "name": "wiki-server",
   "description": "A Federated Wiki Server",
-  "version": "0.26.2",
+  "version": "0.26.3",
   "type": "module",
   "author": {
     "name": "Ward Cunningham",
