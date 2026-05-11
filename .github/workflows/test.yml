@@ -14,9 +14,8 @@ jobs:
       matrix:
         # Releases https://github.com/nodejs/release#release-schedule
         node-version:
-          - 20.x # Maintenance
-          - 22.x # LTS
-          - 24.x # Current
+          - 22.x # Maintenance
+          - 24.x # Active
 
     steps:
       - uses: actions/checkout@v4
