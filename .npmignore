@@ -9,3 +9,4 @@ eslint.config.js
 scripts/
 test/
 coverage
+cve-report

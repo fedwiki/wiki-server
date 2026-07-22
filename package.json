@@ -61,7 +61,7 @@
     "grunt-git-authors": "^3.2.0",
     "prettier": "^3.8.2",
     "supertest": "^7.1.4",
-    "wiki-client": "^0.31.6",
+    "wiki-client": "^0.32.0",
     "wiki-plugin-activity": "0.7",
     "wiki-plugin-video": "^0.4"
   },

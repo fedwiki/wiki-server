@@ -12,3 +12,4 @@ node_modules
 npm-debug.log
 temp
 coverage
+cve-report
