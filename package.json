@@ -40,7 +40,7 @@
     "express": "^5.1.0",
     "express-handlebars": "^9.0.1",
     "flates": "0.0.5",
-    "jsdom": "^30.0.1",
+    "jsdom": "^31.0.0",
     "method-override": "^3.0.0",
     "minisearch": "^7.2.0",
     "morgan": "^1.10.1",
