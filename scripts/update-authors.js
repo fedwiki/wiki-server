@@ -1,3 +1,6 @@
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
 const gitAuthors = require('grunt-git-authors')
 
 // list of contributers from prior the split out of Smallest Federated Wiki repo.
