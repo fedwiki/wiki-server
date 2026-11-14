@@ -14,7 +14,7 @@
     {
       "type": "factory",
       "id": "63ad2e58eecdd9e5",
-      "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press Command/ALT-S to save.\n\nMake all pages here yours alone with the login below."
+      "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press ⌘/Ctrl+S to save.\n\nMake all pages here yours alone with the login below."
     },
     {
       "type": "paragraph",
@@ -24,7 +24,7 @@
     {
       "type": "factory",
       "id": "05e2fa92643677ca",
-      "prompt": "Create pages about things you do on this wiki. Type a descriptive name of something you will be writing about. Enclose it in square brackets. Then press Command/ALT-S to save."
+      "prompt": "Create pages about things you do on this wiki. Type a descriptive name of something you will be writing about. Enclose it in square brackets. Then press ⌘/Ctrl+S to save."
     },
     {
       "type": "paragraph",
@@ -67,7 +67,7 @@
       "item": {
         "type": "factory",
         "id": "63ad2e58eecdd9e5",
-        "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press Command/ALT-S to save.\n\nMake all pages here yours alone with the login below."
+        "prompt": "Link to a page about yourself here. Type your name enclosed in double square brackets. Then press ⌘/Ctrl+S to save.\n\nMake all pages here yours alone with the login below."
       },
       "after": "821827c99b90cfd1",
       "id": "63ad2e58eecdd9e5",
@@ -89,7 +89,7 @@
       "item": {
         "type": "factory",
         "id": "05e2fa92643677ca",
-        "prompt": "Create pages about things you do on this wiki. Type a descriptive name of something you will be writing about. Enclose it in square brackets. Then press Command/ALT-S to save."
+        "prompt": "Create pages about things you do on this wiki. Type a descriptive name of something you will be writing about. Enclose it in square brackets. Then press ⌘/Ctrl+S to save."
       },
       "after": "2bbd646ff3f44b51",
       "id": "05e2fa92643677ca",
