@@ -28,7 +28,8 @@
     "Joshua Benuck <joshua_benuck@yahoo.com>",
     "Tom Lieber <tom@alltom.com>",
     "Andrew Shell <andrew@andrewshell.org>",
-    "jon r <jon@allmende.io>"
+    "jon r <jon@allmende.io>",
+    "SamAxe <1377880+SamAxe@users.noreply.github.com>"
   ],
   "main": "index.js",
   "dependencies": {
@@ -52,7 +53,7 @@
     "prettier:check": "prettier --check ./**/*.js",
     "test": "node --test",
     "watch": "node --test --watch",
-    "update-authors": "node scripts/update-authors.js"
+    "update-authors": "node scripts/update-authors.cjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
